@@ -1,0 +1,302 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Faqs" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Faqs" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-12 col-span-12">
+                            <div class="card">
+                                <h6 class="mb-4 text-lg">Have any Questions ?</h6>
+                                <div x-data="{tab: 1}" x-init="setTimeout(() => accordion(1, true))">
+                                    <div class="flex flex-wrap w-full bg-gray-50 dark:bg-dark rounded-md border dark:border-darkborder">
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 1.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple bg-purple text-light" :class="{'bg-purple text-light': tab === 1, 'transform': tab !== 1}">1</span>
+                                            <span class="sm:block hidden">General Questions</span>
+                                        </a>
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 2.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple transform" :class="{'bg-purple text-light': tab === 2, 'transform': tab !== 2}" @click.prevent="tab = 2">2</span>
+                                            <span class="sm:block hidden">Manage account</span>
+                                        </a>
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 3.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple transform" :class="{'bg-purple text-light': tab === 3, 'transform': tab !== 3}" @click.prevent="tab = 3">3</span>
+                                            <span class="sm:block hidden">Privacy & Security</span>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <div class="mt-6" x-show="tab === 1">
+                                            <h6 class="text-center text-lg">General Questions</h6>
+                                            <p class="mb-4 text-center text-muted">Here you’ll find answers to common questions about our products and services.</p>
+                                            <div class="w-full sm:w-10/12 xl:w-1/2 my-1 mx-auto">
+                                                <ul class="mx-auto">
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(1, true)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>When will my order arrive?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div x-ref="tab" :style="handleToggle()" class="overflow-hidden max-h-0 duration-500 transition-all">
+                                                            <p class="p-3 text-muted">
+                                                                The estimated delivery time depends on the shipping method you selected at checkout. You'll find the expected delivery date in your order confirmation email.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(2)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I track my order?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                Once your order ships, we’ll send you a tracking number via email. You can use this number to track your order through our website or the courier’s site.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(3)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>What’s your return policy?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                We offer a 30-day return policy. If you are not satisfied with your purchase, contact our support team with your order number, and we'll assist you with the return process.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(4)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>Can I modify my order after it’s placed?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                Yes, as long as your order is still being processed. Please contact us as soon as possible to make any changes. If the order has already been shipped, we won’t be able to modify it.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(5)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>What shipping options are available?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                We offer a range of shipping options, including standard and express delivery. For domestic orders within the USA, we use trusted carriers such as FedEx and USPS.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(6)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>What payment methods do you accept?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                We accept a variety of payment methods, including major credit cards (MasterCard, Visa, American Express), PayPal, and gift cards.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="mt-6" x-show="tab === 2" style="display: none;">
+                                            <h6 class="text-center text-lg">Manage Your Account</h6>
+                                            <p class="mb-4 text-center text-muted">Here you can find information related to managing your account</p>
+                                            <div class="w-full sm:w-10/12 xl:w-1/2 my-1 mx-auto">
+                                                <ul class="mx-auto">
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(1, true)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I update my account details?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div x-ref="tab" :style="handleToggle()" class="overflow-hidden max-h-0 duration-500 transition-all">
+                                                            <p class="p-3 text-muted">
+                                                                To update your account details, log in to your account and navigate to the 'Account Settings' section. From there, you can update your name, email address, and password.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(2)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I reset my password?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                To reset your password, click the 'Forgot Password' link on the login page. Follow the instructions sent to your email to reset your password securely.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(3)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I delete my account?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                If you wish to delete your account, please contact our support team at support@example.com. Once your account is deleted, you won’t be able to recover it.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(4)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How can I change my payment methods?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                You can update your payment methods by logging in to your account and visiting the 'Billing Information' section. Add or remove your preferred payment methods here.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(5)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I view my order history?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                You can view your past orders by going to the 'Order History' section in your account. This section shows all previous orders and their statuses.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(6)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I subscribe to or unsubscribe from emails?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                You can manage your email preferences in the 'Notifications' section of your account settings. You can choose which types of emails you'd like to receive or unsubscribe completely.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="mt-6" x-show="tab === 3" style="display: none;">
+                                            <h6 class="text-center text-lg">Privacy & Security</h6>
+                                            <p class="mb-4 text-center text-muted">Find answers to your privacy and security questions</p>
+                                            <div class="w-full sm:w-10/12 xl:w-1/2 my-1 mx-auto">
+                                                <ul class="mx-auto">
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(1, true)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How is my personal information protected?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div x-ref="tab" :style="handleToggle()" class="overflow-hidden max-h-0 duration-500 transition-all">
+                                                            <p class="p-3 text-muted">
+                                                                We use industry-standard security measures to ensure your personal information is protected. This includes encryption of sensitive data and secure server infrastructure.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(2)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How can I manage my privacy settings?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                You can manage your privacy settings in the 'Privacy Settings' section of your account. Here, you can adjust the information you share and control how it is used.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(3)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I enable two-factor authentication?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                Two-factor authentication (2FA) can be enabled in your 'Security Settings'. Once enabled, you'll receive a code via SMS or email each time you log in, adding an extra layer of security.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(4)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I report a security concern?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                If you notice any suspicious activity or believe your account has been compromised, contact our security team immediately at security@example.com. We take all security concerns seriously.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(5)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>WWhat data do you collect and why?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                We collect data to improve your user experience, process transactions, and ensure the security of our services. You can view a detailed breakdown of the data we collect in our Privacy Policy.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="my-2 shadow-md card p-0" x-data="accordion(6)">
+                                                        <h2 @click="handleClick()" class="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer bg-gray-50 dark:bg-dark rounded-sm">
+                                                            <span>How do I request the deletion of my data?</span>
+                                                            <i :class="handleRotate()" class="ri-arrow-down-s-line text-xl font-normal"></i>
+                                                        </h2>
+                                                        <div class="overflow-hidden max-h-0 duration-500 transition-all" x-ref="tab" :style="handleToggle()">
+                                                            <p class="p-3 text-muted">
+                                                                To request the deletion of your personal data, please contact us at privacy@example.com. We will process your request in accordance with applicable privacy laws.
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+<script src="assets/js/pages/faqs.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,432 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="ST Corp dahboard  - development by: clavisdev" }}
+
+    {{> partials/head-css }}
+
+    <style>
+        /* Pastikan elemen peta punya tinggi, kalau tidak peta tidak akan terlihat */
+        html,body { height: 100%; margin: 0; }
+        #map { height: 56.3vh; width: 100%; }
+        #card-sales { height: 54vh; width: 100%; overflow-y: auto;}
+        /* kecilkan popup font jika perlu */
+        .leaflet-popup-content { font-size: 14px; }
+    </style>
+</head>
+
+{{> partials/body }}
+
+<script src="assets/js/pages/authMiddleware.js"></script>
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+
+                {{> partials/page-heading title="Sliced Pro" sub-title="ST Corp dahboard  - development by: clavisdev" }}
+
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 2xl:col-span-9">
+                            <div class="grid grid-cols-12 gap-4">
+                                <!-- <div class="col-span-12 xl:col-span-4 lg:col-span-12"> -->
+                                    <!-- <div class="gap-6 card"> -->
+                                        <!-- <div class="flex items-center justify-between mb-4">
+                                            <div class="shrink-0">
+                                                <p class="mb-3 text-base dark:text-gray-300">Residential</p>
+                                                <div class="flex items-center justify-center font-semibold text-green-500 uppercase rounded-full size-8 bg-green-500/20 me-2">
+                                                    <i class="text-lg ri-building-line"></i>
+                                                </div>
+                                            </div>
+                                            <div id="chart" dir="ltr"></div>
+                                        </div> -->
+                                        <!-- <div class="flex items-center justify-between pt-4 border-t border-light dark:border-darkborder">
+                                            <h4 class="items-center gap-4 text-xl font-semibold text-slate-800 dark:text-slate-100">102
+                                                <span class="p-1 px-2 text-sm leading-none text-green-500 rounded-md bg-success/20">+ 8% <i class="ri-arrow-right-up-line"></i> </span>
+                                            </h4>
+                                            <a href="#!" class="hover:text-purple">Show More <i class="ri-arrow-right-line"></i> </a>
+                                        </div> -->
+                                    <!-- </div> -->
+                                <!-- </div> -->
+                                <!-- end col -->
+                                <!-- <div class="col-span-12 xl:col-span-4 lg:col-span-12">
+                                    <div class="gap-6 card">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="shrink-0">
+                                                <p class="mb-3 text-base dark:text-gray-300">Farm House</p>
+                                                <div class="flex items-center justify-center font-semibold text-red-500 uppercase rounded-full size-8 bg-red-500/20 me-2">
+                                                    <i class="text-lg ri-home-heart-line"></i>
+                                                </div>
+                                            </div>
+                                            <div id="chart2" dir="ltr"></div>
+                                        </div>
+                                        <div class="flex items-center justify-between pt-4 border-t border-light dark:border-darkborder">
+                                            <h4 class="items-center gap-4 text-xl font-semibold text-slate-800 dark:text-slate-100">109
+                                                <span class="p-1 px-2 text-sm leading-none text-red-500 rounded-md bg-red-500/20">+ 3% <i class="ri-arrow-right-down-line"></i> </span>
+                                            </h4>
+                                            <a href="#!" class="hover:text-purple">Show More <i class="ri-arrow-right-line"></i> </a>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- end col -->
+                                <!-- <div class="col-span-12 xl:col-span-4 lg:col-span-12">
+                                    <div class="gap-6 card">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="shrink-0">
+                                                <p class="mb-3 text-base dark:text-gray-300">Commercial</p>
+                                                <div class="flex items-center justify-center font-semibold text-green-500 uppercase rounded-full size-8 bg-green-500/20 me-2">
+                                                    <i class="text-lg ri-building-4-line"></i>
+                                                </div>
+                                            </div>
+                                            <div id="chart3" dir="ltr"></div>
+                                        </div>
+                                        <div class="flex items-center justify-between pt-4 border-t border-light dark:border-darkborder">
+                                            <h4 class="items-center gap-4 text-xl font-semibold text-slate-800 dark:text-slate-100">92
+                                                <span class="p-1 px-2 text-sm leading-none text-green-500 rounded-md bg-success/20">+ 6% <i class="ri-arrow-right-up-line"></i> </span>
+                                            </h4>
+                                            <a href="#!" class="hover:text-purple">Show More <i class="ri-arrow-right-line"></i> </a>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-12">
+                                    <div class="card">
+                                        <div class="flex justify-between items-center mb-[5px]">
+                                            <h5 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Reservations Per Day</h5>
+                                            <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Aug 2024</a>
+                                        </div>
+                                        <!-- <div id="overview"></div> -->
+                                        <div id="map"></div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end grid -->
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 2xl:col-span-3">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 xl:col-span-12">
+                                    <div class="card">
+                                        <input type="text" class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple dark:bg-darklight dark:border-darkborder dark:text-white" placeholder="Search Sales..." id="searchSales">
+                                        <input type="date" class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple dark:bg-darklight dark:border-darkborder dark:text-white" id="filterDate">
+                                        <div id="card-sales"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 xl:col-span-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex justify-between cart-header">
+                                        <h6 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Agent List</h6>
+                                        <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                            <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                    <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                    <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                </svg>
+                                            </a>
+                                            <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap" style="display: none;">
+                                                <li><a href="javascript:;">Weekly</a></li>
+                                                <li><a href="javascript:;">Monthly</a></li>
+                                                <li><a href="javascript:;">Yearly</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between py-3">
+                                        <div class="flex items-center">
+                                            <img src="assets/images/avatar-3.png" class="rounded-full size-8 me-2" alt="">
+                                            <div>
+                                                <h6>Clarissa</h6>
+                                                <span class="text-xs text-muted">Property Dealr</span>
+                                            </div>
+                                        </div>
+                                        <a href="#!" class="px-2 py-1 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:text-white dark:border-darkborder border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Contact <i class="ri-phone-line"></i> </a>
+                                    </div>
+                                    <hr class="dark:border-darkborder">
+                                    <div class="flex items-center justify-between py-3">
+                                        <div class="flex items-center">
+                                            <img src="assets/images/avatar-8.png" class="rounded-full size-8 me-2" alt="">
+                                            <div>
+                                                <h6>James</h6>
+                                                <span class="text-xs text-muted">Property Dealr</span>
+                                            </div>
+                                        </div>
+                                        <a href="#!" class="px-2 py-1 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:text-white dark:border-darkborder border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Contact <i class="ri-phone-line"></i> </a>
+                                    </div>
+                                    <hr class="dark:border-darkborder">
+                                    <div class="flex items-center justify-between py-3">
+                                        <div class="flex items-center">
+                                            <img src="assets/images/avatar-5.png" class="rounded-full size-8 me-2" alt="">
+                                            <div>
+                                                <h6>William </h6>
+                                                <span class="text-xs text-muted">Property Dealr</span>
+                                            </div>
+                                        </div>
+                                        <a href="#!" class="px-2 py-1 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:text-white dark:border-darkborder border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Contact <i class="ri-phone-line"></i> </a>
+                                    </div>
+                                    <hr class="dark:border-darkborder">
+                                    <div class="flex items-center justify-between py-3">
+                                        <div class="flex items-center">
+                                            <img src="assets/images/avatar-6.png" class="rounded-full size-8 me-2" alt="">
+                                            <div>
+                                                <h6>Leatrice</h6>
+                                                <span class="text-xs text-muted">Property Dealr</span>
+                                            </div>
+                                        </div>
+                                        <a href="#!" class="px-2 py-1 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:text-white dark:border-darkborder border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Contact <i class="ri-phone-line"></i> </a>
+                                    </div>
+                                    <hr class="dark:border-darkborder">
+                                    <div class="flex items-center justify-between py-3">
+                                        <div class="flex items-center">
+                                            <img src="assets/images/avatar-7.png" class="rounded-full size-8 me-2" alt="">
+                                            <div>
+                                                <h6>Florence</h6>
+                                                <span class="text-xs text-muted">Property Dealr</span>
+                                            </div>
+                                        </div>
+                                        <a href="#!" class="px-2 py-1 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:text-white dark:border-darkborder border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Contact <i class="ri-phone-line"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 xl:col-span-9">
+                            <div class="card">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Find Property </h2>
+                                    <a href="#" class="px-3 py-1.5 bg-gray-100 dark:bg-darklight dark:hover:bg-dark dark:hover:border-darklight dark:text-white dark:border-darkborder dark:hover:bg-white/85 dark:hover:border-white/85 border border-gray-300 rounded-md transition-all duration-300 hover:bg-black/[0.85] hover:text-white hover:border-black/[0.60] inline-block">Jun 2024</a>
+                                </div>
+                                <div class="overflow-auto">
+                                    <table class="min-w-[640px] w-full">
+                                        <thead>
+                                            <tr class="ltr:text-left rtl:text-right">
+                                                <th>Sales Category</th>
+                                                <th>Country</th>
+                                                <th>Type Of Sale</th>
+                                                <th>Price</th>
+                                                <th>Square Feet</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="text-muted">
+                                                <td>Flats</td>
+                                                <td>US</td>
+                                                <td>Rent</td>
+                                                <td>$9805 <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">3.8%</span></td>
+                                                <td>500</td>
+                                            </tr>
+                                            <tr class="text-muted">
+                                                <td>Town House</td>
+                                                <td>London</td>
+                                                <td>Sale</td>
+                                                <td>$4659 <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">7.9%</span></td>
+                                                <td>9625</td>
+                                            </tr>
+                                            <tr class="text-muted">
+                                                <td>Residency</td>
+                                                <td>Moldova</td>
+                                                <td>Sale</td>
+                                                <td>$8516 <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">19.8%</span></td>
+                                                <td>785</td>
+                                            </tr>
+                                            <tr class="text-muted">
+                                                <td>Row House</td>
+                                                <td>Russia</td>
+                                                <td>Rent</td>
+                                                <td>$1568 <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">23.3%</span></td>
+                                                <td>382</td>
+                                            </tr>
+                                            <tr class="text-muted">
+                                                <td>Flats</td>
+                                                <td>France</td>
+                                                <td>Rent</td>
+                                                <td>$6879 <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">46.2%</span></td>
+                                                <td>416</td>
+                                            </tr>
+                                            <tr class="text-muted">
+                                                <td>House</td>
+                                                <td>Turkey</td>
+                                                <td>Rent</td>
+                                                <td>$5489 <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">6.89%</span></td>
+                                                <td>984</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 xl:col-span-4 md:col-span-6 card">
+                            <div class="flex justify-between items-center mb-[5px]">
+                                <h5 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Sales Analytics</h5>
+                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Aug 2024</a>
+                            </div>
+                            <div id="pie"></div>
+                        </div>
+                        <!-- end col -->
+                        <div class="order-1 col-span-12 xl:col-span-4 md:col-span-6 card lg:-order-none">
+                            <div class="card-body">
+                                <div class="flex justify-between cart-header">
+                                    <h6 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Full Activity</h6>
+                                    <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                        <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                            </svg>
+                                        </a>
+                                        <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap" style="display: none;">
+                                            <li><a href="javascript:;">Weekly</a></li>
+                                            <li><a href="javascript:;">Monthly</a></li>
+                                            <li><a href="javascript:;">Yearly</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-b dark:border-darkborder">
+                                    <div class="flex items-center">
+                                        <div class="relative flex items-center justify-center">
+                                            <img src="assets/images/avatar-12.png" class="rounded-full size-12 me-2" alt="">
+                                            <span class="absolute flex items-center justify-center font-semibold text-white uppercase border-2 border-white rounded-full -bottom-1 -right-1 size-7 bg-purple me-2">
+                                                <i class="text-sm ri-home-2-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4>Viewed your profile </h4>
+                                            <span class="text-xs text-muted">
+                                                <i class="ri-time-line"></i> 1:20
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">16 Aug</span>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-b dark:border-darkborder">
+                                    <div class="flex items-center">
+                                        <div class="relative flex items-center justify-center">
+                                            <img src="assets/images/avatar-14.png" class="rounded-full size-12 me-2" alt="">
+                                            <span class="absolute flex items-center justify-center font-semibold text-white uppercase bg-green-500 border-2 border-white rounded-full -bottom-1 -right-1 size-7 me-2">
+                                                <i class="text-sm ri-thumb-up-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4>Liked has been your selling </h4>
+                                            <span class="text-xs text-muted">
+                                                <i class="ri-time-line"></i> 5:23
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">8 Aug</span>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-b dark:border-darkborder">
+                                    <div class="flex items-center">
+                                        <div class="relative flex items-center justify-center">
+                                            <img src="assets/images/avatar-15.png" class="rounded-full size-12 me-2" alt="">
+                                            <span class="absolute flex items-center justify-center font-semibold text-white uppercase bg-red-500 border-2 border-white rounded-full -bottom-1 -right-1 size-7 me-2">
+                                                <i class="text-sm ri-heart-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4>Liked has been your selling </h4>
+                                            <span class="text-xs text-muted">
+                                                <i class="ri-time-line"></i> 18:50
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">4 Aug</span>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-b dark:border-darkborder">
+                                    <div class="flex items-center">
+                                        <div class="relative flex items-center justify-center">
+                                            <img src="assets/images/avatar-16.png" class="rounded-full size-12 me-2" alt="">
+                                            <span class="absolute flex items-center justify-center font-semibold text-white uppercase border-2 border-white rounded-full -bottom-1 -right-1 size-7 bg-purple me-2">
+                                                <i class="text-sm ri-home-2-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4>Viewed your profile </h4>
+                                            <span class="text-xs text-muted">
+                                                <i class="ri-time-line"></i> 18:50
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">31 Jul</span>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-b dark:border-darkborder">
+                                    <div class="flex items-center">
+                                        <div class="relative flex items-center justify-center">
+                                            <img src="assets/images/avatar-17.png" class="rounded-full size-12 me-2" alt="">
+                                            <span class="absolute flex items-center justify-center font-semibold text-white uppercase border-2 border-white rounded-full -bottom-1 -right-1 size-7 bg-purple me-2">
+                                                <i class="text-sm ri-home-2-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4>Viewed your profile </h4>
+                                            <span class="text-xs text-muted">
+                                                <i class="ri-time-line"></i> 18:50
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">28 Jul</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 xl:col-span-4 md:col-span-6 card">
+                            <div class="flex justify-between items-center mb-[5px]">
+                                <h5 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Agent Analytics</h5>
+                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Aug 2024</a>
+                            </div>
+                            <div id="analytics"></div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- End grid -->
+                </div>
+                <!-- end all card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/real-estate.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="assets/js/pages/maps.js"></script>
+<script src="assets/js/pages/card-sales.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+</body>
+
+</html>

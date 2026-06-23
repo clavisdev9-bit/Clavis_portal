@@ -1,0 +1,300 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Orders Details" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Orders Details" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-8 col-span-12">
+                            <div class="card p-0">
+                                <div class="overflow-x-auto">
+                                    <div class="inline-block min-w-full overflow-hidden">
+                                        <div x-data="{ count1 : 0 , count2:0 , count3:0 , count4:0}">
+                                            <table class="min-w-full leading-normal">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Product Desc</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Total</th>
+                                                        <th class="text-center">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/product/img-1.png" alt="product-img" title="product-img" class="w-16">
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="truncate">
+                                                                <a href="products-detail.html">Arrow Orange Hoode</a>
+                                                            </h5>
+                                                            <p class="mb-0 text-muted">Color : <span class="font-semibold">Orange</span></p>
+                                                        </td>
+                                                        <td class="text-muted"> $ 240 </td>
+                                                        <td>
+                                                            <div class="relative w-36 mx-auto">
+                                                                <button @click="count1 > 0 && count1--" class="absolute left-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <input x-model="count1" type="number" value="1" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                                                <button @click=" count1 < 100 && count1++" class="absolute right-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-muted"> $ 480 </td>
+                                                        <td class="text-center">
+                                                            <a href="javascript:void(0);" class="text-danger">
+                                                                <i class="ri-delete-bin-5-fill text-[18px]"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/product/img-2.png" alt="product-img" title="product-img" class="w-16">
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="truncate">
+                                                                <a href="products-detail.html">Richlook Black Shirt</a>
+                                                            </h5>
+                                                            <p class="mb-0 text-muted">Color : <span class="font-semibold">Black</span></p>
+                                                        </td>
+                                                        <td class="text-muted"> $ 225 </td>
+                                                        <td>
+                                                            <div class="relative w-36 mx-auto">
+                                                                <button @click="count2 > 0 && count2--" class="absolute left-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <input x-model="count2" type="number" value="3" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                                                <button @click="count2 < 100 && count2++" class="absolute right-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-muted"> $ 225 </td>
+                                                        <td class="text-center">
+                                                            <a href="javascript:void(0);" class="text-danger">
+                                                                <i class="ri-delete-bin-5-fill text-[18px]"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/product/img-3.png" alt="product-img" title="product-img" class="w-16">
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="truncate">
+                                                                <a href="products-detail.html">Levi's Red Tshirt</a>
+                                                            </h5>
+                                                            <p class="mb-0 text-muted">Color : <span class="font-semibold">Red</span></p>
+                                                        </td>
+                                                        <td class="text-muted"> $ 152 </td>
+                                                        <td>
+                                                            <div class="relative w-36 mx-auto">
+                                                                <button @click="count3 > 0 && count3--" class="absolute left-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <input x-model="count3" type="number" value="2" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                                                <button @click="count3 < 100 && count3++" class="absolute right-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-muted"> $ 204 </td>
+                                                        <td class="text-center">
+                                                            <a href="javascript:void(0);" class="text-danger">
+                                                                <i class="ri-delete-bin-5-fill text-[18px]"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/product/img-4.png" alt="product-img" title="product-img" class="w-16">
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="truncate">
+                                                                <a href="products-detail.html">Blackberry Blue Shirt</a>
+                                                            </h5>
+                                                            <p class="mb-0 text-muted">Color : <span class="font-semibold">Blue</span></p>
+                                                        </td>
+                                                        <td class="text-muted"> $ 275 </td>
+                                                        <td>
+                                                            <div class="relative w-36 mx-auto">
+                                                                <button @click="count4 > 0 && count4--" class="absolute left-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <input x-model="count4" type="number" value="1" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                                                <button @click="count4 < 100 && count4++" class="absolute right-0 top-0 bottom-0 rounded bg-gray-200/50 dark:bg-dark p-1.5 border dark:border-darkborder text-center text-sm dark:text-white transition-all shadow-sm hover:shadow focus:shadow-none" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-muted"> $ 275 </td>
+                                                        <td class="text-center">
+                                                            <a href="javascript:void(0);" class="text-danger">
+                                                                <i class="ri-delete-bin-5-fill text-[18px]"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 col-span-12">
+                            <div class="bg-gray-200/50 border border-b-0 dark:border-darkborder rounded-t dark:bg-darkmuted/25 py-3 px-4">
+                                <h5 class="font-semibold">Order Summary</h5>
+                            </div>
+                            <div class="card rounded-t-none">
+                                <p class="mb-4">To take a trivial example, which of us ever undertakes laborious</p>
+                                <div>
+                                    <table class="min-w-full leading-normal">
+                                        <tbody>
+                                            <tr>
+                                                <td>Sub Total :</td>
+                                                <td class="text-right">$ 1,184</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Discount : </td>
+                                                <td class="text-right">- $ 154</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Shipping Charge :</td>
+                                                <td class="text-right">$ 25</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Estimated Tax : </td>
+                                                <td class="text-right">$ 18.20</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total :</th>
+                                                <td class="text-right">
+                                                    <span class="font-weight-bold">
+                                                        1,073.2&#x202C;
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="grid grid-cols-12 gap-4">
+                                        <div class="md:col-span-4 col-span-12">
+                                            <div class="flex items-center">
+                                                <div class="ltr:mr-3 rtl:ml-3">
+                                                    <span class="bg-gray-200/50 dark:bg-dark rounded-full px-2.5 py-2 text-purple text-2xl">
+                                                        <i class="ri-checkbox-circle-line"></i>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h5 class="text-lg mb-1">Free Shipping</h5>
+                                                    <p class="text-truncate text-muted mb-0">Sed ut perspiciatis unde</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="md:col-span-4 col-span-12">
+                                            <div class="flex items-center mt-4 md:mt-0">
+                                                <div class="ltr:mr-3 rtl:ml-3">
+                                                    <span class="bg-gray-200/50 dark:bg-dark rounded-full px-2.5 py-2 text-purple text-2xl">
+                                                        <i class="ri-exchange-line"></i>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h5 class="text-lg mb-1">Easy To Return</h5>
+                                                    <p class="text-truncate text-muted mb-0">Neque porro quisquam est</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="md:col-span-4 col-span-12">
+                                            <div class="flex items-center mt-4 md:mt-0">
+                                                <div class="ltr:mr-3 rtl:ml-3">
+                                                    <span class="bg-gray-200/50 dark:bg-dark rounded-full px-2.5 py-2 text-purple text-2xl">
+                                                        <i class="ri-money-dollar-circle-line"></i>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h5 class="text-lg mb-1">Cash on Delivery</h5>
+                                                    <p class="text-truncate text-muted mb-0">Ut enim ad minima quis</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

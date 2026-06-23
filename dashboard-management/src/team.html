@@ -1,0 +1,390 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Team" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Team" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 xl:col-span-4">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12">
+                                    <div class="card">
+                                        <div class="overflow-hidden profile-wid-bg rounded-top">
+                                            <div class="bg-overlay bg-primary">
+                                                <img src="assets/images/team.png" class="rounded-md" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="pt-4">
+                                            <div class="flex">
+                                                <div class="ltr:mr-3 rtl:ml-3">
+                                                    <div class="inline-flex items-center justify-center font-semibold uppercase rounded-full size-12 rounded-circle bg-light dark:bg-darkborder dark:text-light text-dark">
+                                                        <i class="ri-pencil-ruler-2-fill"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h5 class="text-lg">Designer</h5>
+                                                    <p class="text-muted"><i class="mr-1 align-bottom ri-group-fill text-success"></i>8 Members</p>
+                                                </div>
+                                                <div class="ltr:mr-3 rtl:ml-3">
+                                                    <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"> Join </a>
+                                                </div>
+                                                <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                    <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                            <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                            <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                        <li><a href="javascript:;">Weekly</a></li>
+                                                        <li><a href="javascript:;">Monthly</a></li>
+                                                        <li><a href="javascript:;">Yearly</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="flex justify-between">
+                                                <h4 class="mb-4 card-title">Group Info</h4>
+                                                <div x-data="{ dropdown: false}" class="dropdown">
+                                                    <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                            <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                            <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                        <li><a href="javascript:;">Weekly</a></li>
+                                                        <li><a href="javascript:;">Monthly</a></li>
+                                                        <li><a href="javascript:;">Yearly</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="flex">
+                                                <div class="ltr:mr-3 rtl:ml-3 avatar-sm">
+                                                    <div class="inline-flex items-center justify-center font-semibold uppercase rounded-full size-10 rounded-circle bg-light dark:bg-darkborder dark:text-light text-dark">
+                                                        <i class="ri-pencil-ruler-2-fill"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h5 class="text-[15px] font-semibold mb-1">Designer</h5>
+                                                    <p>8 Members</p>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div>
+                                                <ul class="flex flex-col divide-y divide-gray-200 dark:divide-darkborder">
+                                                    <li class="inline-flex items-center px-4 py-3 text-sm gap-x-2">
+                                                        <p class="mb-1" text-muted>Group Name</p>
+                                                        <h5 class="mb-0 font-semibold">Designer</h5>
+                                                    </li>
+                                                    <li class="inline-flex items-center px-4 py-3 text-sm gap-x-2">
+                                                        <p class="mb-1" text-muted>Total Members</p>
+                                                        <h5 class="mb-0 font-semibold">8</h5>
+                                                    </li>
+                                                    <li class="inline-flex items-center px-4 py-3 text-sm gap-x-2">
+                                                        <p class="mb-1" text-muted>Owner</p>
+                                                        <h5 class="mb-0 font-semibold"><a href="#">Michael White</a></h5>
+                                                    </li>
+                                                    <li class="inline-flex items-center px-4 py-3 text-sm gap-x-2">
+                                                        <p class="mb-1 text-muted">Created Date</p>
+                                                        <h5 class="mb-0 font-semibold">14/10/2024</h5>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 xl:col-span-8">
+                            <div>
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-1.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Michael White</h5>
+                                                    <p class="mb-0 text-muted">CEO / Founder</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-2.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Marilyn Bohannon</h5>
+                                                    <p class="mb-0 text-muted">Frontend Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-3.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Louisa Hamilton</h5>
+                                                    <p class="mb-0 text-muted">Full Stack Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-4.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Gene Sloan</h5>
+                                                    <p class="mb-0 text-muted">Backend Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-5.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">George Lent</h5>
+                                                    <p class="mb-0 text-muted">Frontend Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-6.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Jack Stewart</h5>
+                                                    <p class="mb-0 text-muted">Backend Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                                <div class="mb-3 card">
+                                    <div class="card-body">
+                                        <div class="flex items-center">
+                                            <div class="ltr:mr-3 rtl:ml-3">
+                                                <img src="assets/images/avatar-7.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                            </div>
+                                            <div class="flex-1">
+                                                <div>
+                                                    <h5 class="text-[15px] font-semibold mb-1">Terry Brown</h5>
+                                                    <p class="mb-0 text-muted">Developer</p>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <button class="px-3 py-1.5 rounded-md text-white shadow-lg border-purple bg-purple inline-block border"><i class="mr-1 align-middle ri-message-3-line"></i> Message</button>
+                                            </div>
+                                            <div x-data="{ dropdown: false}" class="ml-auto dropdown">
+                                                <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                        <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                        <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                                <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class="ltr:right-0 rtl:left-0 whitespace-nowrap">
+                                                    <li><a href="javascript:;">Weekly</a></li>
+                                                    <li><a href="javascript:;">Monthly</a></li>
+                                                    <li><a href="javascript:;">Yearly</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

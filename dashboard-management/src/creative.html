@@ -1,0 +1,58 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Creative Detached" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+<!-- Start Layout -->
+<div class="bg-[#f9fbfd] dark:bg-dark dark:text-darkmuted text-black">
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+               <!-- Start Content -->
+               <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Layout" sub-title="Creative Layout" }} 
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)] detache-card-area">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="gap-6 p-5 bg-white border rounded dark:bg-darklight dark:border-darkborder md:col-span-2 xl:col-span-2 border-slate-200">
+                            <h2 class="mb-4 text-base font-semibold text-black dark:text-white/80">Card Title</h2>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div>
+                                    <img src="assets/images/logo-dark.svg" class="mx-auto h-11 dark:hidden " alt="">
+                                    <img src="assets/images/logo-light.svg" class="hidden mx-auto h-11 dark:block" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+            {{> partials/footer }}
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

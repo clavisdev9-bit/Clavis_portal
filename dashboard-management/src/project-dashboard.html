@@ -1,0 +1,110 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Project " }}
+
+    {{> partials/head-css }}
+    <style>
+        #salesTable_length select {
+            width: 6vh;
+        }
+        
+        #salesTable {
+            width: 100% !important;
+        }
+    </style>
+</head>
+
+{{> partials/body }}
+<script src="assets/js/pages/authMiddleware.js"></script>
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+                    <div class="card">
+                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="shopping-bag" class="size-4"></i> Total Sales</p>
+                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100" id="total_sales">
+                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 6.7%</span>
+                        </h4>
+                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.7k</span> than last month</p>
+                    </div>
+                    <div class="card">
+                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="dollar-sign" class="size-4"></i> Earnings</p>
+                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$974.66M
+                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 14.6%</span>
+                        </h4>
+                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+$141k</span> than last month</p>
+                    </div>
+                    <div class="card">
+                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="activity" class="size-4"></i> Conversation Rate</p>
+                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">60%
+                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 7%</span>
+                        </h4>
+                        <p class="mt-2 text-muted"><span class="font-semibold text-success">2%</span> than last month</p>
+                    </div>
+                    <div class="card">
+                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="truck" class="size-4"></i> Average Order Value</p>
+                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$450
+                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 2.5%</span>
+                        </h4>
+                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.5k</span> than last month</p>
+                    </div>
+                    <div class="card">
+                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="stop-circle" class="size-4"></i> Total Deal</p>
+                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">5k
+                            <span class="p-1 text-sm leading-none rounded-md bg-danger/20 text-danger"><i class="ri-arrow-down-line"></i> 1.2%</span>
+                        </h4>
+                        <p class="mt-2 text-muted"><span class="font-semibold text-danger">548</span> than last month</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Sales Report</h2>
+                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
+                            </div>
+                            <div class="w-full overflow-x-auto">
+                                <table id="salesTable" class="display w-full"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/project-dashboard.js"></script>
+<script src="assets/js/pages/master_sales.js"></script>
+<script type="module" src="assets/js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+
+</body>
+
+</html>

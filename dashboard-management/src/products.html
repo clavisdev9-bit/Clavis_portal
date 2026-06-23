@@ -1,0 +1,474 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Product" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Product" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 md:col-span-3 sm:col-span-5">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12">
+                                    <div class="card">
+                                        <h5 class="mb-1">Filters</h5>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <div>
+                                            <p class="mb-4 text-muted">Cloths</p>
+                                            <ul>
+                                                <li class="my-1">
+                                                    <a href="#!"><i class="mr-1 ri-arrow-right-s-line"></i> T-shirts</a>
+                                                </li>
+                                                <li class="my-1">
+                                                    <a href="#!"><i class="mr-1 ri-arrow-right-s-line"></i> Shirts</a>
+                                                </li>
+                                                <li class="my-1">
+                                                    <a href="#!"><i class="mr-1 ri-arrow-right-s-line"></i> Jeans</a>
+                                                </li>
+                                                <li class="my-1">
+                                                    <a href="#!"><i class="mr-1 ri-arrow-right-s-line"></i> Hoodies</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <div>
+                                            <p class="text-muted">Size</p>
+                                            <ul>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="form-radio" checked="checked">
+                                                        <span>XS</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                        <span>S</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                        <span>M</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                        <span>L</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                        <span>XL</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                        <span>2XL</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <div>
+                                            <p class="text-muted">Colors</p>
+                                            <ul>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" name="radio-one" class="border-red-500 rounded-full form-checkbox checked:focus:bg-red-500 checked:hover:bg-red-500 checked:bg-red-500">
+                                                        <span>Red</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" name="radio-one" class="border-green-500 rounded-full form-checkbox checked:focus:bg-green-500 checked:hover:bg-green-500 checked:bg-green-500" checked="checked">
+                                                        <span>Green</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" name="radio-one" class="border-yellow-500 rounded-full form-checkbox checked:focus:bg-yellow-500 checked:hover:bg-yellow-500 checked:bg-yellow-500" checked="checked">
+                                                        <span>Yellow</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" name="radio-one" class="rounded-full form-checkbox border-zinc-500 checked:focus:bg-zinc-500 checked:hover:bg-zinc-500 checked:bg-zinc-500" checked="checked">
+                                                        <span>Gray</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" name="radio-one" class="rounded-full form-checkbox border-purple checked:focus:bg-purple-500 checked:hover:bg-purple-500 checked:bg-purple-500">
+                                                        <span>Purple</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <div>
+                                            <p class="text-muted">Discount</p>
+                                            <ul>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="form-radio" checked="checked">
+                                                        <span>50% or more</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="rounded-full form-radio">
+                                                        <span>40% or more</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="rounded-full form-radio">
+                                                        <span>30% or more</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="rounded-full form-radio">
+                                                        <span>20% or more</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="rounded-full form-radio">
+                                                        <span>10% or more</span>
+                                                    </label>
+                                                </li>
+                                                <li class="my-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="radio" name="Discount" class="rounded-full form-radio">
+                                                        <span>Less than 10%</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 md:col-span-9 sm:col-span-7">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <a href="#!" class="absolute right-0 px-2 py-1 text-xs text-white bg-red-500 rounded-md">
+                                                New
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-1.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Arrow Orange Hoode</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="mr-2">
+                                                    <h5 class="mb-0 font-semibold">$520</h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <a href="#!" class="absolute right-0 px-2 py-1 text-xs text-white bg-green-500 rounded-md">
+                                                50%
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-2.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Richlook Black Shirt</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="flex mr-2">
+                                                    <h5 class="mb-0 font-semibold">$499</h5>
+                                                    <h5 class="mb-0 font-semibold ms-2 text-muted"><del>$999</del></h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-3.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Levi's Red Tshirt</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="flex mr-2">
+                                                    <h5 class="mb-0 font-semibold">$499</h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-4.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Blackberry Blue Shirt</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="flex mr-2">
+                                                    <h5 class="mb-0 font-semibold">$999</h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <a href="#!" class="absolute right-0 px-2 py-1 text-xs text-white bg-red-500 rounded-md">
+                                                New
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-5.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Red Tape Black Hoode</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="flex mr-2">
+                                                    <h5 class="mb-0 font-semibold">$699</h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="col-span-12 xl:col-span-4 md:col-span-6 sm:col-span-12">
+                                    <div class="card">
+                                        <div class="relative">
+                                            <a href="#!" class="text-muted">
+                                                <i class="text-xl ri-heart-3-line"></i>
+                                            </a>
+                                            <a href="#!" class="absolute right-0 px-2 py-1 text-xs text-white bg-red-500 rounded-md">
+                                                New
+                                            </a>
+                                            <img class="rounded-md" src="assets/images/product/img-6.png" alt="" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="mt-4">
+                                                <a href="#!" class="font-semibold">Zodiac Sport Red Tshirt</a>
+                                            </div>
+                                            <div class="mt-2 text-muted">
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                                <i class="text-yellow-500 ri-star-fill"></i>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex flex-wrap items-center justify-between">
+                                                <div class="flex mr-2">
+                                                    <h5 class="mb-0 font-semibold">$399</h5>
+                                                </div>
+                                                <ul class="flex">
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md border border-black/20 dark:border-darkborder text-muted shadow-lg me-2 inline-block">
+                                                            <i class="ri-shopping-cart-line"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#!" class="px-3 py-1.5 rounded-md text-white shadow-lg bg-purple border border-purple inline-block">
+                                                            But Now
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Orders Details" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Orders Details" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-12 col-span-12">
+                            <div class="card text-center">
+                                <ul class="flex-wrap sm:flex">
+                                    <li class="flex-grow py-3">
+                                        <div class="inline-flex items-center justify-center font-semibold uppercase mb-3 rounded-full size-10 rounded-circle bg-purple text-light">
+                                            01
+                                        </div>
+                                        <h6 class="font-semibold mb-2">Order Placed</h6>
+                                        <span class="text-muted">20 Sep 2024, 03:00PM</span>
+                                    </li>
+                                    <li class="flex-grow py-3">
+                                        <div class="inline-flex items-center justify-center font-semibold uppercase mb-3 rounded-full size-10 rounded-circle bg-purple text-light">
+                                            02
+                                        </div>
+                                        <h6 class="font-semibold mb-2">Packed</h6>
+                                        <span class="text-muted">20 Sep 2024, 03:00PM</span>
+                                    </li>
+                                    <li class="flex-grow py-3">
+                                        <div class="inline-flex items-center justify-center font-semibold uppercase mb-3 rounded-full size-10 rounded-circle bg-light dark:bg-darkborder dark:text-light text-dark">
+                                            03
+                                        </div>
+                                        <h6 class="font-semibold mb-2">Shipped</h6>
+                                        <span class="text-muted">21 Sep 2024, 10:50AM</span>
+                                    </li>
+                                    <li class="flex-grow py-3">
+                                        <div class="inline-flex items-center justify-center font-semibold uppercase mb-3 rounded-full size-10 rounded-circle bg-light dark:bg-darkborder dark:text-light text-dark">
+                                            04
+                                        </div>
+                                        <h6 class="font-semibold mb-2">Delivered</h6>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-12 col-span-12">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="xl:col-span-8 col-span-12">
+                                    <div class="overflow-x-auto">
+                                        <div class="inline-block min-w-full overflow-hidden">
+                                            <table class="min-w-full leading-normal mb-0 border dark:border-darkborder">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th>Product name</th>
+                                                        <th>Product</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Arrow Orange Hoode</th>
+                                                        <td><img src="assets/images/product/img-1.png" class="w-9" alt="product-img"></td>
+                                                        <td>1</td>
+                                                        <td>$240</td>
+                                                        <td>$240</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Richlook Black Shirt</th>
+                                                        <td><img src="assets/images/product/img-2.png" class="w-9" alt="product-img"></td>
+                                                        <td>2</td>
+                                                        <td>$225</td>
+                                                        <td>$450</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Levi's Red Tshirt</th>
+                                                        <td><img src="assets/images/product/img-3.png" class="w-9" alt="product-img"></td>
+                                                        <td>1</td>
+                                                        <td>$138</td>
+                                                        <td>$138</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 col-span-12">
+                                    <div class="overflow-x-auto">
+                                        <div class="inline-block min-w-full overflow-hidden">
+                                            <table class="min-w-full leading-normal mb-0 border dark:border-darkborder">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th colspan="2">Order summary</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Sub Total :</th>
+                                                        <td>$828</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Shipping Charge :</th>
+                                                        <td>$24</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Estimated Tax :</th>
+                                                        <td>$12</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Total :</th>
+                                                        <td>$864</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-12 col-span-12">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="xl:col-span-4 col-span-12">
+                                    <div class="card">
+                                        <h4 class="mb-3 text-lg">Shipping Information</h4>
+                                        <div class="overflow-x-auto">
+                                            <div class="inline-block min-w-full overflow-hidden">
+                                                <table class="min-w-full leading-normal">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <h5 class="text-lg mb-0">Mark McKee</h5>
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Address:</th>
+                                                            <td>730 644 Clarine Crossing, Waelchimouth, OR 20122</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Phone :</th>
+                                                            <td>(123) 456-7890</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Mobile :</th>
+                                                            <td>(+01) 12345 67890</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 col-span-12">
+                                    <div class="card">
+                                        <h4 class="mb-3 text-lg">Billing Information</h4>
+                                        <div class="overflow-x-auto">
+                                            <div class="inline-block min-w-full overflow-hidden">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Payment Type:</th>
+                                                            <td>Credit Card</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Provider :</th>
+                                                            <td>Visa ending in 2851</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valid Date :</th>
+                                                            <td>08/2024</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>CVV :</th>
+                                                            <td>xxx</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 col-span-12">
+                                    <div class="card">
+                                        <h4 class="mb-4 text-lg">Delivery Info</h4>
+                                        <div class="text-center">
+                                            <div class="my-3">
+                                                <i class="ri-truck-line text-6xl text-muted"></i>
+                                            </div>
+                                            <h5 class="text-lg"><b>UPS Delivery</b></h5>
+                                            <div class="mt-4">
+                                                <p class="mb-1 text-muted"><span class="font-semibold">Order ID :</span> xxxx496</p>
+                                                <p class="text-muted"><span class="font-semibold">Payment Mode :</span> Credit Card</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

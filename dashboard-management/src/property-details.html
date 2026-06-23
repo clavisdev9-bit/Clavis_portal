@@ -1,0 +1,376 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Property Details Dashboard" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Property Details" }}
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-8 col-span-12">
+                            <div class="grid grid-cols-12 gap-4 card">
+                                <div class="xl:col-span-5 col-span-12">
+                                    <div class="swiper property-swiper">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide"><img src="assets/images/property/img-1.jpg" class="rounded-md" alt=""></div>
+                                            <div class="swiper-slide"><img src="assets/images/property/img-2.jpg" class="rounded-md" alt=""></div>
+                                            <div class="swiper-slide"><img src="assets/images/property/img-3.jpg" class="rounded-md" alt=""></div>
+                                            <div class="swiper-slide"><img src="assets/images/property/img-4.jpg" class="rounded-md" alt=""></div>
+                                        </div>
+                                        <div class="swiper-button-next dark:after:bg-slate-800 after:bg-slate-100 after:rounded-2xl after:p-4">
+                                            <i class="ri-arrow-right-s-line absolute text-2xl"></i>
+                                        </div>
+                                        <div class="swiper-button-prev dark:after:bg-slate-800 after:bg-slate-100 after:rounded-2xl after:p-4">
+                                            <i class="ri-arrow-left-s-line absolute text-2xl"></i>
+                                        </div>
+                                        <div class="swiper-pagination"></div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-7 col-span-12">
+                                    <div class="">
+                                        <h4 class="text-lg font-semibold">Snap Up This Great Investment</h4>
+                                        <p class="text-muted">Lorem ipsum odor amet, consectetuer adipiscing elit. Aliquet magnis vel vestibulum justo donec adipiscing egestas
+                                            aptent scelerisque. Mauris pulvinar lobortis felis dapibus vehicula nullam molestie posuere.</p>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <div class="inline-block min-w-full overflow-hidden">
+                                            <table class="min-w-full leading-normal">
+                                                <tbody>
+                                                    <tr class="border-0">
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-price-tag-3-line text-lg"></i>
+                                                                <span>Price</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">$52000</h4>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-camera-lens-line text-lg"></i>
+                                                                <span>Media Charges</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">$120</h4>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-money-dollar-circle-line text-lg"></i>
+                                                                <span>Potential Cashflow</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">$52000</h4>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-stack-line text-lg"></i>
+                                                                <span>Vacany Rate</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">0.6%</h4>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-bar-chart-box-line text-lg"></i>
+                                                                <span>Potential Gross Yield</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">5.2%</h4>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted">
+                                                                <i class="ri-price-tag-3-line text-lg"></i>
+                                                                <span>Listed</span>
+                                                            </div>
+                                                            <h4 class="text-lg font-semibold">26 Days Ago</h4>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <a href="#!" class="btn bg-purple text-white border-purple">Contact</a>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end grid -->
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 col-span-12">
+                            <div class="card">
+                                <div class="responsive-map">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.7806761080233!2d-93.29138368446431!3d44.96844997909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32b6ee2c87c91%3A0xc20dff2748d2bd92!2sWalker+Art+Center!5e0!3m2!1sen!2sus!4v1514524647889" width="100%" height="290" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-8 col-span-12">
+                            <div class="card">
+                                <div class="pb-4 border-b dark:border-darkborder">
+                                    <p class="text-[16px] mb-1">4BHK Row house for Sale</p>
+                                    <p class="text-muted"> <i class="ri-map-pin-line"></i> 245 E 20th St, New York, NY 201609</p>
+                                </div>
+                                <p class="py-4 text-muted">
+                                    If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual
+                                    languages.it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is. The
+                                    European languages are members of the same family. The new common language will be more simple and regular than the existing
+                                    European languages.
+                                </p>
+                                <p class="pb-4 text-muted">
+                                    Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in
+                                    their grammar, their pronunciation and their most common words.
+                                </p>
+                                <a href="#!" class="text-purple">Show more <i class="ri-arrow-right-s-line"></i></a>
+                                <hr class="my-4 dark:border-darkborder">
+                                <div>
+                                    <p class="text-[16px]">General Amenities</p>
+                                </div>
+
+                                <div class="grid grid-cols-12 gap-4 mt-4">
+                                    <div class="sm:col-span-4 col-span-6">
+                                        <ul>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Swimming pool</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Air conditioning</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Internet</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Radio</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Balcony</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Roof terrace</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Cable TV</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Electricity</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="sm:col-span-4 col-span-6">
+                                        <ul>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Terrace</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Cofee pot</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Oven</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Towelwes</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Computer</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Parquet</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="sm:col-span-4 col-span-6">
+                                        <ul>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Dishwasher</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Near Green Zone</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Near Church</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Near Hospital</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Near School</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Near Shop</span>
+                                            </li>
+                                            <li>
+                                                <i class="ri-verified-badge-line text-lg text-success me-1"></i>
+                                                <span class="text-muted">Natural Gas</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 col-span-12">
+                            <div class="card">
+                                <table class="min-w-full leading-normal">
+                                    <tbody class="border dark:border-darkborder">
+                                        <tr>
+                                            <td>
+                                                <span>Price:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">$390,000</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Contract type:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">For Sale</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Bathrooms:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">4</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Square ft:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">850</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Garage Spaces:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">1</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Land Size:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">700 m²</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Floors:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">3</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Listed for:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">5 days</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Available:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">Immediately</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Pets:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">Allowed</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Bedrooms:</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">5</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script src="assets/libs/swiper/swiper-bundle.min.js"></script>
+
+<script src="assets/js/pages/property-details.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="ST Corp dahboard  - development by: clavisdev" }}
+
+    {{> partials/head-css }}
+
+    <style>
+        /* Pastikan elemen peta punya tinggi, kalau tidak peta tidak akan terlihat */
+        html,body { height: 100%; margin: 0; }
+        #map { height: 56.3vh; width: 100%; }
+        #card-sales { height: 62vh; width: 100%; overflow-y: auto;}
+        /* kecilkan popup font jika perlu */
+        .leaflet-popup-content { font-size: 14px; }
+        .leaflet-container {
+            z-index: 0 !important;
+        }
+        .custom-marker {
+            background: none;
+            border: none;
+        }
+
+        .pin-wrapper {
+            width: 50px;
+            height: 60px;
+            background: url('/assets/images/location_2.png') no-repeat center;
+            background-size: contain;
+            position: relative;
+        }
+
+        .pin-wrapper img {
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .pin-wrapper-close {
+            width: 50px;
+            height: 60px;
+            background: url('/assets/images/location.png') no-repeat center;
+            background-size: contain;
+            position: relative;
+        }
+
+        .pin-wrapper-close img {
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        #salesTable {
+            width: 100% !important;
+        }
+    </style>
+</head>
+
+{{> partials/body }}
+<script src="assets/js/pages/authMiddleware.js"></script>
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative space-y-4 detached-content">
+                <iframe src="https://crm.clavisdev.cloud/maps/tracking/sales" height="100%" width="100%" title="description"></iframe>
+                <!-- <div class="flex flex-col min-h-[calc(100vh-212px)] card p-3 shadow-lg ">
+                    <div class="grid-rows-2">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="flex-1 p-4 text-center">
+                                <div class="grid grid-rows-[auto_1fr] gap-4">
+                                    <div class="flex flex-col md:flex-row gap-2">
+                                        <div class="relative flex-1">
+                                            <span class="absolute left-3 top-2.5 text-gray-400">🔍</span>
+                                            <input type="text" id="searchSales" placeholder="Search Sales" class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none"/>
+                                        </div>
+                                        <input type="date" id="filterDate" class="px-4 py-2 mx-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none"/>
+                                        <select id="filterStatus" class="px-2 py-2 mx-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none md:w-[170px]">
+                                            <option value="">Semua Status</option>
+                                            <option value="SELESAI">Selesai</option>
+                                            <option value="SEDANG_CHECK_IN">Check In</option>
+                                            <option value="VISIT">Visit</option>
+                                        </select>
+                                    </div>
+                                    <div id="map" class="relative z-0 w-full h-[400px]"></div>
+                                </div>
+                            </div>
+                            <div class="basis-auto p-3">
+                                <div class="flex-row gap-4 lg:w-[375px]">
+                                    <div id="card-sales" class="relative pt-0 mt-1">
+                                        <div id="card-content"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Sales Activity List</h2>
+                                    </div>
+                                    <div class="w-full overflow-x-auto">
+                                        <table id="salesTable" class="display nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Time</th>
+                                                    <th>Name</th>
+                                                    <th>Detail</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- End grid -->
+                </div>
+                <!-- end all card -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/real-estate.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="assets/js/pages/maps.js"></script>
+<script src="assets/js/pages/card-sales.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/pages/sales_table.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+</body>
+
+</html>

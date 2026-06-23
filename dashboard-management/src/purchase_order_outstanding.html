@@ -1,0 +1,94 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Blog" }}
+
+    {{> partials/head-css }}
+    <style>
+        .wrap-col {
+            white-space: normal !important;
+            word-break: break-word;
+        }
+
+        /* cursor klik */
+        .clickable-row {
+            cursor: pointer;
+        }
+
+        .clickable-row:hover {
+            background-color: #458fff !important;
+        }
+        .selected-row {
+            background-color: #458fff !important;
+        }
+    </style>
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                            <div class="flex gap-3 mb-2">
+                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Request For Quotation</h2>
+                                <button id="exportExcel" class="text-right bg-green-500 py-2 px-3 font-bold text-white rounded-lg"><i class="ri-file-excel-line text-lg"></i> Export excel</button>
+                            </div>
+                            <div id="purchaseOrderOutstandingTable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script  src="assets/js/pages/apex.init.js"></script>
+<script src="assets/libs/jquery/jquery.js"></script>
+
+<script src="assets/libs/highcharts/highcharts.js"></script>
+
+<script src="assets/libs/highcharts/modules/accessibility.js"></script>
+
+<script src="assets/js/pages/blog.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+<script type="text/babel" src="assets/js/pages/purchase_order_outstanding.jsx"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.bundle.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+
+</body>
+
+</html>

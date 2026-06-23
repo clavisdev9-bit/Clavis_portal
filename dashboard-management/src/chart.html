@@ -1,0 +1,89 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Chart" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+
+            {{> partials/topbar }}
+
+               <!-- Start Content -->
+               <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Chart" }}
+
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Line Chart</h2>
+                            <div id="linechart" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Area Chart</h2>
+                            <div id="areachart" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Bar Chart</h2>
+                            <div id="barchart" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Simple Bar</h2>
+                            <div id="simplebarchart" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Bar Chart</h2>
+                            <div id="barchartcenter" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Spline Area Charts</h2>
+                            <div id="apex_area1" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Donut</h2>
+                            <div id="basicbonut" dir="ltr"></div>
+                        </div>
+                        <div class="p-5 bg-white border rounded border-slate-200 dark:bg-darklight dark:border-darkborder">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Doughnut chart</h2>
+                            <div id="doughnutchart" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                
+            {{> partials/footer }}
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script  src="assets/libs/apexcharts/apexcharts.js"></script>
+<script  src="assets/js/pages/apex.init.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+
+</html>

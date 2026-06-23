@@ -1,0 +1,485 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="CRM" }}
+
+    {{> partials/head-css }}
+    <style>
+        body { font-family: Arial;}
+        textarea { width: 100%; height: 250px; }
+        img { max-width: 300px; margin-bottom: 10px; }
+        tr.selected {
+            background-color: #bfdbfe !important; /* blue-100 */
+        }
+    </style>
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                <!-- Start All Card -->
+                <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                    <div class="flex gap-6">
+                        <div class="w-1/3">
+                            <input type="file" id="file" accept="image/*" class="block mb-3">
+                            <img id="preview" class="hidden max-w-120 border rounded mt-2">
+                            <button id="scanBtn" class="bg-blue-500 text-white px-4 py-2 rounded mt-3 hidden flex items-center justify-center gap-2 min-w-[150px]" onclick="scan()">
+                                <svg id="scanSpinner" class="hidden w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"></path>
+                                </svg>
+                                <span id="scanText" class="whitespace-nowrap">Scan OCR</span>
+                            </button>
+                        </div>
+                        <!-- KANAN: FORM -->
+                        <div class="w-2/3 space-y-4 pt-10">
+                            <div class="grid grid-cols-4 items-start gap-3">
+                                <label for="Toko" class="text-left font-medium">Nama Toko</label>
+
+                                <div class="col-span-2">
+                                    <input type="text" id="Toko" class="border rounded px-2 py-1 w-full" disabled>
+                                    <p id="error-toko" class="text-red-500 text-sm hidden">Nama toko harus terisi</p>
+                                </div>
+                            </div>
+
+                            <!-- Date -->
+                            <div class="grid grid-cols-4 items-start gap-3">
+                                <label for="Date" class="text-left font-medium">Date</label>
+
+                                <div class="col-span-2">
+                                    <input type="date" id="Date" class="border rounded px-2 py-1 w-full" disabled>
+                                    <p id="error-date" class="text-red-500 text-sm hidden">Date harus terisi</p>
+                                </div>
+                            </div>
+
+                            <!-- Note -->
+                            <div class="grid grid-cols-4 items-start gap-3">
+                                <label for="Note" class="text-left font-medium pt-2">Note</label>
+
+                                <div class="col-span-2">
+                                    <textarea id="Note" rows="4" class="border rounded px-2 py-1 w-full" disabled></textarea>
+                                    <p id="error-note" class="text-red-500 text-sm hidden">Note harus terisi</p>
+                                </div>
+                            </div>
+
+                            <!-- Total -->
+                            <div class="grid grid-cols-4 items-start">
+                                <label for="Total" class="text-left font-medium">Total</label>
+                                <div class="col-span-2">
+                                    <input type="text" id="Total" class="border rounded px-2 py-1 w-full" disabled>
+                                    <p id="error-total" class="text-red-500 text-sm hidden">Total harus terisi</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-4 items-center gap-3">
+                                <label for="Total" class="text-right font-medium"></label>
+                                <button id="submitButton" class="bg-blue-500 text-white px-4 py-2 rounded mt-3 hidden flex items-center justify-center gap-2 min-w-[150px]">
+                                    <svg id="submitSpinner" class="hidden w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"></path>
+                                    </svg>
+                                    <span id="submitText" class="whitespace-nowrap">Submit</span>
+                                </button>
+                                <button id="clearButton" class="bg-gray-400 text-white px-4 py-2 rounded mt-3 flex items-center justify-center min-w-[150px]">
+                                    Clear Form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pre hidden id="result"></pre>
+                <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">List</h2>
+                        <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
+                    </div>
+                    <div class="overflow-auto">
+                        <table id="productTable" class="min-w-[640px] w-full">
+                        </table>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+                        <div class="card">
+                            <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="dollar-sign" class="size-4"></i> Earnings</p>
+                            <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$974.66M
+                                <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 14.6%</span>
+                            </h4>
+                            <p class="mt-2 text-muted"><span class="font-semibold text-success">+$141k</span> than last month</p>
+                        </div>
+                        <div class="card">
+                            <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="activity" class="size-4"></i> Conversation Rate</p>
+                            <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">60%
+                                <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 7%</span>
+                            </h4>
+                            <p class="mt-2 text-muted"><span class="font-semibold text-success">2%</span> than last month</p>
+                        </div>
+                        <div class="card">
+                            <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="truck" class="size-4"></i> Average Order Value</p>
+                            <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$450
+                                <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 2.5%</span>
+                            </h4>
+                            <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.5k</span> than last month</p>
+                        </div>
+                        <div class="card">
+                            <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="stop-circle" class="size-4"></i> Total Deal</p>
+                            <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">5k
+                                <span class="p-1 text-sm leading-none rounded-md bg-danger/20 text-danger"><i class="ri-arrow-down-line"></i> 1.2%</span>
+                            </h4>
+                            <p class="mt-2 text-muted"><span class="font-semibold text-danger">548</span> than last month</p>
+                        </div>
+                        <div class="card">
+                            <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="shopping-bag" class="size-4"></i> Total Sales</p>
+                            <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">48k
+                                <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 6.7%</span>
+                            </h4>
+                            <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.7k</span> than last month</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 card xl:col-span-3">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Top Traffic by Source</h2>
+                            <div class="grid grid-cols-1 gap-3">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center justify-center text-lg rounded size-10 text-purple bg-purple/20">
+                                            <i class="ri-chrome-line"></i>
+                                        </span>
+                                        <div>
+                                            <p class="dark:text-white">Chrome</p>
+                                            <p class="text-muted">Top Browser</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="relative w-full h-1 bg-black/10 dark:bg-darkborder rounded-2xl">
+                                            <div class="bg-purple h-full w-[56%] rounded-2xl"></div>
+                                        </div>
+                                        <p class="text-purple text-[15px] leading-[22px] font-medium flex-none">
+                                            56%
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center justify-center text-lg rounded size-10 text-danger bg-danger/20">
+                                            <i class="ri-firefox-line"></i>
+                                        </span>
+                                        <div>
+                                            <p class="dark:text-white">Firefox</p>
+                                            <p class="text-muted">Top Browser</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="relative w-full h-1 bg-black/10 dark:bg-darkborder rounded-2xl">
+                                            <div class="bg-danger h-full w-[65%] rounded-2xl"></div>
+                                        </div>
+                                        <p class="text-danger text-[15px] leading-[22px] font-medium flex-none">
+                                            65%
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center justify-center text-lg text-black rounded size-10 dark:text-white bg-black/20 dark:bg-white/10">
+                                            <i class="ri-safari-line"></i>
+                                        </span>
+                                        <div>
+                                            <p class="dark:text-white">Safari</p>
+                                            <p class="text-muted">Top Browser</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="relative w-full h-1 bg-black/10 dark:bg-darkborder rounded-2xl">
+                                            <div class="bg-black dark:bg-white h-full w-[86%] rounded-2xl"></div>
+                                        </div>
+                                        <p class="text-black dark:text-white text-[15px] leading-[22px] font-medium flex-none">
+                                            86%
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center justify-center text-lg text-pink-500 rounded size-10 bg-pink-500/20">
+                                            <i class="ri-instagram-line"></i>
+                                        </span>
+                                        <div>
+                                            <p class="dark:text-white">Instagram</p>
+                                            <p class="text-muted">Top Browser</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="relative w-full h-1 bg-black/10 dark:bg-darkborder rounded-2xl">
+                                            <div class="bg-pink-500 h-full w-[50%] rounded-2xl"></div>
+                                        </div>
+                                        <p class="text-pink-500 text-[15px] leading-[22px] font-medium flex-none">
+                                            50%
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center justify-center text-lg rounded size-10 text-info bg-info/20">
+                                            <i class="ri-edge-new-line"></i>
+                                        </span>
+                                        <div>
+                                            <p class="dark:text-white">Edge</p>
+                                            <p class="text-muted">Top Browser</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="relative w-full h-1 bg-black/10 dark:bg-darkborder rounded-2xl">
+                                            <div class="bg-info h-full w-[40%] rounded-2xl"></div>
+                                        </div>
+                                        <p class="text-info text-[15px] leading-[22px] font-medium flex-none">
+                                            40%
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 gap-6 card xl:col-span-6">
+                            <div class="flex items-center justify-between gap-4 mb-4">
+                                <h2 class="text-base font-semibold text-slate-800 dark:text-slate-100">Customer Activities</h2>
+                                <div>
+                                    <div x-data="{ dropdown: false}" class="ltr:ml-auto rtl:mr-auto dropdown">
+                                        <a href="#!" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                            </svg>
+                                        </a>
+                                        <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class=" whitespace-nowrap ltr:right-0 rtl:left-0">
+                                            <li><a href="#!">Weekly</a></li>
+                                            <li><a href="#!">Monthly</a></li>
+                                            <li><a href="#!">Yearly</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 divide-x md:grid-cols-4 divide-slate-200 dark:divide-darkborder divide-dashed rtl:divide-x-reverse">
+                                <div class="px-4 ltr:first:pl-0 rtl:first:pr-0">
+                                    <h6 class="text-base font-semibold text-slate-800 dark:text-slate-100">1541</h6>
+                                    <p>Visit Customer</p>
+                                </div>
+                                <div class="px-4 ltr:first:pl-0 rtl:first:pr-0">
+                                    <h6 class="text-base font-semibold text-slate-800 dark:text-slate-100">362</h6>
+                                    <p>Add to Cart</p>
+                                </div>
+                                <div class="px-4 ltr:first:pl-0 rtl:first:pr-0">
+                                    <h6 class="text-base font-semibold text-slate-800 dark:text-slate-100">94</h6>
+                                    <p>Check Out</p>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="customerActivitiesChart" dir="ltr" class="!min-h-[auto]"></div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 card xl:col-span-3">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h2 class="text-base font-semibold capitalize grow text-slate-800 dark:text-slate-100">Activities</h2>
+                                <a href="#!" class="transition-all hover:text-purple">View All <i class="align-middle ri-arrow-right-line"></i></a>
+                            </div>
+                            <div id="salesChart" dir="ltr"></div>
+                            <div class="mt-4 space-y-3">
+                                <div class="flex items-center gap-3 p-3 border border-dashed shadow-none card">
+                                    <img src="assets/images/chatgpt.png" alt="" class="size-7">
+                                    <div>
+                                        <h5 class="text-slate-800 dark:text-slate-100">ChatGTP</h5>
+                                        <p class="text-muted dark:text-darkmuted">2.2% vs last year</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 border border-dashed shadow-none card">
+                                    <img src="assets/images/blogger.png" alt="" class="size-7">
+                                    <div>
+                                        <h5 class="text-slate-800 dark:text-slate-100">Blogger</h5>
+                                        <p class="text-muted dark:text-darkmuted">1.5% vs last year</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 border border-dashed shadow-none card">
+                                    <img src="assets/images/invision.png" alt="" class="size-7">
+                                    <div>
+                                        <h5 class="text-slate-800 dark:text-slate-100">Invision</h5>
+                                        <p class="text-muted dark:text-darkmuted">1.9% vs last year</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Top Performing Pages</h2>
+                            <div class="overflow-auto">
+                                <table class="min-w-[640px] w-full">
+                                    <thead>
+                                        <tr class="ltr:text-left rtl:text-right">
+                                            <th>Page Name</th>
+                                            <th>Clicks</th>
+                                            <th>Sessions</th>
+                                            <th>% Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-muted">
+                                            <td>http://sliced.com/Index.html</td>
+                                            <td>55</td>
+                                            <td>2952</td>
+                                            <td>27% <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">3.8%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>http://google.com</td>
+                                            <td>229</td>
+                                            <td>2392</td>
+                                            <td>65% <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">7.9%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>http://facebook.com/Index.html</td>
+                                            <td>12</td>
+                                            <td>2792</td>
+                                            <td>37% <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">19.8%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>http://twitter.com</td>
+                                            <td>239</td>
+                                            <td>6534</td>
+                                            <td>74% <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">23.3%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>http://github.com/Index.html</td>
+                                            <td>53</td>
+                                            <td>3434</td>
+                                            <td>71% <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">46.2%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>http://instagram.com</td>
+                                            <td>65</td>
+                                            <td>123</td>
+                                            <td>69% <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">6.89%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Users by Countries</h2>
+                            <div class="overflow-auto">
+                                <table class="min-w-[640px] w-full">
+                                    <thead>
+                                        <tr class="ltr:text-left rtl:text-right">
+                                            <th>Countries Name</th>
+                                            <th>Device</th>
+                                            <th>Age</th>
+                                            <th>Sessions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-muted">
+                                            <td>Ireland</td>
+                                            <td>Desktop</td>
+                                            <td>18</td>
+                                            <td>2.3K <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">3.8%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>United States</td>
+                                            <td>Mobile</td>
+                                            <td>24 - 36</td>
+                                            <td>879 <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">7.9%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>Germany</td>
+                                            <td>Tablet</td>
+                                            <td>50</td>
+                                            <td>340 <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">19.8%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>United Kingdom</td>
+                                            <td>Desktop</td>
+                                            <td>24 - 36</td>
+                                            <td>5.4K <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">23.3%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>India</td>
+                                            <td>Tablet</td>
+                                            <td>18</td>
+                                            <td>1.3K <span class="px-1 text-xs font-bold rounded bg-success/10 text-success">46.2%</span></td>
+                                        </tr>
+                                        <tr class="text-muted">
+                                            <td>Singapore</td>
+                                            <td>Mobile</td>
+                                            <td>18 - 24</td>
+                                            <td>699 <span class="px-1 text-xs font-bold rounded bg-danger/10 text-danger">6.89%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-[300px] text-center">
+        <h2 class="text-lg font-bold text-green-600 mb-2">Success</h2>
+        <p class="text-gray-700 mb-4" id="textSuccess"></p>
+        <button onclick="closeSuccessModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            OK
+        </button>
+    </div>
+</div>
+<div id="imageModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <img id="modalImage" class="max-w-[90%] max-h-[90%] rounded">
+</div>
+<div id="errorModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    <div class="bg-white pt-0 pb-3 rounded-lg shadow-lg w-[300px] text-center">
+        <header class="bg-danger">
+            <h2 class="text-lg font-bold text-white mb-2 py-1 rounded">Failed</h2>
+        </header>
+        <p class="text-gray-700 mb-4 whitespace-pre-line" id="textError"></p>
+        <button onclick="closeErrorModal()" class="bg-white text-danger px-4 py-2 rounded hover:bg-gray-200 border border-red-700">
+            OK
+        </button>
+    </div>
+</div>
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/crm-dashboard.init.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    
+</script>
+
+<script src="assets/js/pages/master_struk.js"></script>
+</body>
+
+</html>

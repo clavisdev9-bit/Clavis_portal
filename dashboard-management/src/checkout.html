@@ -1,0 +1,287 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Checkout" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Checkout" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-8 col-span-12">
+                            <div class="card">
+                                <div x-data="{tab: 1}">
+                                    <div class="flex flex-wrap w-full bg-gray-50 dark:bg-dark rounded-md border dark:border-darkborder">
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 1.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple" :class="{'bg-purple text-light': tab === 1, 'transform': tab !== 1}">1</span>
+                                            <span class="sm:block hidden">Biling Info</span>
+                                        </a>
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 2.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple" :class="{'bg-purple text-light': tab === 2, 'transform': tab !== 2}" @click.prevent="tab = 2">2</span>
+                                            <span class="sm:block hidden">Shipping Info</span>
+                                        </a>
+                                        <a class="flex-1 p-2 text-sm flex items-center sm:justify-start justify-center" href="#" @click.prevent="tab = 3.">
+                                            <span class="py-2 px-3.5 rounded-full me-2 border-2 border-purple" :class="{'bg-purple text-light': tab === 3, 'transform': tab !== 3}" @click.prevent="tab = 3">3</span>
+                                            <span class="sm:block hidden">Payment Info</span>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <div class="space-y-6" x-show="tab === 1">
+                                            <h6 class="mt-4 text-lg">Biling information</h6>
+                                            <span class="text-muted">If several languages coalesce, the grammar of the resulting</span>
+                                            <form>
+                                                <div class="grid gap-6 mb-6 md:grid-cols-3">
+                                                    <div>
+                                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label>
+                                                        <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="First name" required />
+                                                    </div>
+                                                    <div>
+                                                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                                                        <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email address" required />
+                                                    </div>
+                                                    <div>
+                                                        <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number</label>
+                                                        <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Phone number" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block mb-6">
+                                                        <span class="block mb-2 text-sm text-gray-900 dark:text-white">Address</span>
+                                                        <input name="address1" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Address" required />
+                                                    </label>
+                                                </div>
+                                                <div class="grid gap-6 mb-6 md:grid-cols-3">
+                                                    <div>
+                                                        <form>
+                                                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
+                                                            <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                                <option selected>Afghanistan</option>
+                                                                <option value="US">United States</option>
+                                                                <option value="CA">India</option>
+                                                                <option value="FR">France</option>
+                                                                <option value="DE">Germany</option>
+                                                            </select>
+                                                        </form>
+                                                    </div>
+                                                    <div>
+                                                        <form>
+                                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City Name</label>
+                                                            <input id="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="City Name">
+                                                        </form>
+                                                    </div>
+                                                    <div>
+                                                        <form>
+                                                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pin Code</label>
+                                                            <input id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pin Code">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                                            </form>
+                                        </div>
+                                        <div class="space-y-6" x-show="tab === 2">
+                                            <h6 class="mt-4 text-lg">Shipping information</h6>
+                                            <span class="text-muted">It will be as simple as occidental in fact</span>
+                                            <div class="grid grid-cols-1 gap-4 lg:grid-cols-1 2xl:grid-cols-3 mt-4">
+                                                <div class="card border rounded">
+                                                    <div class="card-body">
+                                                        <a href="#" class="float-right ml-1 text-purple">Edit</a>
+                                                        <h5 class="mb-4 font-semibold">House Address 1</h5>
+                                                        <h5 class="font-semibold mb-2">Mark McKee</h5>
+                                                        <p class="mb-1 text-muted">730 644 Clarine Crossing, Waelchimouth, OR 20122</p>
+                                                        <p class="mb-0 text-muted">Mo. 912-345-6789</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card border rounded">
+                                                    <div class="card-body">
+                                                        <a href="#" class="float-right ml-1 text-purple">Edit</a>
+                                                        <h5 class="mb-4 font-semibold">Office Address 2</h5>
+                                                        <h5 class="font-semibold mb-2">Mark McKee</h5>
+                                                        <p class="mb-1 text-muted">730 644 Clarine Crossing, Waelchimouth, OR 20122</p>
+                                                        <p class="mb-0 text-muted">Mo. 912-345-6789</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card border rounded relative">
+                                                    <div class="card-body">
+                                                        <h6 class="mb-4 font-semibold">Add Address</h6>
+                                                        <div class="flex justify-center mt-10">
+                                                            <a href="" class="inline-flex py-1.5 px-2.5 rounded-full border dark:border-darkborder">
+                                                                <i class="ri-add-line"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <button type="previous" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previous</button>
+                                                <button type="next" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Next</button>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-6" x-show="tab === 3">
+                                            <h6 class="mt-4 text-lg">Payment information</h6>
+                                            <span class="text-muted">It will be as simple as occidental in fact</span>
+
+                                            <h6 class="mt-4 text-lg">Payment method :</h6>
+                                            <div class="grid grid-cols-1 gap-4 lg:grid-cols-1 2xl:grid-cols-3 mt-4">
+                                                <div class="card p-0">
+                                                    <label class="flex items-center cursor-pointer p-4">
+                                                        <input type="radio" name="radio-one" class="form-radio absolute opacity-0" checked="checked">
+                                                        <i class="ri-mastercard-line text-lg me-2"></i>
+                                                        Credit Card
+                                                    </label>
+                                                </div>
+                                                <div class="card p-0">
+                                                    <label class="flex items-center cursor-pointer p-4">
+                                                        <input type="radio" name="radio-one" class="form-radio absolute opacity-0" checked="checked">
+                                                        <i class="ri-hand-coin-line text-lg me-2"></i>
+                                                        Case on Delivery
+                                                    </label>
+                                                </div>
+                                                <div class="card p-0">
+                                                    <label class="flex items-center cursor-pointer p-4">
+                                                        <input type="radio" name="radio-one" class="form-radio absolute opacity-0" checked="checked">
+                                                        <i class="ri-bank-line text-lg me-2"></i>
+                                                        UPI
+                                                    </label>
+                                                </div>
+                                            </div>
+
+
+                                            <h6>For card Payment</h6>
+                                            <div class="card">
+                                                <form>
+                                                    <div>
+                                                        <label for="cardnameInput" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on Card</label>
+                                                        <input type="text" id="cardnameInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name on Card" required="">
+                                                    </div>
+                                                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-1 2xl:grid-cols-3 mt-4">
+                                                        <div>
+                                                            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card Number</label>
+                                                            <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0000 0000 0000 0000" required="">
+                                                        </div>
+                                                        <div>
+                                                            <label for="default-datepicker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expiry date</label>
+                                                            <input type="text" id="default-datepicker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="MM/YY" required="">
+                                                        </div>
+                                                        <div>
+                                                            <label for="cardnameInput" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CVV Code</label>
+                                                            <input type="text" id="cardnameInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark dark:border-darkborder dark:placeholder:text-white/30 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter CVV Code" required="">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <button type="previous" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previous</button>
+                                                <button type="completed-order" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Completed Order</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 col-span-12">
+                            <div class="card checkout-order-summary">
+                                <div class="card-body">
+                                    <div class="p-3 mb-4 bg-gray-50 dark:bg-dark border rounded-sm dark:border-darkborder">
+                                        <h5 class="mb-0">Order Summary <span class="float-right ml-2">#SP288</span></h5>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <div class="inline-block min-w-full overflow-hidden">
+                                            <table class="min-w-full leading-normal">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="border-top-0">Product</th>
+                                                        <th class="border-top-0">Product Desc</th>
+                                                        <th class="border-top-0">Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row"><img src="assets/images/product/img-1.png" alt="product-img" title="product-img" class="w-14"></th>
+                                                        <td>
+                                                            <h5 class="text-truncate"><a href="products-detail.html">Full sleeve Hoode</a></h5>
+                                                            <p class="text-muted mb-0">$ 599 x 2</p>
+                                                        </td>
+                                                        <td>$ 1198</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><img src="assets/images/product/img-3.png" alt="product-img" title="product-img" class="w-14"></th>
+                                                        <td>
+                                                            <h5 class="text-truncate"><a href="products-detail.html">Half sleeve T-shirt</a></h5>
+                                                            <p class="text-muted mb-0">$ 499 x 1</p>
+                                                        </td>
+                                                        <td>$ 499</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <h6 class="m-0 text-right">Sub Total:</h6>
+                                                        </td>
+                                                        <td>
+                                                            $ 1697
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <h5 class="text-primary mb-0"><i class="fas fa-shipping-fast mr-2"></i> Shipping <span class="float-right">Free</span></h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <h6 class="m-0 text-right">Total:</h6>
+                                                        </td>
+                                                        <td>
+                                                            $ 1697
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

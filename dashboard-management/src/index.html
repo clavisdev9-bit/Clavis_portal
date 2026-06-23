@@ -1,0 +1,389 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="ST Corp dahboard  - development by: clavisdev" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+<script src="assets/js/pages/authMiddleware.js"></script>
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="" sub-title="Dashboard" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="order-1 col-span-12 text-center md:col-span-6 lg:col-span-3 xl:col-span-2 card">
+                            <div class="flex items-center justify-center mx-auto mb-3 rounded-full size-10 bg-purple/10 text-purple">
+                                <i data-feather="dollar-sign" class="size-5"></i>
+                            </div>
+                            <h5 class="mb-0.5 text-lg font-semibold text-slate-800 dark:text-slate-100">$54,715</h5>
+                            <p class="text-muted dark:text-darkmuted">Total Revenue</p>
+                        </div>
+                        <div class="order-2 col-span-12 text-center md:col-span-6 lg:col-span-3 xl:col-span-2 card">
+                            <div class="flex items-center justify-center mx-auto mb-3 rounded-full size-10 bg-success/10 text-success">
+                                <i data-feather="dollar-sign" class="size-5"></i>
+                            </div>
+                            <h5 class="mb-0.5 text-lg font-semibold text-slate-800 dark:text-slate-100">$34,152</h5>
+                            <p class="text-muted dark:text-darkmuted">Income</p>
+                        </div>
+                        <div class="order-5 col-span-12 md:col-span-6 xl:order-3 xl:col-span-4 xl:row-span-2 card">
+                            <div class="flex items-center justify-between gap-4 mb-4">
+                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Product Views</h2>
+                                <div>
+                                    <div x-data="{ dropdown: false}" class="ltr:ml-auto rtl:mr-auto dropdown">
+                                        <a href="javaScript:;" class="text-black dark:text-white" @click="dropdown = !dropdown" @keydown.escape="dropdown = false">
+                                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12.75C9.69036 12.75 10.25 13.3096 10.25 14C10.25 14.6904 9.69036 15.25 9 15.25C8.30964 15.25 7.75 14.6904 7.75 14C7.75 13.3096 8.30964 12.75 9 12.75Z" fill="currentColor"></path>
+                                                <path d="M14 12.75C14.6904 12.75 15.25 13.3096 15.25 14C15.25 14.6904 14.6904 15.25 14 15.25C13.3096 15.25 12.75 14.6904 12.75 14C12.75 13.3096 13.3096 12.75 14 12.75Z" fill="currentColor"></path>
+                                                <path d="M20.25 14C20.25 13.3096 19.6904 12.75 19 12.75C18.3096 12.75 17.75 13.3096 17.75 14C17.75 14.6904 18.3096 15.25 19 15.25C19.6904 15.25 20.25 14.6904 20.25 14Z" fill="currentColor"></path>
+                                            </svg>
+                                        </a>
+                                        <ul x-show="dropdown" @click.away="dropdown = false" x-transition="" x-transition.duration.300ms="" class=" whitespace-nowrap ltr:right-0 rtl:left-0">
+                                            <li><a href="javascript:;">Weekly</a></li>
+                                            <li><a href="javascript:;">Monthly</a></li>
+                                            <li><a href="javascript:;">Yearly</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="productViewsCharts" dir="ltr" class="!min-h-[auto]"></div>
+                        </div>
+                        <div class="order-5 col-span-12 md:col-span-6 xl:order-4 xl:col-span-4 xl:row-span-2 card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Users by Device</h2>
+                            <div id="chart6" dir="ltr" class="!min-h-[auto]"></div>
+                        </div>
+                        <div class="order-3 col-span-12 text-center md:col-span-6 lg:col-span-3 xl:order-5 xl:col-span-2 card">
+                            <div class="flex items-center justify-center mx-auto mb-3 rounded-full size-10 bg-danger/10 text-danger">
+                                <i data-feather="dollar-sign" class="size-5"></i>
+                            </div>
+                            <h5 class="mb-0.5 text-lg font-semibold text-slate-800 dark:text-slate-100">$15,903</h5>
+                            <p class="text-muted dark:text-darkmuted">Expense</p>
+                        </div>
+                        <div class="order-3 col-span-12 text-center md:col-span-6 lg:col-span-3 xl:order-6 xl:col-span-2 card">
+                            <div class="flex items-center justify-center mx-auto mb-3 text-pink-500 rounded-full size-10 bg-pink-500/10">
+                                <i data-feather="users" class="size-5"></i>
+                            </div>
+                            <h5 class="mb-0.5 text-lg font-semibold text-slate-800 dark:text-slate-100">15k</h5>
+                            <p class="text-muted dark:text-darkmuted">Happy Customers</p>
+                        </div>
+                        <div class="relative order-7 col-span-12 md:col-span-6 2xl:col-span-4 2xl:row-span-2 card">
+                            <div class="absolute z-10 top-4 left-4">
+                                <h5 class="mb-2 text-lg font-semibold">$349.36M</h5>
+                                <div class="flex items-center gap-2 mb-1 text-muted dark:text-darkmuted">
+                                    <div class="rounded-full size-2 bg-purple"></div>
+                                    <div class="text-sm">$154.65k Income</div>
+                                </div>
+                                <div class="flex items-center gap-2 text-muted dark:text-darkmuted">
+                                    <div class="rounded-full size-2 bg-success"></div>
+                                    <div class="text-sm">$78.10k Expense</div>
+                                </div>
+                            </div>
+                            <div id="incomeExpenseChart" dir="ltr" class="!min-h-[auto]"></div>
+                        </div>
+                        <div class="order-9 col-span-6 md:col-span-2 2xl:col-span-1 2xl:order-8 card">
+                            <img src="assets/images/flag/us.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">United States</h6>
+                            <h6 class="text-muted dark:text-darkmuted">3k</h6>
+                        </div>
+                        <div class="order-10 col-span-6 md:col-span-2 2xl:col-span-1 2xl:order-9 card">
+                            <img src="assets/images/flag/br.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Brazil</h6>
+                            <h6 class="text-muted dark:text-darkmuted">1.8k</h6>
+                        </div>
+                        <div class="order-11 col-span-6 md:col-span-2 2xl:col-span-1 2xl:order-10 card">
+                            <img src="assets/images/flag/au.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Australia</h6>
+                            <h6 class="text-muted dark:text-darkmuted">1.6k</h6>
+                        </div>
+                        <div class="order-12 col-span-6 md:col-span-2 2xl:col-span-1 2xl:order-11 card">
+                            <img src="assets/images/flag/cn.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">China</h6>
+                            <h6 class="text-muted dark:text-darkmuted">1.2k</h6>
+                        </div>
+                        <div class="order-8 col-span-12 md:col-span-6 2xl:order-12 2xl:col-span-4 2xl:row-span-2">
+                            <h2 class="mb-3 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Team Members</h2>
+                            <div class="flex items-center gap-3 p-3 mb-4 card">
+                                <img src="assets/images/avatar-7.png" alt="" class="rounded-md size-10 shrink-0">
+                                <div class="grow">
+                                    <h6 class="font-semibold"><a href="#!">Audie Bogan</a></h6>
+                                    <p class="text-muted dark:text-darkmuted">Store Manager</p>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <a href="#!">
+                                        <i data-feather="mail" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                    <a href="#!">
+                                        <i data-feather="phone-call" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 mb-4 card">
+                                <img src="assets/images/avatar-9.png" alt="" class="rounded-md size-10 shrink-0">
+                                <div class="grow">
+                                    <h6 class="font-semibold"><a href="#!">Leopoldo White</a></h6>
+                                    <p class="text-muted dark:text-darkmuted">Retail sales associates</p>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <a href="#!">
+                                        <i data-feather="mail" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                    <a href="#!">
+                                        <i data-feather="phone-call" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 card">
+                                <img src="assets/images/avatar-8.png" alt="" class="rounded-md size-10 shrink-0">
+                                <div class="grow">
+                                    <h6 class="font-semibold"><a href="#!">Lesley Lynch</a></h6>
+                                    <p class="text-muted dark:text-darkmuted">Team leaders</p>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <a href="#!">
+                                        <i data-feather="mail" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                    <a href="#!">
+                                        <i data-feather="phone-call" class="transition-all text-muted dark:text-darkmuted hover:text-purple dark:hover:text-purple size-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-6 md:col-span-2 2xl:col-span-1 card order-[13]">
+                            <img src="assets/images/flag/de.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Germany</h6>
+                            <h6 class="text-muted dark:text-darkmuted">0.8k</h6>
+                        </div>
+                        <div class="col-span-6 md:col-span-2 2xl:col-span-1 card order-[14]">
+                            <img src="assets/images/flag/ru.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Russia</h6>
+                            <h6 class="text-muted dark:text-darkmuted">0.7k</h6>
+                        </div>
+                        <div class="col-span-6 md:col-span-2 2xl:col-span-1 card order-[15]">
+                            <img src="assets/images/flag/es.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Spain</h6>
+                            <h6 class="text-muted dark:text-darkmuted">0.3k</h6>
+                        </div>
+                        <div class="col-span-6 md:col-span-2 2xl:col-span-1 card order-[16]">
+                            <img src="assets/images/flag/vn.svg" alt="" class="object-cover rounded-full size-8">
+                            <h6 class="mt-2 truncate text-slate-800 dark:text-slate-100">Vietnam</h6>
+                            <h6 class="text-muted dark:text-darkmuted">0.3k</h6>
+                        </div>
+                        <div class="col-span-12 2xl:col-span-12 order-[17] card">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Products List</h2>
+                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
+                            </div>
+                            <div class="overflow-auto">
+                                <button onclick="showAddModal()"
+                                    class="btn bg-white text-purple px-4 py-1 rounded border-purple mb-3 flex items-center gap-2">
+                                    <i class="ri-add-line text-xl"></i>
+                                    Add Product
+                                </button>
+                                <table id="productTable" class="min-w-[640px] w-full">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- <div class="col-span-12 card 2xl:col-span-3 order-[18]">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Most Selling Products</h2>
+                            <div class="flex flex-col gap-3">
+                                <div class="flex gap-2 p-3 border border-gray-200 border-dashed rounded-md dark:border-darkborder">
+                                    <img src="assets/images/product-1.png" alt="" class="size-10 shrink-0">
+                                    <div class="overflow-hidden grow">
+                                        <h6 class="mb-1 capitalize truncate text-slate-800 dark:text-slate-100"><a href="#!">Elegance color apparel clothes clothing</a></h6>
+                                        <ul class="flex items-center gap-3 text-xs text-muted">
+                                            <li>Sales: 158</li>
+                                            <li>Fashion</li>
+                                        </ul>
+                                    </div>
+                                    <h6 class="font-bold rtl:float-left ltr:float-right text-slate-800 dark:text-slate-100">$49.99</h6>
+                                </div>
+                                <div class="flex gap-2 p-3 border border-gray-200 border-dashed rounded-md dark:border-darkborder">
+                                    <img src="assets/images/product-2.png" alt="" class="size-10 shrink-0">
+                                    <div class="overflow-hidden grow">
+                                        <h6 class="mb-1 capitalize truncate text-slate-800 dark:text-slate-100"><a href="#!">Graphic tshirt trendy</a></h6>
+                                        <ul class="flex items-center gap-3 text-xs text-muted">
+                                            <li>Sales: 264</li>
+                                            <li>Women Fashion</li>
+                                        </ul>
+                                    </div>
+                                    <h6 class="font-bold rtl:float-left ltr:float-right text-slate-800 dark:text-slate-100">$85.77</h6>
+                                </div>
+                                <div class="flex gap-2 p-3 border border-gray-200 border-dashed rounded-md dark:border-darkborder">
+                                    <img src="assets/images/product-3.png" alt="" class="size-10 shrink-0">
+                                    <div class="overflow-hidden grow">
+                                        <h6 class="mb-1 capitalize truncate text-slate-800 dark:text-slate-100"><a href="#!">Simple Gray t-shirt</a></h6>
+                                        <ul class="flex items-center gap-3 text-xs text-muted">
+                                            <li>Sales: 365</li>
+                                            <li>Fashion</li>
+                                        </ul>
+                                    </div>
+                                    <h6 class="font-bold rtl:float-left ltr:float-right text-slate-800 dark:text-slate-100">$73.22</h6>
+                                </div>
+                                <div class="flex gap-2 p-3 border border-gray-200 border-dashed rounded-md dark:border-darkborder">
+                                    <img src="assets/images/product-4.png" alt="" class="size-10 shrink-0">
+                                    <div class="overflow-hidden grow">
+                                        <h6 class="mb-1 capitalize truncate text-slate-800 dark:text-slate-100"><a href="#!">Modern minimal headphone</a></h6>
+                                        <ul class="flex items-center gap-3 text-xs text-muted">
+                                            <li>Sales: 144</li>
+                                            <li>Headphones</li>
+                                        </ul>
+                                    </div>
+                                    <h6 class="font-bold rtl:float-left ltr:float-right text-slate-800 dark:text-slate-100">$164.20</h6>
+                                </div>
+                                <div class="flex gap-2 p-3 border border-gray-200 border-dashed rounded-md dark:border-darkborder">
+                                    <img src="assets/images/product-5.png" alt="" class="size-10 shrink-0">
+                                    <div class="overflow-hidden grow">
+                                        <h6 class="mb-1 capitalize truncate text-slate-800 dark:text-slate-100"><a href="#!">Top view cap</a></h6>
+                                        <ul class="flex items-center gap-3 text-xs text-muted">
+                                            <li>Sales: 648</li>
+                                            <li>Accessories</li>
+                                        </ul>
+                                    </div>
+                                    <h6 class="font-bold rtl:float-left ltr:float-right text-slate-800 dark:text-slate-100">$99.49</h6>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="addProductModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl w-[400px]">
+        <h2 class="text-lg font-semibold mb-4">Add Product</h2>
+
+        <div class="grid gap-3">
+            <input id="add_name" class="form-input" placeholder="Name">
+            <input id="add_cost" class="form-input" placeholder="Cost">
+            <input id="add_sales_price" class="form-input" placeholder="Sales Price">
+            <input id="add_product_category" class="form-input" placeholder="Product Category">
+            <input id="add_unit_of_measure" class="form-input" placeholder="Unit of Measure">
+            <input id="add_costing_method" class="form-input" placeholder="Costing Method">
+            <input id="add_product_type" class="form-input" placeholder="Product Type">
+        </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <button onclick="closeAddModal()" class="btn bg-gray-300">Cancel</button>
+            <button onclick="addProduct()" class="btn bg-purple text-white">Save</button>
+        </div>
+    </div>
+</div>
+
+<div id="detailModal"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center">
+    <div class="bg-white p-6 rounded-xl shadow-xl w-[400px]">
+        <h2 class="text-xl font-bold mb-4">Product Detail</h2>
+
+        <div id="modalContent" class="space-y-2 text-gray-700">
+            <!-- Data detail dimasukkan lewat JavaScript -->
+        </div>
+
+        <button onclick="closeDetail()"
+            class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-900">
+            Close
+        </button>
+    </div>
+</div>
+<div id="editModal" 
+     class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-lg w-[400px]">
+
+        <h2 class="text-xl font-semibold mb-3">Edit Product</h2>
+
+        <input type="hidden" id="edit_id">
+
+        <label>Product Name</label>
+        <input id="edit_name" class="border w-full p-2 mb-2">
+
+        <label>Cost</label>
+        <input id="edit_cost" type="number" class="border w-full p-2 mb-2">
+
+        <label>Sales Price</label>
+        <input id="edit_sales_price" type="number" class="border w-full p-2 mb-2">
+
+        <label>Product Category</label>
+        <input id="edit_product_category" class="border w-full p-2 mb-2">
+
+        <label>UOM</label>
+        <input id="edit_uom" class="border w-full p-2 mb-2">
+
+        <label>Costing Method</label>
+        <input id="edit_costing_method" class="border w-full p-2 mb-2">
+        
+        <label>Product Type</label>
+        <input id="edit_product_type" class="border w-full p-2 mb-2">
+
+        <div class="flex justify-end gap-2 mt-3">
+            <button onclick="closeEditModal()" class="bg-gray-400 px-3 py-2 text-white rounded">Cancel</button>
+            <button onclick="saveEdit()" class="bg-blue-600 px-3 py-2 text-white rounded">Save</button>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal -->
+<div id="deleteModal" 
+     class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-lg w-[400px]">
+
+        <h2 class="text-xl font-semibold mb-3">Apakah anda yakin untuk menghapus data produk ini?</h2>
+
+        <input type="hidden" id="deleted_id">
+        <div class="flex justify-end gap-2 mt-3">
+            <button onclick="closeDeleteModal()" class="bg-gray-400 px-3 py-2 text-white rounded">Cancel</button>
+            <button onclick="deleteProduct()" class="bg-blue-600 px-3 py-2 text-white rounded">Delete</button>
+        </div>
+    </div>
+</div>
+<div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-[300px] text-center">
+        <h2 class="text-lg font-bold text-green-600 mb-2">Success</h2>
+        <p class="text-gray-700 mb-4" id="textSuccess"></p>
+        <button onclick="closeSuccessModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            OK
+        </button>
+    </div>
+</div>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/ecommerce-dashboard.js"></script>
+<script src="assets/js/pages/master_products.js"></script>
+<script type="module" src="assets/js/main.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script type="module" src="assets/js/pages/logout.js"></script>
+
+{{> partials/vendor-scripts }}
+
+
+
+</body>
+
+</html>

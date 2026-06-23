@@ -1,0 +1,361 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Property List Dashboard" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Property List" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-3 col-span-12">
+                            <div class="card p-0">
+                                <div class="p-4 border-b dark:border-darkborder">
+                                    <h5 class="text-lg mb-0">Filters</h5>
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-muted">Status</p>
+                                    <div class="grid grid-cols-12">
+                                        <div class="col-span-6">
+                                            <div class="mt-2">
+                                                <label class="flex items-center cursor-pointer">
+                                                    <input type="radio" name="radio-one" class="form-radio" checked="checked">
+                                                    <span>For sale</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6">
+                                            <div class="mt-2">
+                                                <label class="flex items-center cursor-pointer">
+                                                    <input type="radio" name="radio-one" class="rounded-full form-radio">
+                                                    <span>For Rent</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border-t dark:border-darkborder">
+                                    <p class="text-muted mb-4">Property Type</p>
+                                    <div class="mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                            <span>House</span>
+                                        </label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="checkbox" name="radio-one" class="form-checkbox">
+                                            <span>Apartment</span>
+                                        </label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                            <span>Land</span>
+                                        </label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                            <span>Villa</span>
+                                        </label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="checkbox" name="radio-one" class="form-checkbox">
+                                            <span>Row House</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="p-4 border-t dark:border-darkborder">
+                                        <a href="#locationcollapse" class="text-muted d-block" data-toggle="collapse">Location</a>
+                                        <div class="show" id="locationcollapse">
+                                            <div class="mt-4">
+                                                <div class="input-group rounded">
+                                                    <form class="flex-1">
+                                                        <div class="relative">
+                                                            <input type="text" id="search" class="border-slate-200 dark:text-white/80 dark:placeholder:text-white/30 dark:border-darkborder dark:bg-dark dark:focus:border-white/30 focus:border-black/30 placeholder:text-black/50 border text-black text-sm rounded block w-full ltr:pl-3 rtl:pr-3 ltr:pr-7 rtl:pl-7 h-10 bg-[#f9fbfd] focus:ring-0 focus:outline-0" placeholder="Search..." required="">
+                                                            <button type="button" class="absolute inset-y-0 flex items-center text-black ltr:right-0 rtl:left-0 ltr:pr-2 rtl:pl-2 dark:text-white/80">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4">
+                                                                    <path d="M11 2C15.968 2 20 6.032 20 11C20 15.968 15.968 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2ZM11 18C14.8675 18 18 14.8675 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18ZM19.4853 18.0711L22.3137 20.8995L20.8995 22.3137L18.0711 19.4853L19.4853 18.0711Z" fill="currentColor"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 border-t dark:border-darkborder">
+                                        <a href="#pricecollapse" class="text-muted" data-toggle="collapse">Price</a>
+                                        <div class="flex items-center mt-2">
+                                            <input id="min" type="number" value="300" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none">
+                                            <span class="mx-2">To</span>
+                                            <input id="max" type="number" value="5999" class="w-full text-center bg-transparent placeholder:text-slate-400 text-sm border dark:border-darkborder border-slate-200 rounded-md px-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none">
+                                        </div>
+                                    </div>
+                                    <div class="p-4 border-t dark:border-darkborder">
+                                        <a href="#otherfeaturescollapse" class="text-muted d-block" data-toggle="collapse">Other Features</a>
+                                        <div class="mt-2">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                                <span>House</span>
+                                            </label>
+                                        </div>
+                                        <div class="mt-2">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                                <span>Apartment</span>
+                                            </label>
+                                        </div>
+                                        <div class="mt-2">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                                <span>Land</span>
+                                            </label>
+                                        </div>
+                                        <div class="mt-2">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                                <span>Villa</span>
+                                            </label>
+                                        </div>
+                                        <div class="mt-2">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="checkbox" name="radio-one" class="form-checkbox" checked="checked">
+                                                <span>Row House</span>
+                                            </label>
+                                        </div>
+                                        <a href="javascript: void(0);" class="btn bg-purple text-white mt-4 flex ms-auto w-fit border-purple">Apply</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-9 col-span-12">
+                            <div class="grid grid-cols-12 gap-4 mb-3">
+                                <div class="col-span-4">
+                                    <div class="flex items-center mb-2">
+                                        <label class="text-sm me-2">
+                                            <h6 class="font-semibold">Sort by :</h6>
+                                        </label>
+                                        <div class="relative">
+                                            <select class="rounded-md pl-1 pr-7 py-1 border-slate-200 dark:border-darkborder dark:bg-dark focus:border-transparent text-sm">
+                                                <option value="Property">Property</option>
+                                                <option value="New">New</option>
+                                                <option value="Details">Details</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card p-4 mb-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+                                        <img src="assets/images/property/img-1.jpg" class="rounded-md" alt="">
+                                    </div>
+                                    <div class="xl:col-span-8 md:col-span-6 col-span-12">
+                                        <div class="flex h-full flex-col px-xl-4">
+                                            <div class="listingInfo">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">4BHK Alexander Court,New York</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 980 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 4 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pt-3 mt-auto border-t dark:border-darkborder">
+                                                <div class="flex items-center flex-wrap">
+                                                    <div class="mr-2">
+                                                        <h5 class="text-lg mb-0">$ 520,000</h5>
+                                                    </div>
+
+                                                    <div class="text-muted ml-auto">
+                                                        <p class="mb-0">01 Days ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card p-4 mb-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+                                        <img src="assets/images/property/img-2.jpg" class="rounded-md" alt="">
+                                    </div>
+                                    <div class="xl:col-span-8 md:col-span-6 col-span-12">
+                                        <div class="flex h-full flex-col px-xl-4">
+                                            <div class="listingInfo">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">5BHK With Swimingpool For Rent</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 1500 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 5 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 5 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                            <li class="text-muted py-1"><i class="ri-shield-star-line align-middle mr-1"></i> Security</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pt-3 mt-auto border-t dark:border-darkborder">
+                                                <div class="flex items-center flex-wrap">
+                                                    <div class="mr-2">
+                                                        <h5 class="text-lg mb-0">$ 90,000</h5>
+                                                    </div>
+
+                                                    <div class="text-muted ml-auto">
+                                                        <p class="mb-0">02 Days ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card p-4 mb-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+                                        <img src="assets/images/property/img-3.jpg" class="rounded-md" alt="">
+                                    </div>
+                                    <div class="xl:col-span-8 md:col-span-6 col-span-12">
+                                        <div class="flex h-full flex-col px-xl-4">
+                                            <div class="listingInfo">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">3BHK Alexander Court,New York</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 950 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 4 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pt-3 mt-auto border-t dark:border-darkborder">
+                                                <div class="flex items-center flex-wrap">
+                                                    <div class="mr-2">
+                                                        <h5 class="text-lg mb-0">$ 120,000</h5>
+                                                    </div>
+                                                    <div class="text-muted ml-auto">
+                                                        <p class="mb-0">01 Days ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card p-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="xl:col-span-4 md:col-span-6 col-span-12">
+                                        <img src="assets/images/property/img-4.jpg" class="rounded-md" alt="">
+                                    </div>
+                                    <div class="xl:col-span-8 md:col-span-6 col-span-12">
+                                        <div class="flex h-full flex-col px-xl-4">
+                                            <div class="listingInfo">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">4BHK Forest Villa For Rent</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 1020 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 3 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pt-3 mt-auto border-t dark:border-darkborder">
+                                                <div class="flex items-center flex-wrap">
+                                                    <div class="mr-2">
+                                                        <h5 class="text-lg mb-0">$ 260,000</h5>
+                                                    </div>
+                                                    <div class="text-muted ml-auto">
+                                                        <p class="mb-0">01 Days ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- Start All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

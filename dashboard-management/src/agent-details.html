@@ -1,0 +1,370 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Agent Details" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Agent Details" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="lg:col-span-3 col-span-12">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12">
+                                    <div class="card">
+                                        <div class="text-center">
+                                            <div class="mb-3 flex justify-center">
+                                                <img src="assets/images/avatar-2.png" alt="" class="flex-none object-cover p-1 border rounded-full size-24 border-purple">
+                                            </div>
+                                            <h5 class="mb-1">Heather McCullough</h5>
+                                            <p class="text-muted">Property Agent</p>
+
+                                            <p class="text-muted">
+                                                <i class="ri-star-fill text-warning"></i>
+                                                <i class="ri-star-fill text-warning"></i>
+                                                <i class="ri-star-fill text-warning"></i>
+                                                <i class="ri-star-fill text-warning"></i>
+                                                <i class="ri-star-fill text-warning"></i>
+                                                <span>(29)</span>
+                                            </p>
+                                        </div>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <p class="mb-4 text-muted">Hi I'm Heather McCullough,has been the industry's standard dummy text ever since the 1500s.</p>
+                                        <div class="overflow-x-auto">
+                                            <div class="inline-block min-w-full overflow-hidden">
+                                                <div class="min-w-full leading-normal">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Full Name : </th>
+                                                                <td class="text-muted">Heather McCullough</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Mobile : </th>
+                                                                <td class="text-muted">123 456 7890</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Email : </th>
+                                                                <td class="text-muted">example123@gmail.com</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Location : </th>
+                                                                <td class="text-muted">USA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Experience : </th>
+                                                                <td class="text-muted">2 years</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="col-span-12">
+                                    <div class="card">
+                                        <h5 class="mb-1">Get in Touch</h5>
+                                        <hr class="my-4 dark:border-darkborder">
+                                        <p class="mb-4 text-muted">Hi I'm Heather McCullough,has been the industry's standard dummy text ever since the 1500s.</p>
+                                        <div class="overflow-x-auto">
+                                            <div class="inline-block min-w-full overflow-hidden">
+                                                <div class="min-w-full leading-normal">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Full Name : </th>
+                                                                <td class="text-muted">Heather McCullough</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Mobile : </th>
+                                                                <td class="text-muted">123 456 7890</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Email : </th>
+                                                                <td class="text-muted">example123@gmail.com</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Location : </th>
+                                                                <td class="text-muted">USA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Experience : </th>
+                                                                <td class="text-muted">2 years</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end col -->
+                        <div class="lg:col-span-9 col-span-12">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-1.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">4BHK Alexander Court,New York</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 980 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 4 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 520,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">01 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-2.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">5BHK With Swimingpool For Rent</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 1500 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 5 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 5 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 90,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">02 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-3.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">3BHK Alexander Court,New York</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 950 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 4 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 120,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">01 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-4.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">4BHK Forest Villa For Rent</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 1020 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 3 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 520,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">01 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-5.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">2BHK House for Rent</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 480 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 1 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 1 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 99,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">02 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                                <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                                    <div class="card">
+                                        <img class="rounded-md" src="assets/images/property/img-6.jpg" alt="" />
+                                        <div class="flex flex-col">
+                                            <div class="pt-3">
+                                                <h5 class="text-lg mb-2"><a href="property-details.html">4BHK Alexander Court,New York</a></h5>
+                                                <p class="text-muted"><i class="ri-map-pin-fill mr-1"></i>245 E 20th St, New York, NY 201609</p>
+                                                <div class="grid grid-cols-12">
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-pencil-ruler-2-fill align-middle mr-1"></i> 999 sq ft</li>
+                                                            <li class="text-muted py-1"><i class="ri-hotel-bed-fill align-middle mr-1"></i> 4 Bedroom</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-span-6">
+                                                        <ul class="mt-3">
+                                                            <li class="text-muted py-1"><i class="ri-car-fill align-middle mr-1"></i> 2 Parking space</li>
+                                                            <li class="text-muted py-1"><i class="ri-battery-charge-fill align-middle mr-1"></i> 24h Electricity</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4 dark:border-darkborder">
+                                            <div class="flex items-center flex-wrap">
+                                                <div class="mr-2">
+                                                    <h5 class="text-lg mb-0">$ 450,000</h5>
+                                                </div>
+                                                <div class="text-muted ml-auto">
+                                                    <p class="mb-0">03 Days ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                                <!-- end col -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end grid -->
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

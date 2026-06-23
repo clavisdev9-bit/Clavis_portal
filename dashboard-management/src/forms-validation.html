@@ -1,0 +1,95 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Validation" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Forms" sub-title="Validation" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Validation Wrong</h2>
+                            <form class="space-y-4">
+                                <div>
+                                    <input type="text" placeholder="First Name" class="form-input text-danger !border-danger placeholder:text-danger" required />
+                                    <p class="mt-1 text-danger">Please fill the Name</p>
+                                </div>
+                                <div>
+                                    <input type="email" placeholder="Email Type" class="form-input" required />
+                                </div>
+                                <div>
+                                    <input type="password" placeholder="Password" class="form-input" required />
+                                </div>
+                                <div>
+                                    <input type="password" placeholder="Confirm Password" class="form-input" required />
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn bg-purple border-purple text-white hover:bg-purple/[0.85] hover:border-purple/[0.85]">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Validation Complete</h2>
+                            <form class="space-y-4">
+                                <div>
+                                    <input type="text" placeholder="First Name" class="form-input text-success !border-success placeholder:text-success" required />
+                                    <p class="mt-1 text-success">Please fill the Name</p>
+                                </div>
+                                <div>
+                                    <input type="email" placeholder="Email Type" class="form-input" required />
+                                </div>
+                                <div>
+                                    <input type="password" placeholder="Password" class="form-input" required />
+                                </div>
+                                <div>
+                                    <input type="password" placeholder="Confirm Password" class="form-input" required />
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn bg-purple border-purple text-white hover:bg-purple/[0.85] hover:border-purple/[0.85]">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script src="assets/js/pages/form-editor.js"></script>
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

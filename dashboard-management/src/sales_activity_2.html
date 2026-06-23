@@ -1,0 +1,158 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="ST Corp dahboard  - development by: clavisdev" }}
+
+    {{> partials/head-css }}
+
+    <style>
+        /* Pastikan elemen peta punya tinggi, kalau tidak peta tidak akan terlihat */
+        html,body { height: 100%; margin: 0; }
+        #map { height: 56.3vh; width: 100%; }
+        #card-sales { height: 54vh; width: 100%; overflow-y: auto;}
+        /* kecilkan popup font jika perlu */
+        .leaflet-popup-content { font-size: 14px; }
+        .leaflet-container {
+            z-index: 0 !important;
+        }
+        .custom-marker {
+            background: none;
+            border: none;
+        }
+
+        .pin-wrapper {
+            width: 50px;
+            height: 60px;
+            background: url('/assets/images/location_2.png') no-repeat center;
+            background-size: contain;
+            position: relative;
+        }
+
+        .pin-wrapper img {
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .pin-wrapper-close {
+            width: 50px;
+            height: 60px;
+            background: url('/assets/images/location.png') no-repeat center;
+            background-size: contain;
+            position: relative;
+        }
+
+        .pin-wrapper-close img {
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+{{> partials/body }}
+
+<script src="assets/js/pages/authMiddleware.js"></script>
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+
+                {{> partials/page-heading title="" sub-title="Sales Activity" }}
+
+                <!-- Start All Card -->
+                
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 2xl:col-span-9">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12">
+                                    <!-- Toolbar -->
+                                    <div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative flex-1">
+                                                <span class="absolute left-3 top-2.5 text-gray-400">🔍</span>
+                                                <input type="text" id="searchSales" placeholder="Search Sales" class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none"/>
+                                            </div>
+
+                                            <!-- Date -->
+                                            <input type="date" id="filterDate" class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none"/>
+                                            <select id="filterStatus" class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none w-36">
+                                                <option value="">Semua Status</option>
+                                                <option value="SELESAI">Selesai</option>
+                                                <option value="SEDANG_CHECK_IN">Check In</option>
+                                                <option value="VISIT">Visit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 2xl:col-span-9">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 xl:col-span-12">
+                                    <div class="card">
+                                        <div id="map" class="relative z-0 w-full h-[400px]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-span-12 2xl:col-span-3">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 xl:col-span-12">
+                                    <div class="card">
+                                        <div id="card-sales" class="relative">
+                                            <div id="card-content"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- End grid -->
+                </div>
+                <!-- end all card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/real-estate.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="assets/js/pages/maps.js"></script>
+<script src="assets/js/pages/card-sales2.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+</body>
+
+</html>

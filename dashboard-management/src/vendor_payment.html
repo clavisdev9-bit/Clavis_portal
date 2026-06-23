@@ -1,0 +1,63 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Blog" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                <div id="vendorPaymentTable"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+<script  src="assets/js/pages/apex.init.js"></script>
+<script src="assets/libs/jquery/jquery.js"></script>
+
+<script src="assets/libs/highcharts/highcharts.js"></script>
+
+<script src="assets/libs/highcharts/modules/accessibility.js"></script>
+
+<script src="assets/js/pages/blog.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+<script type="text/babel" src="assets/js/pages/vendor_payment.jsx"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+
+</body>
+
+</html>

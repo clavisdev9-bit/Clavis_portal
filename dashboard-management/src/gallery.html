@@ -1,0 +1,101 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Gallery" }}
+
+    {{> partials/head-css }}
+
+    <!-- Magnific Popup core CSS file -->
+    <link rel="stylesheet" href="assets/libs/magnific-popup/magnific-popup.css">
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Gallery" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="p-0 card">
+                            <div class="p-5 border-b card-header border-slate-200 dark:border-darkborder">
+                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100">New Photos</h2>
+                            </div>
+                            <div class="grid grid-cols-4 grid-rows-5 gap-2 p-5 mx-auto card-body max-w-7xl zoom-gallery">
+                                <a class="relative block w-full rounded-lg h-72" href="assets/images/gallery/img-1.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-1.png">
+                                </a>
+                                <a class="relative block row-span-2 rounded-lg" href="assets/images/gallery/img-2.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-2.png">
+                                </a>
+                                <a class="relative block col-span-2 row-span-2 rounded-lg" href="assets/images/gallery/img-3.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-3.png">
+                                </a>
+                                <a class="relative block row-span-2 rounded-lg" href="assets/images/gallery/img-4.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-4.png">
+                                </a>
+                                <a class="relative block rounded-lg" href="assets/images/gallery/img-5.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-5.png">
+                                </a>
+                                <a class="relative block rounded-lg h-72" href="assets/images/gallery/img-6.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-6.png">
+                                </a>
+                                <a class="relative block row-span-2 rounded-lg" href="assets/images/gallery/img-7.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-7.png">
+                                </a>
+                                <a class="relative block col-span-2 row-span-2 rounded-lg" href="assets/images/gallery/img-8.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-8.png">
+                                </a>
+                                <a class="relative block row-span-2 rounded-lg" href="assets/images/gallery/img-9.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-9.png">
+                                </a>
+                                <a class="relative block rounded-lg" href="assets/images/gallery/img-10.png">
+                                    <img class="absolute inset-0 object-cover object-center w-full h-full rounded-lg" src="assets/images/gallery/img-10.png">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<!-- jQuery -->
+<script src="assets/libs/jquery/jquery.js"></script>
+
+<!-- Magnific Popup core JS file -->
+<script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+<!-- Magnific Popup custom JS file -->
+<script src="assets/js/pages/magnific-popp.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

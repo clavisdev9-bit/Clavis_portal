@@ -1,0 +1,176 @@
+<nav class="sidebar lg:z-[9] z-[10] group-data-[sidebar=brand]/item:border-sky-600 dark:border-darkborder">
+    <div class="h-full bg-white dark:bg-darklight group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-600">
+        <div class="p-4">
+            <a href="index.html" class="w-full main-logo">
+                <img src="assets/images/logo_clavis-removebg.png" class="mx-auto dark-logo h-7 logo dark:hidden group-data-[sidebar=dark]/item:hidden group-data-[sidebar=brand]/item:hidden" alt="logo" />
+                <img src="assets/images/logo_clavis-removebg.png" class="hidden mx-auto light-logo h-7 logo dark:block group-data-[sidebar=dark]/item:block group-data-[sidebar=brand]/item:block" alt="logo" />
+                <img src="assets/images/logo_clavis-removebg.png" class="hidden mx-auto logo-icon h-7" alt="">
+            </a>
+        </div>
+        <div class="h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden px-5 pb-4 space-y-16 detached-menu">
+            <ul id="clavis_menu" class="relative flex flex-col gap-1">
+            </ul>
+        </div>
+    </div>
+</nav>
+<script>
+    const id_user = localStorage.getItem("id_user");
+
+    const getUserPage = async () => {
+        try {
+            // 🔹 ambil id_page milik user
+            const res1 = await axios.get(
+                `${__API_URL__}/user_page/get_this_user_page`,
+                {
+                    params: { user_id: id_user }
+                }
+            );
+
+            const sortedData = [...res1.data[0]].sort((a, b) => a - b);
+
+            // 🔹 ambil detail page
+            const res2 = await axios.get(
+                `${__API_URL__}/page/get_this_user_page_2`,
+                {
+                    params: { id_page: sortedData.join(',') }
+                }
+            );
+
+            const pages = res2.data;
+
+            // 🔥 container menu
+            const menuContainer = document.getElementById("clavis_menu");
+            menuContainer.innerHTML = ""; // reset
+
+            // 🔥 ambil semua parent
+            const currentPath = window.location.pathname.split("/").pop();
+            const parentMenus = pages.filter(p => p.level === 1);
+
+            parentMenus.forEach(parent => {
+
+                const li = document.createElement("li");
+                li.className = "menu nav-item main-menu";
+
+                li.innerHTML = `
+                    <a href="javascript:void(0);" class="menu-toggle flex items-center justify-between text-black nav-link group cursor-pointer">
+                        <div class="flex items-center">
+                            <i data-feather="${parent.logo}" class="size-4 ml-3 text-dark text-lg dark:text-white"></i>
+                            <span class="ltr:pl-1 rtl:pr-1.5">&nbsp;${parent.page_label}</span>
+                        </div>
+                        <span class="arrow transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path d="M7 10l5 5 5-5" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <ul class="sub-menu overflow-hidden transition-all duration-300 ease-in-out flex flex-col gap-1 text-black"></ul>
+                `;
+                
+                const submenu = li.querySelector(".sub-menu");
+                const toggleBtn = li.querySelector(".menu-toggle");
+                const arrow = li.querySelector(".arrow");
+                let hasActiveChild = false;
+                
+                pages
+                    .filter(p => p.parent === parent.id)
+                    .forEach(child => {
+                        const subLi = document.createElement("li");
+
+                        const isActive = currentPath === `${child.page_name}.html`;
+                        if (isActive) hasActiveChild = true;
+
+                        subLi.innerHTML = `
+                            <a href="${child.page_name}.html"
+                            class="flex items-center text-black dark:text-white py-1 ${isActive ? 'text-blue-600 dark:text-yellow-500 font-semibold' : ''}">
+                                ${child.logo ? `<i class="${child.logo}"></i>` : ''}
+                                <span class="ml-2">${child.page_label}</span>
+                            </a>
+                        `;
+                        submenu.appendChild(subLi);
+                    });
+                    
+                if (hasActiveChild) {
+                    toggleBtn.classList.add(
+                        "text-blue-400",
+                        "dark:text-blue-400",
+                        "font-bold"
+                    );
+                    const parentIcon = li.querySelector("i");
+                    if (parentIcon) {
+                        parentIcon.classList.add(
+                            "text-blue-600",
+                            "dark:text-blue-400"
+                        );
+                    }
+
+                    submenu.classList.add("open");
+
+                    requestAnimationFrame(() => {
+                        submenu.style.maxHeight = submenu.scrollHeight + "px";
+                    });
+
+                    arrow.classList.add("rotate-180");
+                    submenu.dataset.active = "true";
+                } else {
+                    submenu.dataset.active = "false";
+                }
+                        
+                toggleBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+
+                    const allSubmenus = document.querySelectorAll("#clavis_menu .sub-menu");
+                    const allArrows = document.querySelectorAll("#clavis_menu .arrow");
+
+                    const isOpen = submenu.classList.contains("open");
+
+                    // tutup semua submenu lain
+                    allSubmenus.forEach((el) => {
+                        if (el !== submenu) {
+                            el.classList.remove("open");
+                            el.style.maxHeight = "0px";
+                        }
+                    });
+
+                    // reset arrow lain
+                    allArrows.forEach((el) => {
+                        if (el !== arrow) {
+                            el.classList.remove("rotate-180");
+                        }
+                    });
+
+                    // toggle current
+                    if (isOpen) {
+                        submenu.classList.remove("open");
+                        submenu.style.maxHeight = "0px";
+                        arrow.classList.remove("rotate-180");
+                    } else {
+                        submenu.classList.add("open");
+                        submenu.style.maxHeight = submenu.scrollHeight + "px";
+                        arrow.classList.add("rotate-180");
+                    }
+                });
+                menuContainer.appendChild(li);
+            });
+            feather.replace();
+        } catch (error) {
+            console.error("error:", error);
+        }
+    };
+
+    getUserPage();
+
+
+    // 🔥 realtime update via websocket
+    const socket = new WebSocket("ws://192.168.0.102:3000");
+
+    socket.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+
+        if (data.type === "user_page_updated") {
+            if (data.id_user == id_user) {
+                console.log("update detected → reload menu");
+                getUserPage();
+            }
+        }
+    };
+</script>

@@ -1,0 +1,911 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Feather Icons" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Feather Icons" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Two-Tone Icons</h2>
+                            <div class="flex flex-wrap gap-4">
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="airplay" class="text-purple size-5 fill-purple/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-circle" class="text-success size-5 fill-success/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-octagon" class="text-warning size-5 fill-warning/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-triangle" class="text-info size-5 fill-info/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-circle" class="text-danger size-5 fill-danger/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-octagon" class="text-pink-500 size-5 fill-pink-500/20"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-triangle" class="text-indigo-500 size-5 fill-indigo-500/20"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Feather Icons</h2>
+                            <div class="flex flex-wrap gap-4">
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="activity" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="airplay" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-octagon" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="alert-triangle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="align-center" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="align-justify" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="align-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="align-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="anchor" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="aperture" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="archive" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-down-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-down-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-down-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-left-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-right-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-up-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-up-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-up-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="arrow-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="at-sign" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="award" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bar-chart-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bar-chart" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="battery-charging" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="battery" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bell-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bell" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bluetooth" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bold" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="book-open" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="book" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="bookmark" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="box" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="briefcase" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="calendar" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="camera-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="camera" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cast" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="check-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="check-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="check" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevron-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevron-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevron-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevron-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevrons-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevrons-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevrons-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chevrons-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="chrome" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="clipboard" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="clock" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud-drizzle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud-lightning" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud-rain" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud-snow" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cloud" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="code" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="codepen" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="codesandbox" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="coffee" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="columns" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="command" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="compass" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="copy" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-down-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-down-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-left-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-left-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-right-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-right-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-up-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="corner-up-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="cpu" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="credit-card" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="crop" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="crosshair" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="database" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="delete" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="disc" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="divide-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="divide-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="divide" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="dollar-sign" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="download-cloud" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="download" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="dribbble" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="droplet" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="edit-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="edit-3" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="edit" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="external-link" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="eye-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="eye" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="facebook" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="fast-forward" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="feather" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="figma" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="file-minus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="file-plus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="file-text" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="file" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="film" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="filter" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="flag" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="folder-minus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="folder-plus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="folder" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="framer" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="frown" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="gift" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="git-branch" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="git-commit" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="git-merge" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="git-pull-request" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="github" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="gitlab" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="globe" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="grid" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="hard-drive" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="hash" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="headphones" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="heart" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="help-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="hexagon" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="home" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="image" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="inbox" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="info" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="instagram" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="italic" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="key" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="layers" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="layout" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="life-buoy" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="link-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="link" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="linkedin" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="list" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="loader" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="lock" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="log-in" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="log-out" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="mail" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="map-pin" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="map" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="maximize-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="maximize" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="meh" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="menu" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="message-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="message-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="mic-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="mic" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="minimize-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="minimize" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="minus-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="minus-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="minus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="monitor" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="moon" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="more-horizontal" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="more-vertical" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="mouse-pointer" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="move" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="music" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="navigation-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="navigation" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="octagon" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="package" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="paperclip" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="pause-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="pause" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="pen-tool" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="percent" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-call" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-forwarded" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-incoming" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-missed" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone-outgoing" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="phone" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="pie-chart" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="play-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="play" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="plus-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="plus-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="plus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="pocket" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="power" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="printer" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="radio" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="refresh-cw" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="refresh-ccw" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="repeat" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="rewind" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="rotate-ccw" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="rotate-cw" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="rss" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="save" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="scissors" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="search" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="send" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="settings" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="share-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="shield" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="shield-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="shopping-bag" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="shopping-cart" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="shuffle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="skip-back" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="skip-forward" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="slack" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="slash" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="sliders" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="smartphone" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="smile" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="speaker" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="star" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="stop-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="sun" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="sunrise" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="sunset" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="tablet" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="tag" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="target" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="terminal" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="thermometer" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="thumbs-down" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="thumbs-up" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="toggle-left" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="toggle-right" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="tool" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="trash" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="trash-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="triangle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="truck" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="tv" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="twitch" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="twitter" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="type" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="umbrella" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="unlock" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="user-check" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="user-minus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="user-plus" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="user-x" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="user" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="users" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="video-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="video" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="voicemail" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="volume" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="volume-1" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="volume-2" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="volume-x" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="watch" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="wifi-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="wifi" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="wind" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="x-circle" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="x-octagon" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="x-square" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="x" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="youtube" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="zap-off" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="zap" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="zoom-in" class="size-5"></i>
+                                </div>
+                                <div class="flex items-center justify-center size-12 text-2xl border rounded-md border-slate-200 text-black/80 dark:border-darkborder dark:text-muted hover:text-slate-800 hover:bg-[#f9fbfd] hover:dark:text-slate-100 hover:dark:bg-dark cursor-pointer">
+                                    <i data-feather="zoom-out" class="size-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

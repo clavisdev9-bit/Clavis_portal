@@ -1,0 +1,66 @@
+<!-- plugins CSS -->
+<link rel="stylesheet" href="assets/scss/plugins.scss">
+<!-- Icons CSS -->
+<link rel="stylesheet" href="assets/scss/icons.scss">
+<!-- Tailwind CSS -->
+<link rel="stylesheet" href="assets/scss/tailwind.scss">
+<!-- <link rel="stylesheet" href="assets/css/chat.css"> -->
+
+<script type="module" src="assets/js/admin.bundle.js"></script>
+<!-- <script type="module" src="assets/js/chat.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const __API_URL__ = "http://192.168.0.100:3000";
+    const __ODOO_URL__ = "http://72.60.76.201:8002";
+</script>
+<style>
+    #DataTables_Table_0_length select {
+        width: 6vh;
+    }
+    #salesTable_length select {
+        width: 6vh;
+    }
+    #vendorTable_length select {
+        width: 6vh;
+    }
+    #moveHistoryTable_length select {
+        width: 6vh;
+        margin-bottom: 4px;
+    }
+    #tablePurchaseOrderOutstanding_length select {
+        width: 6vh;
+    }
+    #journalItemDataTable_length select {
+        width: 6vh;
+    }
+    #journalEntryDataTable_length select {
+        width: 6vh;
+    }
+    #courierTable_length select {
+        width: 6vh;
+        margin-bottom: 6px;
+    }
+    #salesInvoiceTable_length select{
+        width: 6vh;
+        margin-bottom: 6px;
+    }
+    #salesInvoiceDimTable_length select{
+        width: 6vh;
+        margin-bottom: 6px;
+    }
+    .sub-menu {
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+            max-height 0.3s ease,
+            opacity 0.3s ease;
+    }
+
+    .sub-menu.open {
+        opacity: 1;
+        max-height: 500px;
+    }
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">

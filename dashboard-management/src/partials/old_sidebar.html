@@ -1,0 +1,581 @@
+<!-- Start Sidebar -->
+<nav class="sidebar lg:z-[9] z-[10] group-data-[sidebar=brand]/item:border-sky-600 dark:border-darkborder">
+    <div class="h-full bg-white dark:bg-darklight group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-600">
+        <div class="p-4">
+            <a href="index.html" class="w-full main-logo">
+                <img src="assets/images/logo_clavis-removebg.png" class="mx-auto dark-logo h-7 logo dark:hidden group-data-[sidebar=dark]/item:hidden group-data-[sidebar=brand]/item:hidden" alt="logo" />
+                <img src="assets/images/logo_clavis-removebg.png" class="hidden mx-auto light-logo h-7 logo dark:block group-data-[sidebar=dark]/item:block group-data-[sidebar=brand]/item:block" alt="logo" />
+                <img src="assets/images/logo_clavis-removebg.png" class="hidden mx-auto logo-icon h-7" alt="">
+            </a>
+        </div>
+        <div class="h-[calc(100vh-60px)]  overflow-y-auto overflow-x-hidden px-5 pb-4 space-y-16 detached-menu">
+            <ul class="relative flex flex-col gap-1 " x-data="sidebarMenu">
+                <!-- <h2 class="my-2 text-sm text-slate-500 group-data-[sidebar=dark]/item:text-slate-500 group-data-[sidebar=brand]/item:text-sky-200"><span>Menu</span></h2> -->
+                <div id="clavis_menu" class="hidden">
+                    <li class="menu nav-item main-menu" id="clavis_dashboard_menu" class="hidden">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('dashboard')}" @click="toggle('dashboard' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Dashboard</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('dashboard')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('dashboard')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="index.html">Default</a></li>
+                            <li><a href="dashboard-sales-activity.html">Sales Activity</a></li>
+                            <li><a href="dashboard-sales-tracking.html">Sales Tracking</a></li>
+                            <li><a href="module_expenses.html">Module Expenses</a></li>
+                            <li><a href="project-dashboard.html">Sales Report</a></li>
+                            <li><a href="blog.html">Purchase Report</a></li>
+                            <li><a href="partner.html">Partner Report</a></li>
+                            <li><a href="vendor.html">Vendor Report</a></li>
+                            <li><a href="account_moves.html">Account Move</a></li>
+                            <li><a href="invoices.html">Invoice</a></li>
+                            <li><a href="payments.html">Payments</a></li>
+                            <li><a href="vendor_bill.html">Vendor Bill</a></li>
+                            <li><a href="vendor_payment.html">Vendor Payment</a></li>
+                            <li><a href="journal_entry.html">Journal Entry</a></li>
+                            <li><a href="journal_item.html">Journal Item</a></li>
+                            <li><a href="analytic_items.html">Analytic Items</a></li>
+                            <li><a href="move_history.html">Move History</a></li>
+                            <li><a href="sales_orders.html">Sales Orders</a></li>
+                            <li><a href="purchase_order_outstanding.html">Purchase Orders</a></li>
+                            <!-- <li><a href="sales_activity_2.html">Sales Activity 2</a></li> -->
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('master_data')}" @click="toggle('master_data' , false)">
+                            <div class="flex items-center">
+                                <!-- <i data-feather="life-buoy" class="size-4 text-white"></i> -->
+                                <span class="ltr:pl-3 rtl:pr-1.5">Master Data</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('master_data')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('master_data')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="courier_price_list.html"><i class="ri-price-tag-3-line"></i>&nbsp;Courier Price List</a></li>
+                            <li><a href="customer.html"><i class="ri-group-3-fill"></i>&nbsp;Customers</a></li>
+                            <li><a href="dc.html"><i class="ri-building-4-line"></i>&nbsp;DC</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('orders')}" @click="toggle('orders' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Orders</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('orders')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('orders')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="order_dashboard.html">Order Dashboard</a></li>
+                            <li><a href="pages-404.html">SI Summary</a></li>
+                            <li><a href="so_summary.html">SO Summary</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('sales')}" @click="toggle('sales' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Sales</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('sales')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('sales')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="sales_dashboard.html">Sales Dashboard</a></li>
+                            <li><a href="sell_out_customers.html">Sell Out By Customer</a></li>
+                            <li><a href="mti_statutory_sales.html"><i class="ri-git-repository-line"></i>&nbsp;MTI Statutory Sales</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('logistics')}" @click="toggle('logistics' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Logistics</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('master_data')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('logistics')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="pod_hand_over.html"><i class="ri-box-3-line"></i>&nbsp;POD Hand Over</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('inventory')}" @click="toggle('inventory' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Inventory</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('inventory')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('inventory')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="inventory_balance.html"><i class="ri-archive-line"></i>&nbsp;Inventory Balance</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('reports')}" @click="toggle('reports' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Reports</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('reports')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('reports')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="insurance_report.html"><i class="ri-shield-check-line"></i>&nbsp;Insurance Report</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('outstanding')}" @click="toggle('outstanding' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Outstanding</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('outstanding')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_gr.html"><i class="ri-archive-stack-line"></i>&nbsp;Outstanding GR</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_dispatch.html"><i class="ri-arrow-right-up-line"></i>&nbsp;Outstanding Dispatch</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_dispatch_freight.html"><i class="ri-arrow-right-up-line"></i>&nbsp;Outstanding Dispatch+Freight</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_pi.html"><i class="ri-sticky-note-line"></i>&nbsp;Outstanding PI</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_do.html"><i class="ri-list-view"></i>&nbsp;Outstanding DO</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_do_cost.html">Outstanding DO+Cost</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_cancel_doc.html">Outstanding Cancel Doc</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_pod_cost.html">Outstanding PDO Cost</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_dr.html">Outstanding DR</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_pr.html">Outstanding PR</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_ttf.html">Outstanding TTF</a></li>
+                        </ul>
+                        <ul x-cloak x-show="isActive('outstanding')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="outstanding_si_qty.html">Outstanding SI (Qty Only)</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu nav-item main-menu">
+                        <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('report_mye')}" @click="toggle('report_mye' , false)">
+                            <div class="flex items-center">
+                                <span class="ltr:pl-3 rtl:pr-1.5">Report MYE</span>
+                            </div>
+                            <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('report_mye')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                    <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <ul x-cloak x-show="isActive('report_mye')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                            <li><a href="sales_invoice.html"><i class="ri-receipt-fill"></i>&nbsp;Sales Invoice</a></li>
+                        </ul>
+                    </li>
+                </div>
+                <li class="menu nav-item main-menu">
+                    <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('report_dim')}" @click="toggle('report_dim' , false)">
+                        <div class="flex items-center">
+                            <span class="ltr:pl-3 rtl:pr-1.5">Report DIM</span>
+                        </div>
+                        <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('report_dim')}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="isActive('report_dim')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                        <li><a href="sales_invoice_dim.html"><i class="ri-receipt-fill"></i>&nbsp;Sales Invoice</a></li>
+                    </ul>
+                </li>
+                <li class="menu nav-item main-menu">
+                    <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group " :class="{'active' : isActive('user_management')}" @click="toggle('user_management' , false)">
+                        <div class="flex items-center">
+                            <span class="ltr:pl-3 rtl:pr-1.5">User Management</span>
+                        </div>
+                        <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('user_management')}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="isActive('user_management')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                        <li><a href="page_management.html"><i class="ri-pages-line"></i>&nbsp;Page Management</a></li>
+                        <li><a href="user_page_managements.html"><i class="ri-user-settings-fill"></i>&nbsp;User Page Management</a></li>
+                    </ul>
+                </li>
+                <!-- <li class="menu nav-item main-menu">
+                    <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('apps')}" @click="toggle('apps' , false)">
+                        <div class="flex items-center">
+                            <i data-feather="grid" class="size-4"></i>
+                            <span class="ltr:pl-1.5 rtl:pr-1.5">Apps</span>
+                        </div>
+                        <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('apps')}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-cloak x-show="isActive('apps')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                        <li><a href="email.html">email</a></li>
+                        <li><a href="chat.html">chat</a></li>
+                        <li class="subMenu">
+                            <a class="items-center" href="javascript:void(0);" :class="{'active' : isSubMenuActive('ecommerce')}" @click="toggle('ecommerce', true)" id="submenu">
+                                <div class="flex items-center">
+                                    <span>Ecommerce</span>
+                                </div>
+                                <div class="flex items-center w-4 h-4 ltr:ml-auto rtl:mr-auto dropdown-icon" :class="{'!rotate-180' : isSubMenuActive('ecommerce')}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                        <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                    </svg>
+                                </div>
+                            </a>
+                            <ul x-cloak x-show="isSubMenuActive('ecommerce')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                                <li>
+                                    <a href="products.html">Products</a>
+                                </li>
+                                <li>
+                                    <a href="products-details.html">Products Details</a>
+                                </li>
+                                <li>
+                                    <a href="orders.html">Orders</a>
+                                </li>
+                                <li>
+                                    <a href="orders-details.html">Order Details</a>
+                                </li>
+                                <li>
+                                    <a href="shopping-cart.html">Shopping Cart</a>
+                                </li>
+                                <li>
+                                    <a href="checkout.html">Checkout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="calender.html">Calendar</a></li>
+                        <li><a href="kanban.html">Kanban</a></li>
+                        <li class="subMenu">
+                            <a class="items-center" href="javascript:void(0);" :class="{'active' : isSubMenuActive('real-estate')}" @click="toggle('real-estate', true)" id="submenu">
+                                <div class="flex items-center">
+                                    <span>Real Estate</span>
+                                </div>
+                                <div class="flex items-center w-4 h-4 ltr:ml-auto rtl:mr-auto dropdown-icon" :class="{'!rotate-180' : isSubMenuActive('real-estate')}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                                        <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                                    </svg>
+                                </div>
+                            </a>
+                            <ul x-cloak x-show="isSubMenuActive('real-estate')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                                <li>
+                                    <a href="property-list.html">Property List</a>
+                                </li>
+                                <li>
+                                    <a href="property-details.html">Property Details</a>
+                                </li>
+                                <li>
+                                    <a href="agent-list.html">Agent List</a>
+                                </li>
+                                <li>
+                                    <a href="agent-details.html">Agent Details</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="invoice.html">invoice</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                </li> -->
+            </ul>
+            </li>
+            <!-- <h2 class="my-2 text-sm text-slate-500 group-data-[sidebar=dark]/item:text-slate-500 group-data-[sidebar=brand]/item:text-sky-200"><span>Users & Pages</span></h2>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('users')}" @click="toggle('users' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="user" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Users</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('users')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('users')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="pages-users-profile.html">Profile</a></li>
+                    <li><a href="pages-users-settings.html">Settings</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group dark:text-white/80" :class="{'active' : isActive('pages')}" @click="toggle('pages', false)">
+                    <div class="flex items-center">
+                        <i data-feather="feather" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Pages</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' :isActive('pages')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('pages')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="blank.html">Starter Page</a></li>
+                    <li><a href="team.html">Team</a></li>
+                    <li><a href="faqs.html">FAQs</a></li>
+                    <li><a href="pages-maintenance.html">maintenance</a></li>
+                    <li><a href="pages-maintenance-2.html">maintenance 2</a></li>
+                    <li><a href="pages-coming-soon.html">coming soon</a></li>
+                    <li><a href="pages-coming-soon-2.html">coming soon 2</a></li>
+                    <li><a href="pages-404.html">404 Error</a></li>
+                    <li><a href="pages-500.html">500 Error</a></li>
+                    <li><a href="pages-503.html">503 Error</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('layout')}" @click="toggle('layout' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="layout" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Layout</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('layout')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('layout')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="creative.html">Creative Detached</a></li>
+                    <li><a href="detached.html">Detached</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('authentication')}" @click="toggle('authentication' ,false)">
+                    <div class="flex items-center">
+                        <i data-feather="lock" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Authentication</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('authentication')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('authentication')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="login.html">Sign In</a></li>
+                    <li><a href="signup.html">Sign Up</a></li>
+                    <li><a href="reset-pw.html">Reset Password</a></li>
+                </ul>
+            </li>
+            <h2 class="my-2 text-sm text-slate-500 group-data-[sidebar=dark]/item:text-slate-500 group-data-[sidebar=brand]/item:text-sky-200"><span>UI Kit</span></h2>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('elements')}" @click="toggle('elements', false)">
+                    <div class="flex items-center">
+                        <i data-feather="zap" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">UI Elements</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('elements')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('elements')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="ui-alerts.html">Alerts</a></li>
+                    <li><a href="ui-buttons.html">Buttons</a></li>
+                    <li><a href="ui-buttons-group.html">buttons group</a></li>
+                    <li><a href="ui-badge.html">badge</a></li>
+                    <li><a href="ui-breadcrumb.html">breadcrumb</a></li>
+                    <li><a href="ui-videos.html">videos</a></li>
+                    <li><a href="ui-images.html">Images</a></li>
+                    <li><a href="ui-dropdowns.html">dropdowns</a></li>
+                    <li><a href="ui-typography.html">typography</a></li>
+                    <li><a href="ui-avatar.html">Avatar</a></li>
+                    <li><a href="ui-tooltips.html">tooltips</a></li>
+                    <li><a href="ui-loader.html">loader</a></li>
+                    <li><a href="ui-pagination.html">pagination</a></li>
+                    <li><a href="ui-progress-bar.html">progress bar</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('components')}" @click="toggle('components', false)">
+                    <div class="flex items-center">
+                        <i data-feather="box" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Components</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('components')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('components')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="ui-tabs.html">tabs</a></li>
+                    <li><a href="ui-accordions.html">accordions</a></li>
+                    <li><a href="ui-modals.html">modals</a></li>
+                    <li><a href="ui-clipboard.html">clipboard</a></li>
+                    <li><a href="ui-notification.html">Notification</a></li>
+                    <li><a href="ui-carousel.html">carousel</a></li>
+                    <li><a href="ui-pricing.html">pricing</a></li>
+                    <li><a href="ui-lightbox.html">lightbox</a></li>
+                    <li><a href="ui-countdown.html">Countdown</a></li>
+                    <li><a href="ui-counter.html">Counter</a></li>
+                    <li><a href="ui-flatpickr.html">Flatpickr</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item">
+                <a href="chart.html" class="nav-link group" @click="toggle('single' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="pie-chart" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Chart</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('icons')}" @click="toggle('icons', false)">
+                    <div class="flex items-center">
+                        <i data-feather="at-sign" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Icons</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('icons')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('icons')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="icons.html">Remix</a></li>
+                    <li><a href="icons-feather.html">Feather</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item">
+                <a href="drag-and-drop.html" class="nav-link group" @click="toggle('single' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="codepen" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Drag & Drop</span>
+                    </div>
+                </a>
+            </li>
+            <h2 class="my-2 text-sm text-slate-500 group-data-[sidebar=dark]/item:text-slate-500 group-data-[sidebar=brand]/item:text-sky-200"><span>Table & Forms</span></h2>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('forms')}" @click="toggle('forms' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="file-text" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Forms</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' : isActive('forms')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('forms')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="forms-basic.html">Basic</a></li>
+                    <li><a href="forms-input-group.html">Input Group</a></li>
+                    <li><a href="forms-editors.html">Editors</a></li>
+                    <li><a href="forms-validation.html">Validation</a></li>
+                    <li><a href="forms-checkbox.html">Checkbox</a></li>
+                    <li><a href="forms-radio.html">Radio</a></li>
+                    <li><a href="forms-switches.html">Switches</a></li>
+                </ul>
+            </li>
+            <li class="menu nav-item main-menu">
+                <a href="javascript:void(0);" class="items-center justify-between text-black nav-link group" :class="{'active' : isActive('table')}" @click="toggle('table' , false)">
+                    <div class="flex items-center">
+                        <i data-feather="rss" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Tables</span>
+                    </div>
+                    <div class="flex items-center justify-center w-4 h-4 dropdown-icon" :class="{'!rotate-180' :  isActive('table')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
+                            <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </a>
+                <ul x-cloak x-show="isActive('table')" x-collapse class="flex flex-col gap-1 text-black sub-menu dark:text-white/60 group-data-[sidebar=dark]/item:text-white/60 group-data-[sidebar=brand]/item:text-sky-200">
+                    <li><a href="tables-basic.html">Basic</a></li>
+                    <li><a href="tables-datatables.html">datatables</a></li>
+                    <li><a href="tables-editable.html">editable</a></li>
+                </ul>
+            </li>
+            <h2 class="my-2 text-sm text-slate-500 group-data-[sidebar=dark]/item:text-slate-500 group-data-[sidebar=brand]/item:text-sky-200"><span>Supports</span></h2>
+            <li class="menu nav-item">
+                <a href="https://sliced-tailwind.netlify.app/docs/html/#change" target="_blank" class="nav-link group" :class="{'active' : isActive('change')}">
+                    <div class="flex items-center">
+                        <i data-feather="git-pull-request" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Changelog</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu nav-item">
+                <a href="https://sliced-tailwind.netlify.app/docs/html/" target="_blank" class="nav-link group" :class="{'active' : isActive('docs')}">
+                    <div class="flex items-center">
+                        <i data-feather="file" class="size-4"></i>
+                        <span class="ltr:pl-1.5 rtl:pr-1.5">Documentation</span>
+                    </div>
+                </a>
+            </li>
+            </ul>
+            <div class="relative p-4 pt-0 text-center rounded-md bg-purple help-box group-data-[sidebar=brand]/item:bg-sky-500">
+                <div class="relative -top-6">
+                    <span class="text-black mx-auto border border-slate-200 shadow-[0_0.75rem_1.5rem_rgba(18,38,63,.03)]  bg-white flex items-center justify-center h-12 w-12 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM13 13.3551V14H11V12.5C11 11.9477 11.4477 11.5 12 11.5C12.8284 11.5 13.5 10.8284 13.5 10C13.5 9.17157 12.8284 8.5 12 8.5C11.2723 8.5 10.6656 9.01823 10.5288 9.70577L8.56731 9.31346C8.88637 7.70919 10.302 6.5 12 6.5C13.933 6.5 15.5 8.067 15.5 10C15.5 11.5855 14.4457 12.9248 13 13.3551Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                </div>
+                <h4 class="text-xl text-white">Help Center</h4>
+                <p class="mt-4 text-white/70">Looks like there might be a new theme soon.</p>
+                <div class="mt-5">
+                    <a href="javascript:void(0);" class="btn-white text-slate-500">Go to help</a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</nav>
+<script>
+    const company = localStorage.getItem("name");
+
+    if (company !== 'dessy' && company !== 'asen') {
+        document.getElementById("clavis_menu").classList.remove("hidden");
+        document.getElementById("clavis_dashboard_menu").classList.remove("hidden");
+    }else{
+        if(company==='asen'){
+            document.getElementById("clavis_menu").classList.remove("hidden");
+            document.getElementById("clavis_dashboard_menu").classList.add("hidden");
+        }
+    }
+    const id_user = localStorage.getItem("id_user");
+    console.log(id_user)
+
+</script>
+<!-- End sidebar -->

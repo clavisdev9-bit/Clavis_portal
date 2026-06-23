@@ -1,0 +1,58 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Calender" }}
+
+    {{> partials/head-css }}
+
+
+</head>
+
+{{> partials/body }}
+
+    <!-- Start Layout -->
+    <div class="bg-[#f9fbfd] dark:bg-dark dark:text-darkmuted text-black">
+        <!-- Start detached bg -->
+        <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+        <!-- End detached bg -->
+
+        <!-- Start Menu Sidebar Olverlay -->
+        <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+        <!-- End Menu Sidebar Olverlay -->
+
+        <!-- Start Main Content -->
+        <div class="flex mx-auto main-container">
+            {{> partials/sidebar }}
+
+            <!-- Start Content Area -->
+            <div class="flex-1 main-content">
+                <!-- Start Topbar -->
+                {{> partials/topbar }}
+                <!-- End Topbar -->
+
+                <!-- Start Content -->
+                <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                    {{> partials/page-heading title="apps" sub-title="Calender" }}
+
+                    <div id="calendar"></div>
+                    {{> partials/footer }}
+                </div>
+                <!-- End Content -->
+            </div>
+            <!-- End Content Area -->
+        </div>
+    </div>
+    <!-- End Layout -->
+
+    {{> partials/vendor-scripts }}
+    <!-- All javascirpt -->
+    <!-- Alpine js -->
+   
+    
+    <script type="module" src='assets/js/pages/calender.js'></script>
+    <!-- Custom js -->
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+
+</html>

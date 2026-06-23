@@ -1,0 +1,123 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Carousel" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Overlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Overlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Elements" sub-title="Carousel" }}
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Carousel</h2>
+                            <div class="swiper SwiperDefault" dir="ltr">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="assets/images/images-1.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-2.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-3.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-4.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-5.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Carousel With Arrow</h2>
+                            <div class="swiper SwiperwithArrows" dir="ltr">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="assets/images/images-6.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-7.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-2.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-4.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-5.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                </div>
+                                <div class="text-white swiper-button-next"></div>
+                                <div class="text-white swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Carousel With pagination</h2>
+                            <div class="swiper SwiperwithPagination" dir="ltr">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="assets/images/images-5.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-4.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-2.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-6.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-7.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Carousel With progress</h2>
+                            <div class="swiper SwiperwithProgress" dir="ltr">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="assets/images/images-4.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-3.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-2.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-6.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-7.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                </div>
+                                <div class="text-white swiper-button-next"></div>
+                                <div class="text-white swiper-button-prev"></div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Basic Carousel With Multiple slides</h2>
+                            <div class="swiper SwiperMultiple" dir="ltr">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="assets/images/images-7.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-6.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-2.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-4.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                    <div class="swiper-slide"><img src="assets/images/images-3.jpg" alt="slider" class="object-cover w-full max-h-96" /></div>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script src="assets/libs/swiper/swiper-bundle.min.js"></script>
+
+<script src="assets/js/pages/carousel.init.js"></script>
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>

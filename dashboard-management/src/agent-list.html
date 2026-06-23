@@ -1,0 +1,314 @@
+{{> partials/main }}
+
+<head>
+
+    {{> partials/title-meta title="Agent List" }}
+
+    {{> partials/head-css }}
+
+</head>
+
+{{> partials/body }}
+
+<!-- Start Layout -->
+<div class="bg-slate-50 dark:bg-dark">
+
+    <!-- Start detached bg -->
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <!-- End detached bg -->
+
+    <!-- Start Menu Sidebar Olverlay -->
+    <div x-cloak class="fixed inset-0 bg-black/60 dark:bg-dark/90 z-10 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <!-- End Menu Sidebar Olverlay -->
+
+    <!-- Start Main Content -->
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+
+        <!-- Start Content Area -->
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <!-- Start Content -->
+            <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
+                {{> partials/page-heading title="Sliced Pro" sub-title="Agent List" }}
+
+                <!-- Start All Card -->
+                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-2.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Heather McCullough</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">50</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-3.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Mollie Best</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">23</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-5.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Eugene Cook</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">29</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-5.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Eugene Cook</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">29</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-6.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Kathryn Zielinski</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">34</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-7.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Patricia Hinkley</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">18</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-8.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Rebecca Rosario</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">24</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-9.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Paul Miranda</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">36</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="xl:col-span-4 sm:col-span-6 col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex">
+                                        <div class="mr-3">
+                                            <img src="assets/images/avatar-10.png" alt="" class="flex-none object-cover p-1 border rounded-full size-12 border-purple">
+                                        </div>
+                                        <div>
+                                            <h5 class="font-size-15 mb-1"><a href="agent-details.html">Martin Carreon</a></h5>
+                                            <p class="text-muted mb-0">Property Agent</p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4 dark:border-darkborder">
+                                    <div class="flex justify-between">
+                                        <div class="overflow-hidden">
+                                            <p class="mb-2 text-muted"><i class="ri-phone-line mr-1"></i> 123 456 7890</p>
+                                            <p class="mb-0 text-muted"><a href="#"><i class="ri-mail-line mr-1"></i> example123@sliced.com</a></p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="text-center">
+                                                <p class="mb-2 text-muted">Property list</p>
+                                                <h5 class="mb-0">46</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                </div>
+                <!-- End All Card -->
+                {{> partials/footer }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script type="module" src="assets/js/main.js"></script>
+
+</body>
+
+</html>
