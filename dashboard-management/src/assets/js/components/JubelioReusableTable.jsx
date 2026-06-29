@@ -46,12 +46,10 @@ const JubelioReusableTable = ({
     let left = rect.right + 10;
     let top = rect.top;
 
-    // kalau mentok kanan viewport → pindah ke kiri
     if (left + popupWidth > window.innerWidth - margin) {
       left = rect.left - popupWidth - 10;
     }
 
-    // kalau mentok bawah viewport → naik ke atas
     if (top + popupHeight > window.innerHeight - margin) {
       top = window.innerHeight - popupHeight - margin;
     }

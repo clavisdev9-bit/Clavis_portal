@@ -39,7 +39,7 @@ const BundlingReusableTable = ({
         <div className="relative w-full">
           <table className="table-fixed min-w-[1200px] text-sm border-separate border-spacing-0">
             <colgroup>
-              <col style={{ width: "50px" }} />
+              <col style={{ width: "30px" }} />
               <col style={{ width: "90px" }} />
               <col style={{ width: "200px" }} />
               <col style={{ width: "320px" }} />
@@ -74,12 +74,10 @@ const BundlingReusableTable = ({
 
                 return (
                   <tr key={v.id || i}>
-                    {/* Kolom No sticky */}
-                    <td className="sticky left-0 z-10 px-3 py-2 w-[60px] bg-gray-100 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700">
+                    <td className="sticky left-0 z-10 px-3 py-2 w-[60px] bg-gray-100 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 text-center">
                       {startIndex + i + 1}
                     </td>
 
-                    {/* Thumbnail */}
                     <td className="px-3 py-2">
                       <img
                         src={
