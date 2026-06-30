@@ -51,7 +51,10 @@ const BundlingReusableTable = ({
 
             <thead className="text-left" style={{ backgroundColor: "#0d2b5e" }}>
               <tr>
-                <th className="text-white sticky left-0 bg-black dark:bg-blue-950 z-4">
+                <th
+                  className="text-white sticky left-0 z-4"
+                  style={{ backgroundColor: "#0d2b5e" }}
+                >
                   No
                 </th>
                 <th className="px-3 py-2 text-white">Thumbnail</th>
@@ -74,7 +77,7 @@ const BundlingReusableTable = ({
 
                 return (
                   <tr key={v.id || i}>
-                    <td className="sticky left-0 z-10 px-3 py-2 w-[60px] bg-gray-100 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 text-center">
+                    <td className="sticky left-0 z-10 px-3 py-2 w-[60px] dark:bg-slate-800 text-center">
                       {startIndex + i + 1}
                     </td>
 

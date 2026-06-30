@@ -6,61 +6,108 @@ const SupplierReusableTable = ({
   columns: initialColumns,
   elementId,
 }) => {
-  const [tableData, setTableData] = useState([]);
+  const [allData, setAllData] = useState([]); // semua data dari backend
   const [searchText, setSearchText] = useState("");
-  const [limit] = useState(10);
-  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const pageSizeOptions = [10, 25, 50, 100];
   const [currentPage, setCurrentPage] = useState(1);
   const [columns, setColumns] = useState(initialColumns);
+  const [loading, setLoading] = useState(false);
+  const [showColumn, setShowColumn] = useState(false);
   const filterRef = useRef(null);
+  const [sortField, setSortField] = useState(null);
+  const [sortDir, setSortDir] = useState("asc");
+
   const getNestedValue = (obj, path) => {
-    return path.split(".").reduce((acc, part) => {
-      return acc && acc[part];
-    }, obj);
+    return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   };
 
-  const fetchData = (page = 1) => {
-    const offset = (page - 1) * limit;
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
 
+  // Fetch SEKALI saja — ambil semua data, tidak perlu page/per_page ke backend
+  const fetchData = () => {
     setLoading(true);
 
-    const params = {
-      page,
-      per_page: limit,
-    };
-
-    if (searchText && searchText.trim()) {
-      params.search = searchText.trim();
-    }
-
     axios
-      .get(`${__JUBELIO_URL__}${endpoint}`, { params })
+      .get(`${__JUBELIO_URL__}${endpoint}`)
       .then((res) => {
         const result = res.data;
+        const dataArr = (result.data && result.data.data) || result.data || [];
 
-        setTableData(result.data.data || []);
-        setTotal(result.data.pagination.total || 0);
-        setCurrentPage(page);
+        setAllData(Array.isArray(dataArr) ? dataArr : []);
+        setCurrentPage(1);
       })
       .catch((err) => console.error(err))
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    fetchData(1);
+    fetchData();
   }, []);
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchData(1);
-    }, 500);
+    const handleClickOutside = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setShowColumn(false);
+      }
+    };
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchText]);
+    document.addEventListener("mousedown", handleClickOutside);
 
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const visibleColumns = columns.filter((col) => col.visible !== false);
+
+  const chunkSize = Math.ceil(columns.length / 3);
+  const col1 = columns.slice(0, chunkSize);
+  const col2 = columns.slice(chunkSize, chunkSize * 2);
+  const col3 = columns.slice(chunkSize * 2);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // ====== Filter berdasarkan search (client-side) ======
+  const filteredData = allData.filter((item) => {
+    if (!searchText.trim()) return true;
+    const keyword = searchText.trim().toLowerCase();
+
+    return visibleColumns.some((col) => {
+      const val = getNestedValue(item, col.field);
+      return val && String(val).toLowerCase().includes(keyword);
+    });
+  });
+
+  // ====== Sort (client-side) ======
+  const sortedData = [...filteredData].sort((a, b) => {
+    if (!sortField) return 0;
+    const aVal = getNestedValue(a, sortField) || "";
+    const bVal = getNestedValue(b, sortField) || "";
+    if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  // ====== Pagination (client-side) — maksimal 10 data per halaman ======
+  const total = sortedData.length;
   const totalPages = Math.ceil(total / limit);
+  const startIdx = (currentPage - 1) * limit;
+  const paginatedData = sortedData.slice(startIdx, startIdx + limit);
 
   const getPagination = (currentPage, totalPages) => {
     const delta = 2;
@@ -92,383 +139,425 @@ const SupplierReusableTable = ({
   };
 
   const pages = getPagination(currentPage, totalPages);
-  const [loading, setLoading] = useState(false);
-  const [showColumn, setShowColumn] = useState(false);
+  const showingFrom = total === 0 ? 0 : startIdx + 1;
+  const showingTo = Math.min(startIdx + limit, total);
+
+  // Reset ke halaman 1 setiap kali search berubah
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (filterRef.current && !filterRef.current.contains(e.target)) {
-        setShowColumn(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-  const visibleColumns = columns.filter((col) => col.visible !== false);
-  const selectableColumns = columns;
+    setCurrentPage(1);
+  }, [searchText]);
 
-  const chunkSize = Math.ceil(selectableColumns.length / 3);
+  // ====== Export helper — pakai paginatedData (data halaman aktif) ======
+  const buildExportRows = () => {
+    const headers = ["No", ...visibleColumns.map((col) => col.label)];
 
-  const col1 = selectableColumns.slice(0, chunkSize);
+    const rows = paginatedData.map((item, index) => {
+      const row = [startIdx + index + 1];
 
-  const col2 = selectableColumns.slice(chunkSize, chunkSize * 2);
+      visibleColumns.forEach((col) => {
+        const rawValue = getNestedValue(item, col.field);
+        const value =
+          col.type === "date" ? formatDate(rawValue) : rawValue || "";
 
-  const col3 = selectableColumns.slice(chunkSize * 2);
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
+        row.push(value);
+      });
 
-    return new Date(dateString).toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
+      return row;
     });
+
+    return { headers, rows };
   };
-  const formatMonth = (dateString) => {
-    if (!dateString) return;
 
-    return new Date(dateString).toLocaleDateString("en-GB", {
-      month: "long",
-    });
+  const exportCSV = () => {
+    const { headers, rows } = buildExportRows();
+    const csvContent = [headers, ...rows]
+      .map((r) =>
+        r
+          .map((cell) => `"${String(cell || "").replace(/"/g, '""')}"`)
+          .join(","),
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = `${title || "data"}.csv`;
+    link.click();
   };
-  const formatYear = (dateString) => {
-    if (!dateString) return;
 
-    return new Date(dateString).toLocaleDateString("en-GB", {
-      year: "numeric",
-    });
-  };
-  const formatRupiah = (value, options = {}) => {
-    const {
-      minimumFractionDigits = 2,
-      maximumFractionDigits = 2,
-      rounding = "round", // 'round' | 'ceil' | 'floor'
-    } = options;
-
-    let number = Number(value) || 0;
-
-    // Handle rounding
-    if (rounding === "ceil") {
-      number = Math.ceil(number * 100) / 100;
-    } else if (rounding === "floor") {
-      number = Math.floor(number * 100) / 100;
-    } else {
-      number = Math.round(number * 100) / 100;
+  const exportXLSX = () => {
+    if (typeof XLSX === "undefined") {
+      console.error("Library XLSX (SheetJS) belum di-load di HTML.");
+      return;
     }
 
-    return new Intl.NumberFormat("id-ID", {
-      minimumFractionDigits,
-      maximumFractionDigits,
-    }).format(number);
-  };
-  const formatCurrency = (value, currency = "IDR") => {
-    if (value == null) return;
+    const { headers, rows } = buildExportRows();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const wb = XLSX.utils.book_new();
 
-    const locale = "id-ID";
-
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
-  const formatNumber = (value) => {
-    if (value === null || value === undefined || value === "") return;
-
-    return Number(value).toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
-  const formatters = {
-    date: formatDate,
-    number: formatNumber,
-    currency: formatCurrency,
-    sync_status: formatSyncStatus,
+    XLSX.utils.book_append_sheet(wb, ws, title || "Sheet1");
+    XLSX.writeFile(wb, `${title || "data"}.xlsx`);
   };
 
-  const formatSyncStatus = (value) => {
-    if (!value) {
-      return <i className="ri-close-line text-red-500"></i>;
-    }
+  const handlePrint = () => {
+    const { headers, rows } = buildExportRows();
+    const printWindow = window.open("", "_blank");
 
-    const date = new Date(value);
+    const tableHtml = `
+      <table border="1" cellspacing="0" cellpadding="6" style="width:100%; border-collapse:collapse; font-family:sans-serif;">
+        <thead>
+          <tr>${headers
+            .map((h) => `<th style="background:#233a68;color:#fff;">${h}</th>`)
+            .join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows
+            .map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`)
+            .join("")}
+        </tbody>
+      </table>
+    `;
 
-    if (isNaN(date.getTime())) {
-      return <i className="ri-close-line text-red-500"></i>;
-    }
+    printWindow.document.write(`
+      <html>
+        <head><title>${title}</title></head>
+        <body>
+          <h3>${title}</h3>
+          ${tableHtml}
+        </body>
+      </html>
+    `);
 
-    return <i className="ri-check-line text-green-500"></i>;
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   return (
-    <div className="dark:bg-dark">
-      <div class="card m-5 p-0">
-        <div class="border border-gray-300 border-t-0 border-l-0 border-r-0 p-4 font-bold">
-          <i class="ri-filter-line"></i> Filter Panel
+    <div>
+      {/* FILTER PANEL */}
+      <div className="card m-5 p-0">
+        <div className="border border-gray-300 border-t-0 border-l-0 border-r-0 p-4 font-bold">
+          <i className="ri-filter-line"></i> Filter Panel
         </div>
-        <div class="grid grid-cols-4 p-4 gap-4">
-          <div class="flex flex-col">
-            <label class="pb-2 font-medium">Date From</label>
+
+        <div className="grid grid-cols-4 p-4 gap-4">
+          <div className="flex flex-col">
+            <label className="pb-2 font-medium">Date From</label>
             <input
               type="date"
-              class="border border-gray-300 rounded-md dark:bg-dark text-black dark:text-white date-input"
+              className="border border-gray-300 rounded-md dark:bg-dark date-input"
             />
           </div>
-          <div class="flex flex-col">
-            <label class="pb-2 font-medium">Date To</label>
+
+          <div className="flex flex-col">
+            <label className="pb-2 font-medium">Date To</label>
             <input
               type="date"
-              class="border border-gray-300 rounded-md dark:bg-dark date-input"
+              className="border border-gray-300 rounded-md dark:bg-dark date-input"
             />
           </div>
         </div>
       </div>
+
+      {/* TABLE */}
       <div className="flex flex-col gap-4 m-5 mt-0 min-h-[calc(100vh-212px)]">
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 card relative overflow-visible">
-            {/* Header */}
+          <div className="col-span-12 2xl:col-span-12 order-[17] card">
             <div className="grid grid-cols-2 content-between mb-2">
               <h4 className="font-semibold pt-1">{title}</h4>
 
-              <div className="flex justify-end gap-1">
-                <div class="relative">
-                  <span class="absolute left-3 top-2 text-gray-400">🔍</span>
-                  <input
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="Search..."
-                    className="w-18 pl-10 pr-4 py-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple focus:outline-none dark:bg-dark"
-                  />
-                </div>
-                <div className="relative" ref={filterRef}>
+              <div className="flex justify-end gap-1" ref={filterRef}>
+                <button
+                  onClick={exportXLSX}
+                  className="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
+                >
+                  <i className="ri-file-excel-line text-md"></i> XLSX
+                </button>
+
+                <button
+                  onClick={handlePrint}
+                  className="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
+                >
+                  <i className="ri-file-pdf-2-line text-md"></i> PDF
+                </button>
+
+                <button
+                  onClick={exportCSV}
+                  className="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
+                >
+                  <i className="ri-file-hwp-line text-md"></i> CSV
+                </button>
+
+                <button
+                  onClick={handlePrint}
+                  className="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
+                >
+                  <i className="ri-printer-line text-md"></i> PRINT
+                </button>
+
+                <div className="relative">
                   <button
                     onClick={() => setShowColumn(!showColumn)}
-                    id="exportExcel"
                     className="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
                   >
                     <i className="ri-layout-vertical-line text-md"></i> Columns
                   </button>
 
                   {showColumn && (
-                    <div className="absolute right-0 top-full mt-2 bg-white dark:bg-slate-800 border border-gray-200 rounded-lg shadow-2xl p-4 z-[99999] max-h-[500px] overflow-y-auto inline-block min-w-max whitespace-nowrap">
-                      {/* Check All */}
-                      <label className="flex items-center border-b pb-2 mb-2 font-semibold cursor-pointer text-black dark:text-black">
-                        <input
-                          type="checkbox"
-                          className="mr-2 cursor-pointer"
-                          checked={columns.every(
-                            (col) => col.visible !== false,
-                          )}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
+                    <div className="absolute min-w-96 mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-50 whitespace-nowrap">
+                      <div className="flex flex-col gap-3">
+                        <label className="flex items-center border-b pb-2 font-semibold cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={columns.every(
+                              (col) => col.visible !== false,
+                            )}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
 
-                            setColumns((prev) =>
-                              prev.map((col) => ({
-                                ...col,
+                              setColumns((prev) =>
+                                prev.map((col) => ({
+                                  ...col,
+                                  visible: checked,
+                                })),
+                              );
+                            }}
+                            className="mr-2 cursor-pointer"
+                          />
+                          <span>Check All Columns</span>
+                        </label>
 
-                                // index 1 - 6 selalu visible
-                                visible: col.index <= 6 ? true : checked,
-                              })),
-                            );
-                          }}
-                        />
-                        Check All Columns
-                      </label>
-
-                      {/* Column List */}
-                      <div className="flex gap-8 w-max">
-                        {[col1, col2, col3].map((group, groupIndex) => (
-                          <div
-                            key={groupIndex}
-                            className="flex flex-col pr-4 min-w-[220px]"
-                          >
-                            {group.map((col) => (
-                              <label
-                                key={col.index}
-                                className="flex items-center gap-2 cursor-pointer text-black whitespace-nowrap"
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="mt-1 flex-shrink-0 cursor-pointer"
-                                  checked={col.visible !== false}
-                                  onChange={() => {
-                                    setColumns((prev) =>
-                                      prev.map((item) =>
-                                        item.index === col.index
-                                          ? {
-                                              ...item,
-                                              visible: !item.visible,
-                                            }
-                                          : item,
-                                      ),
-                                    );
-                                  }}
-                                />
-
-                                <span className="whitespace-nowrap">
-                                  {col.label}
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        ))}
+                        <div className="flex gap-3">
+                          {[col1, col2, col3].map((group, index) => (
+                            <div key={index} className="flex-1 flex flex-col">
+                              {group.map((col) => (
+                                <label
+                                  key={col.index}
+                                  className="flex items-center cursor-pointer"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={col.visible !== false}
+                                    onChange={() => {
+                                      setColumns((prev) =>
+                                        prev.map((item) =>
+                                          item.index === col.index
+                                            ? {
+                                                ...item,
+                                                visible: !item.visible,
+                                              }
+                                            : item,
+                                        ),
+                                      );
+                                    }}
+                                    className="mr-2 cursor-pointer"
+                                  />
+                                  <span>{col.label}</span>
+                                </label>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
             </div>
+            <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center gap-2">
+                <span>Show</span>
+                <div className="relative inline-flex items-center">
+                  <select
+                    value={limit}
+                    onChange={(e) => {
+                      setLimit(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    style={{
+                      WebkitAppearance: "none",
+                      MozAppearance: "none",
+                      appearance: "none",
+                    }}
+                    className="border border-gray-300 rounded-md pl-3 pr-7 py-1 w-20 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-dark"
+                  >
+                    {pageSizeOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                  <i className="absolute right-2 text-gray-500 pointer-events-none text-sm"></i>
+                </div>
+                <span>entries</span>
+              </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto relative">
+              <div className="flex items-center gap-2">
+                <span>Search:</span>
+                <input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  className="border border-gray-300 rounded-md px-3 py-1"
+                />
+              </div>
+            </div>
+
+            <div className="relative w-full overflow-x-auto">
               {loading && (
-                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 dark:bg-black/40 backdrop-blur-[2px] rounded-md">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-white mb-3">
-                    <i className="ri-loader-4-line animate-spin text-lg"></i>
-                    Loading data...
-                  </div>
-
-                  <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-slate-700">
-                    <div className="h-full bg-blue-600 animate-pulse w-full"></div>
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">
+                  <div className="flex flex-col items-center gap-2">
+                    <i className="ri-loader-4-line animate-spin text-3xl"></i>
+                    <span className="text-sm font-medium">Loading...</span>
                   </div>
                 </div>
               )}
-              <table
-                className={`table-fixed min-w-max transition-all duration-200 ${loading ? "blur-sm brightness-50 scale-[0.99] pointer-events-none select-none" : ""}`}
+
+              <div
+                className={`${loading ? "blur-sm pointer-events-none" : ""}`}
               >
-                <colgroup>
-                  <col style={{ width: "50px" }} />
-
-                  {visibleColumns.map((col) => (
-                    <col
-                      key={col.index}
-                      style={{
-                        width: col.width || "200px",
-                      }}
-                    />
-                  ))}
-
-                  <col style={{ width: "80px" }} />
-                </colgroup>
-
-                <thead
-                  className="text-left"
-                  style={{
-                    backgroundColor: "#0d2b5e",
-                  }}
-                >
-                  <tr>
-                    <th className="text-white sticky left-0 bg-black dark:bg-blue-950 z-4">
-                      No
-                    </th>
-
-                    {visibleColumns.map((col) => (
-                      <th key={col.index} className="text-white">
-                        {col.label}
+                <table className="min-w-full table-auto">
+                  <thead
+                    className="text-left"
+                    style={{ backgroundColor: "#233a68" }}
+                  >
+                    <tr>
+                      <th
+                        className="text-white px-3 py-3 font-semibold"
+                        style={{ backgroundColor: "#233a68" }}
+                      >
+                        No
                       </th>
-                    ))}
 
-                    <th className="text-white sticky right-0 bg-gray-700 dark:bg-blue-950 z-10">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {tableData.map((item, index) => (
-                    <tr key={index} className="align-top">
-                      {/* No */}
-                      <td className="sticky left-0 bg-white dark:bg-dark z-4">
-                        {(currentPage - 1) * limit + index + 1}
-                      </td>
-
-                      {/* Dynamic Columns */}
-                      {visibleColumns.map((col) => {
-                        const rawValue = getNestedValue(item, col.field);
-
-                        let value;
-
-                        if (col.render) {
-                          value = col.render(rawValue, item);
-                        } else {
-                          const formatter = formatters[col.type];
-                          value = formatter ? formatter(rawValue) : rawValue;
-                        }
-
-                        return (
-                          <td
-                            key={col.index}
-                            className={`
-                                px-3 py-2
-                                align-top
-                                break-words
-                                whitespace-normal
-                                overflow-hidden
-                                ${col.className || ""}
-                            `}
-                          >
-                            {value}
-                          </td>
-                        );
-                      })}
-
-                      {/* Actions */}
-                      {/* <td className="sticky right-0 bg-white dark:bg-dark z-10">
-                        <i className="ri-eye-line"></i>
-
-                        <i className="ri-printer-line ml-3"></i>
-                      </td> */}
+                      {visibleColumns.map((col) => (
+                        <th
+                          key={col.index}
+                          className="text-white px-3 py-3 font-semibold cursor-pointer select-none"
+                          onClick={() => handleSort(col.field)}
+                        >
+                          <div className="flex items-center gap-1">
+                            {col.label}
+                            <span className="flex flex-col leading-none text-[10px]">
+                              <span
+                                style={{
+                                  opacity:
+                                    sortField === col.field && sortDir === "asc"
+                                      ? 1
+                                      : 0.35,
+                                }}
+                              >
+                                ▲
+                              </span>
+                              <span
+                                style={{
+                                  opacity:
+                                    sortField === col.field &&
+                                    sortDir === "desc"
+                                      ? 1
+                                      : 0.35,
+                                }}
+                              >
+                                ▼
+                              </span>
+                            </span>
+                          </div>
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody>
+                    {paginatedData.map((item, index) => (
+                      <tr
+                        key={startIdx + index}
+                        className="border-b border-gray-200"
+                      >
+                        <td className="px-3 py-3">{startIdx + index + 1}</td>
+
+                        {visibleColumns.map((col) => {
+                          const rawValue = getNestedValue(item, col.field);
+
+                          let value;
+
+                          if (col.render) {
+                            value = col.render(rawValue, item);
+                          } else if (col.type === "date") {
+                            value = formatDate(rawValue);
+                          } else {
+                            value = rawValue;
+                          }
+
+                          return (
+                            <td
+                              key={col.index}
+                              className={`px-3 py-3 break-words whitespace-normal ${
+                                col.className || ""
+                              }`}
+                            >
+                              {value}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            {/* Pagination */}
-            <div className="pt-3 text-right">
-              <button
-                onClick={() => fetchData(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`px-2 rounded-md ${
-                  currentPage === 1
-                    ? "text-gray-400"
-                    : "border border-gray-400 text-black"
-                }`}
-              >
-                <i className="ri-arrow-left-double-line"></i>
-              </button>
+            {/* PAGINATION */}
+            <div className="flex justify-between items-center pt-3 text-sm">
+              <span className="text-gray-600 dark:text-gray-300">
+                {total === 0
+                  ? "Showing 0 entries"
+                  : `Showing ${showingFrom} to ${showingTo} of ${total} entries`}
+              </span>
 
-              {pages.map((p, index) => (
+              <div className="flex items-center gap-1">
                 <button
-                  key={index}
-                  onClick={() => typeof p === "number" && fetchData(p)}
-                  disabled={p === "..."}
-                  style={{
-                    margin: "0 1px",
-                    fontWeight: currentPage === p ? "bold" : "normal",
-                    cursor: p === "..." ? "default" : "pointer",
-                    backgroundColor: currentPage === p ? "#0d2b5e" : "white",
-                    color: currentPage === p ? "white" : "#0d2b5e",
-                  }}
-                  className="rounded-md px-2 content-center border border-gray-400"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 rounded-md border ${
+                    currentPage === 1
+                      ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "border-gray-400 text-black hover:bg-gray-100"
+                  }`}
                 >
-                  {p}
+                  Previous
                 </button>
-              ))}
 
-              <button
-                onClick={() => fetchData(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`px-2 rounded-md content-center ${
-                  currentPage === totalPages
-                    ? "text-gray-400"
-                    : "border border-gray-400 text-black"
-                }`}
-              >
-                <i className="ri-arrow-right-double-line"></i>
-              </button>
+                {pages.map((p, index) => (
+                  <button
+                    key={index}
+                    onClick={() => typeof p === "number" && setCurrentPage(p)}
+                    disabled={p === "..."}
+                    style={{
+                      backgroundColor: currentPage === p ? "#233a68" : "white",
+                      color: currentPage === p ? "white" : "#233a68",
+                    }}
+                    className="px-3 py-1 rounded-md border border-gray-400 min-w-[36px]"
+                  >
+                    {p}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-1 rounded-md border ${
+                    currentPage === totalPages
+                      ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "border-gray-400 text-black hover:bg-gray-100"
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -476,4 +565,5 @@ const SupplierReusableTable = ({
     </div>
   );
 };
+
 window.SupplierReusableTable = SupplierReusableTable;
