@@ -52,6 +52,20 @@
         div.dataTables_scrollBody {
             overflow-x: auto !important;
         }
+        table.dataTable tbody td,
+        table.dataTable thead th{
+            white-space: nowrap;
+        }
+
+        .dtfc-fixed-left,
+        .dtfc-fixed-right{
+            background:#fff;
+        }
+
+        .dark .dtfc-fixed-left,
+        .dark .dtfc-fixed-right{
+            background:#0f172a;
+        }
     </style>
 </head>
 
@@ -95,6 +109,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
+
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
 <script type="module" src="assets/js/pages/logout.js"></script>
 </body>
 

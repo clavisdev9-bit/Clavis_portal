@@ -135,13 +135,26 @@ const PurchaseOrderTable = () => {
                     {
                         data: null,
                         title: "No",
-                        orderable: false,
+                        width: "60px",
                         searchable: false,
                         render: function (data, type, row, meta) {
                             return meta.row + 1;
                         }
                     },
-                    { data: "purchaseorder_no", title: "Purchase Order No" },
+                    {
+                        data: "purchaseorder_no",
+                        title: "Purchase Order No",
+                        render: function(data) {
+                            return `
+                                 <a
+                                    href="#"
+                                    class="po-detail text-blue-600 hover:text-blue-800 font-medium"
+                                    data-po="${data}">
+                                    ${data}
+                                </a>
+                            `;
+                        }
+                    },
                     { data: "ref_no", title: "Ref No" },
                     { data: "supplier_name", title: "Supplier Name" },
                     { data: "supplier_email", title: "Supplier Email" },
@@ -152,17 +165,85 @@ const PurchaseOrderTable = () => {
                             return formatDate(data);
                         }
                     },
-                    { data: "status", title: "Status" },
+                    {
+                        data: "status",
+                        title: "Status",
+                        render: function (data) {
+                            const status = (data || "").toUpperCase();
+
+                            if (status === "ACTIVE") {
+                                return `
+                                    <span class="inline-block px-3 rounded-full border border-green-500 text-green-600 font-medium">
+                                        ACTIVE
+                                    </span>
+                                `;
+                            }
+
+                            if (status === "NONACTIVE") {
+                                return `
+                                    <span class="inline-block px-3 rounded-full border border-red-500 text-red-600 font-medium">
+                                        NONACTIVE
+                                    </span>
+                                `;
+                            }
+
+                            return `
+                                <span class="inline-block px-3 rounded-full border border-gray-400 text-gray-600">
+                                    ${data != null ? data : "-"}
+                                </span>
+                            `;
+                        }
+                    },
                     { data: "payment_method", title: "Payment Method" },
                     { data: "payment_term", title: "Payment Term" },
                     { data: "location_name", title: "Location Name" },
-                    { data: "sub_total", title: "Subtotal" },
-                    { data: "total_disc", title: "Total Disc" },
-                    { data: "total_tax", title: "Total Tax" },
-                    { data: "grand_total", title: "Grand Total" },
+                    {
+                        data: "sub_total",
+                        title: "Subtotal",
+                        render: function(data) {
+                            return formatCurrency(data);
+                        }
+                    },
+                    {
+                        data: "total_disc",
+                        title: "Total Disc",
+                        render: function(data) {
+                            return formatCurrency(data);
+                        }
+                    },
+                    {
+                        data: "total_tax",
+                        title: "Total Tax",
+                        render: function(data) {
+                            return formatCurrency(data);
+                        }
+                    },
+                    {
+                        data: "grand_total",
+                        title: "Grand Total",
+                        render: function(data) {
+                            return formatCurrency(data);
+                        }
+                    },
                     { data: "detail_fetched", title: "Detail Fetched" },
                     { data: "sync_from_jubelio", title: "Sync From Jubelio" },
                     { data: "sync_to_odoo", title: "Sync To Odoo" },
+                    {
+                        data: null,
+                        title: "Actions",
+                        width: "120px",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button class="btn-view" data-id="${row.id}">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
                 ],
                 columnDefs: columns.map((col, i) => ({
                     targets: i + 1,      // +1 karena kolom No ada di index 0
@@ -170,7 +251,72 @@ const PurchaseOrderTable = () => {
                 })),
                 scrollX: true,
                 scrollCollapse: true,
-                autoWidth: false
+                autoWidth: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                },
+                createdRow: function(row, data) {
+                    $(row).addClass('cursor-pointer hover:bg-slate-100');
+                },
+            });
+            let openedRow = null;
+            let openedTr = null;
+            $('#purchaseOrderTable tbody')
+            .off('click', 'tr')
+            .on('click', 'tr', async function () {
+
+                const tr = $(this);
+                const row = tableRef.current.row(tr);
+                const data = row.data();
+
+                // abaikan jika bukan data row
+                if (!data) return;
+
+                const po = data.purchaseorder_no;
+
+                // jika row yang sama sedang terbuka
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+
+                    openedRow = null;
+                    openedTr = null;
+                    return;
+                }
+
+                // tutup row lain
+                if (openedRow) {
+                    openedRow.child.hide();
+                    openedTr.removeClass('shown');
+                }
+
+                row.child(`
+                    <div class="p-4 text-center">
+                        <i class="ri-loader-4-line animate-spin"></i>
+                        Loading...
+                    </div>
+                `).show();
+
+                tr.addClass('shown');
+
+                openedRow = row;
+                openedTr = tr;
+
+                try {
+                    const res = await axios.get(
+                        `${__JUBELIO_URL__}/api/purchase-orders/number/${po}`
+                    );
+
+                    row.child(renderDetail(res.data.data)).show();
+
+                } catch (err) {
+                    row.child(`
+                        <div class="p-4 text-red-500">
+                            Gagal mengambil data.
+                        </div>
+                    `).show();
+                }
             });
         } else {
             tableRef.current.clear();
@@ -178,6 +324,116 @@ const PurchaseOrderTable = () => {
             tableRef.current.draw();
         }
     }, [purchaseOrderData]);
+    const formatCurrency = (value) => {
+        if (value == null) return "-";
+        return "Rp." + new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }).format(value);
+    };
+    function renderDetail(detail) {
+
+        const items = detail.items.map((item, index) => `
+            <tr class="border-b">
+                <td class="p-2">${index + 1}</td>
+                <td class="p-2">
+                    <img src="${item.thumbnail}" width="50" class="rounded">
+                </td>
+                <td class="p-2">
+                    <div class="font-semibold">${item.item_name}</div>
+                    <div class="text-xs text-gray-500">${item.item_code}</div>
+                </td>
+                <td class="p-2 text-end">${item.qty}</td>
+                <td class="p-2 text-center">${item.unit}</td>
+                <td class="p-2 text-end">${formatCurrency(item.price)}</td>
+                <td class="p-2 text-end">${item.disc}%</td>
+                <td class="p-2 text-end">${formatCurrency(item.tax_amount)}</td>
+                <td class="p-2 text-end font-semibold">${formatCurrency(item.amount)}</td>
+            </tr>
+        `).join("");
+
+        return `
+            <div class="rounded-md border border-gray-400 p-4">
+                <div class="flex items-start justify-between gap-6 mb-3">
+                    <div>
+                        <div class="text-md text-gray-400">PO Number</div>
+                        <div class="font-semibold">${detail.purchaseorder_no}</div>
+                    </div>
+                    <div>
+                        <div class="text-md text-gray-400">No. Ref</div>
+                        <div class="font-semibold">${detail.reference_no}</div>
+                    </div>
+                    <div>
+                        <div class="text-md text-gray-400">Tanggal</div>
+                        <div class="font-semibold">${formatDate(detail.transaction_date)}</div>
+                    </div>
+                    <div>
+                        <div class="text-md text-gray-400">Supplier</div>
+                        <div class="font-semibold">${detail.supplier.name}</div>
+                    </div>
+                    <div>
+                        <div class="text-md text-gray-400">Termin</div>
+                        <div class="font-semibold">${detail.payment_term} Hari</div>
+                    </div>
+                </div>
+
+                <table class="w-full text-sm">
+
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-2">No</th>
+                            <th class="p-2">Image</th>
+                            <th class="p-2">Item</th>
+                            <th class="p-2 text-end">Qty</th>
+                            <th class="p-2">Unit</th>
+                            <th class="p-2 text-end">Price</th>
+                            <th class="p-2 text-end">Disc</th>
+                            <th class="p-2 text-end">Tax</th>
+                            <th class="p-2 text-end">Amount</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${items}
+                    </tbody>
+
+                    <tfoot class="font-semibold">
+                        <tr>
+                            <td colspan="8" class="text-end p-2">Sub Total</td>
+                            <td class="text-end p-2">
+                                ${formatCurrency(detail.summary.sub_total)}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" class="text-end p-2">Discount</td>
+                            <td class="text-end p-2">
+                                ${formatCurrency(detail.summary.total_disc)}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" class="text-end p-2">Tax</td>
+                            <td class="text-end p-2">
+                                ${formatCurrency(detail.summary.total_tax)}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" class="text-end p-2 text-lg">
+                                Grand Total
+                            </td>
+                            <td class="text-end p-2 text-lg text-blue-600">
+                                ${formatCurrency(detail.summary.grand_total)}
+                            </td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+
+            </div>
+        `;
+    }
     return (
         <div>
             <div class="card m-5 p-0">
@@ -313,6 +569,7 @@ const PurchaseOrderTable = () => {
                                             {columns.map(col => (
                                                 <th key={col.index}>{col.label}</th>
                                             ))}
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
