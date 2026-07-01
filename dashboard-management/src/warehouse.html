@@ -1,0 +1,132 @@
+{{> partials/main }}
+
+<head>
+  {{> partials/title-meta title="ST Corp dashboard - development by: clavisdev" }}
+  {{> partials/head-css }}
+
+  <script>
+    document.addEventListener("alpine:initialized", () => {
+      const app = Alpine.store("app");
+      const applyMode = () =>
+        document.documentElement.classList.toggle("dark", app.mode === "dark");
+
+      applyMode();
+      Alpine.effect(applyMode);
+    });
+  </script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    table.dataTable thead th {
+      background: #2d4169 !important;
+      color: white !important;
+    }
+    .dark .date-input {
+      background: #0f172a !important;
+      color: white !important;
+    }
+    .dark .date-input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+    #warehouseTable {
+      table-layout: fixed !important;
+      width: 100% !important;
+    }
+    #warehouseTable_length select {
+      width: 70px;
+      padding: 4px 8px;
+    }
+    #warehouseTable_wrapper .dataTables_filter,
+    #warehouseTable_wrapper .dataTables_length {
+      margin-bottom: 6px;
+    }
+    .sticky-col-left,
+    .sticky-col-right {
+      position: sticky;
+      background: white;
+      z-index: 30;
+    }
+    .sticky-col-left {
+      left: 0;
+    }
+    .sticky-col-right {
+      right: 0;
+    }
+    #warehouseTable thead .sticky-col-left,
+    #warehouseTable thead .sticky-col-right {
+      z-index: 40;
+      background: #2d4169 !important;
+      color: white !important;
+    }
+    .dark .sticky-col-left,
+    .dark .sticky-col-right {
+      background: #1e293b !important;
+    }
+    .dataTables_scrollHead table th:first-child,
+    .dataTables_scrollHead table th:last-child {
+      position: sticky !important;
+      z-index: 100 !important;
+      background: #23395d !important;
+    }
+    .dataTables_scrollHead table th:first-child {
+      left: 0 !important;
+    }
+    .dataTables_scrollHead table th:last-child {
+      right: 0 !important;
+    }
+    .dataTables_scrollBody table td:first-child,
+    .dataTables_scrollBody table td:last-child {
+      position: sticky !important;
+      z-index: 90 !important;
+      background: white !important;
+    }
+    .dataTables_scrollBody table td:first-child {
+      left: 0 !important;
+    }
+    .dataTables_scrollBody table td:last-child {
+      right: 0 !important;
+    }
+    .dark .dataTables_scrollBody table td:first-child,
+    .dark .dataTables_scrollBody table td:last-child {
+      background: #1e293b !important;
+    }
+    .card {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+{{> partials/body }}
+<script src="assets/js/pages/authMiddleware.js"></script>
+<div class="bg-slate-50 dark:bg-dark">
+    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
+    <div class="flex mx-auto main-container">
+        {{> partials/sidebar }}
+        <div class="flex-1 main-content">
+            {{> partials/topbar }}
+            <div class="relative space-y-4 detached-content">
+                <div id="warehouse"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> partials/vendor-scripts }}
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="module" src="assets/js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/babel" src="assets/js/pages/warehouse.jsx"></script>
+<script type="module" src="assets/js/pages/logout.js"></script>
+</body>
+</html>
