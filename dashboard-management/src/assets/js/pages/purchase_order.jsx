@@ -437,10 +437,10 @@ const PurchaseOrderTable = () => {
     return (
         <div>
             <div class="card m-5 p-0">
-                <div class="border border-gray-300 border-t-0 border-l-0 border-r-0 p-4 font-bold">
+                <div class="p-4 font-bold">
                     <i class="ri-filter-line"></i> Filter Panel
                 </div>
-                <div class="grid grid-cols-4 p-4 gap-4">
+                <div class="grid grid-cols-4 px-4 gap-4">
                     <div class="flex flex-col">
                         <label class="pb-2 font-medium">Date From</label>
                         <input type="date" value={startDate} onChange={(e) => {
@@ -476,10 +476,10 @@ const PurchaseOrderTable = () => {
                         <div class="grid grid-cols-2 content-between mb-2">
                             <h4 class="font-semibold pt-1">Purchase Orders</h4>
                             <div class="flex justify-end gap-1" ref={filterRef}>
-                                <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-excel-line text-md"></i> XLSX</button>
+                                {/* <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-excel-line text-md"></i> XLSX</button>
                                 <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-pdf-2-line text-md"></i> PDF</button>
                                 <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-hwp-line text-md"></i> CSV</button>
-                                <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-printer-line text-md"></i> PRINT</button>
+                                <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-printer-line text-md"></i> PRINT</button> */}
                                 
                                 <div className="relative">
                                     <button onClick={() => setShowColumn(!showColumn)} class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-layout-vertical-line text-md"></i> Columns</button>

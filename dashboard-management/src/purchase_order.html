@@ -97,7 +97,8 @@
         <div class="flex-1 main-content">
             {{> partials/topbar }}
             <!-- Start Content -->
-            <div class="h-[calc(100vh-60px)] relative space-y-4 detached-content">
+            <div class="h-[calc(100vh-60px)] relative space-y-4 detached-content p-5">
+                <div id="purchase_order_summary"></div>
                 <div id="purchase_order"></div>
             </div>
         </div>
@@ -113,10 +114,11 @@
 <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 <script type="text/babel" src="assets\js\components\DatatablePage.jsx"></script>
 <script type="text/babel" src="assets\js\pages\purchase_order.jsx"></script>
+<script type="text/babel" src="assets\js\pages\purchase_order_summary.jsx"></script>
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
 
 <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
