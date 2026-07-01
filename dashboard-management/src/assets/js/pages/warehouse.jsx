@@ -543,18 +543,6 @@ const WarehouseDashboard = () => {
             <div class="grid grid-cols-2 content-between mb-2">
               <h4 class="font-semibold pt-1">Warehouse Report</h4>
               <div class="flex justify-end gap-1" ref={filterRef}>
-                <button class="text-right py-1 px-3 font-medium rounded-md border border-gray-400">
-                  <i class="ri-file-excel-line text-md"></i> XLSX
-                </button>
-                <button class="text-right py-1 px-3 font-medium rounded-md border border-gray-400">
-                  <i class="ri-file-pdf-2-line text-md"></i> PDF
-                </button>
-                <button class="text-right py-1 px-3 font-medium rounded-md border border-gray-400">
-                  <i class="ri-file-hwp-line text-md"></i> CSV
-                </button>
-                <button class="text-right py-1 px-3 font-medium rounded-md border border-gray-400">
-                  <i class="ri-printer-line text-md"></i> PRINT
-                </button>
                 <div className="relative">
                   <button
                     onClick={() => setShowColumn(!showColumn)}
