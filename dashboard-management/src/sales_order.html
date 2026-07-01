@@ -90,7 +90,8 @@
         <div class="flex-1 main-content">
             {{> partials/topbar }}
             <!-- Start Content -->
-            <div class="h-[calc(100vh-60px)] relative space-y-4 detached-content">
+            <div class="h-[calc(100vh-60px)] relative space-y-4 detached-content p-5">
+                <div id="sales_order_summary"></div>
                 <div id="sales_order"></div>
             </div>
         </div>
@@ -105,6 +106,7 @@
 <script type="module" src="assets/js/main.js"></script>
 <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 <script type="text/babel" src="assets\js\pages\sales_order.jsx"></script>
+<script type="text/babel" src="assets\js\pages\sales_order_summary.jsx"></script>
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

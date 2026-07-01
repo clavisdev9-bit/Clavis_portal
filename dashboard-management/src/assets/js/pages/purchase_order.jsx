@@ -440,7 +440,7 @@ const PurchaseOrderTable = () => {
                 <div class="p-4 font-bold">
                     <i class="ri-filter-line"></i> Filter Panel
                 </div>
-                <div class="grid grid-cols-4 px-4 gap-4">
+                <div class="grid grid-cols-4 p-4 gap-4">
                     <div class="flex flex-col">
                         <label class="pb-2 font-medium">Date From</label>
                         <input type="date" value={startDate} onChange={(e) => {
