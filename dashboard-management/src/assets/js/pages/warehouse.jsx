@@ -72,12 +72,12 @@ const WarehouseDashboard = () => {
             {
               label: "Active",
               value: formatNumber(summary.active_locations),
-              color: "bg-emerald-100 text-emerald-600",
+              color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-200",
             },
             {
               label: "Inactive",
               value: formatNumber(summary.inactive_locations),
-              color: "bg-red-100 text-red-500",
+              color: "bg-red-100 text-red-600 dark:bg-red-200",
             },
           ],
           subtitle: "Perbandingan lokasi aktif dan nonaktif",
@@ -92,17 +92,20 @@ const WarehouseDashboard = () => {
             {
               label: "Gudang",
               value: formatNumber(summary.warehouse),
-              color: "bg-emerald-100 text-emerald-600",
+              color:
+                "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200",
             },
             {
               label: "POS",
               value: formatNumber(summary.pos_outlet),
-              color: "bg-blue-100 text-blue-600",
+              color:
+                "bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300",
             },
             {
               label: "Multi",
               value: formatNumber(summary.multi_origin),
-              color: "bg-amber-100 text-amber-500",
+              color:
+                "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-200",
             },
           ],
           subtitle: "Distribusi tipe lokasi",
@@ -117,12 +120,12 @@ const WarehouseDashboard = () => {
             {
               label: "Success",
               value: formatNumber(summary.sync_success),
-              color: "bg-emerald-100 text-emerald-600",
+              color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-200",
             },
             {
               label: "Failed",
               value: formatNumber(summary.sync_failed),
-              color: "bg-red-100 text-red-500",
+              color: "bg-red-100 text-red-600 dark:bg-red-200",
             },
           ],
           subtitle: "Status sinkronisasi data lokasi",
