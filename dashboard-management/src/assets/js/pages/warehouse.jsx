@@ -1,6 +1,6 @@
 const { useEffect, useState, useRef } = React;
 
-const WarehouseDashboard = () => {
+const Warehouse = () => {
   const tableRef = useRef();
   const [summary, setSummary] = useState(null);
   const [warehouseData, setWarehouseData] = useState([]);
@@ -208,43 +208,43 @@ const WarehouseDashboard = () => {
       .map(([label, value], idx) => {
         const safeValue = value || value === 0 ? String(value) : "-";
         return `
-        <tr>
-          <td class="px-3 py-2 border-t border-gray-300 text-center" style="width:50px;">${idx + 1}</td>
-          <td class="px-3 py-2 font-medium border-t border-gray-300" style="width:220px;">${label}</td>
-          <td class="px-3 py-2 border-t border-gray-300" style="white-space:normal; word-break:break-word; overflow-wrap:break-word;">${safeValue}</td>
-        </tr>
-      `;
+          <tr>
+            <td class="px-3 py-2 border-t border-gray-300 text-center" style="width:50px;">${idx + 1}</td>
+            <td class="px-3 py-2 font-medium border-t border-gray-300" style="width:220px;">${label}</td>
+            <td class="px-3 py-2 border-t border-gray-300" style="white-space:normal; word-break:break-word; overflow-wrap:break-word;">${safeValue}</td>
+          </tr>
+        `;
       })
       .join("");
     return `
-    <td colspan="${colspan}" class="p-3" style="overflow:hidden;">
-      <div class="border border-gray-400 rounded-md overflow-hidden w-full">
-        <table class="w-full text-sm border-collapse" style="table-layout:fixed;">
-          <thead>
-            <tr>
-              <th class="text-left px-3 py-2 font-semibold border-b border-gray-300 text-center" style="width:50px;">No</th>
-              <th class="text-left px-3 py-2 font-semibold border-b border-gray-300" style="width:220px;">Field</th>
-              <th class="text-left px-3 py-2 font-semibold border-b border-gray-300">Value</th>
-            </tr>
-          </thead>
-          <tbody>${rowsHtml}</tbody>
-        </table>
-      </div>
-    </td>
-  `;
+      <td colspan="${colspan}" class="p-3" style="overflow:hidden;">
+        <div class="border border-gray-400 rounded-md overflow-hidden w-full">
+          <table class="w-full text-sm border-collapse" style="table-layout:fixed;">
+            <thead>
+              <tr>
+                <th class="text-left px-3 py-2 font-semibold border-b border-gray-300 text-center" style="width:50px;">No</th>
+                <th class="text-left px-3 py-2 font-semibold border-b border-gray-300" style="width:220px;">Field</th>
+                <th class="text-left px-3 py-2 font-semibold border-b border-gray-300">Value</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </td>
+    `;
   };
 
   const renderLoadingRowHtml = (colspan) => `
-  <td colspan="${colspan}" class="p-4 text-center text-slate-400">
-    <i class="ri-loader-4-line animate-spin"></i> Memuat detail...
-  </td>
-`;
+    <td colspan="${colspan}" class="p-4 text-center text-slate-400">
+      <i class="ri-loader-4-line animate-spin"></i> Memuat detail...
+    </td>
+  `;
 
   const renderErrorRowHtml = (colspan, message) => `
-  <td colspan="${colspan}" class="p-4 text-center text-red-500">
-    Gagal memuat detail${message ? ": " + message : ""}
-  </td>
-`;
+    <td colspan="${colspan}" class="p-4 text-center text-red-500">
+      Gagal memuat detail${message ? ": " + message : ""}
+    </td>
+  `;
 
   useEffect(() => {
     let tooltipEl = document.getElementById("global-status-tooltip");
@@ -292,6 +292,10 @@ const WarehouseDashboard = () => {
     const handleMouseOver = (e) => {
       const target = e.target.closest(".js-tooltip");
       if (!target) return;
+
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      tooltipEl.style.color = isDarkMode ? "#ffffff" : "#000000";
+
       tooltipEl.textContent = target.getAttribute("data-tooltip") || "";
       positionTooltip(target);
     };
@@ -653,4 +657,4 @@ const WarehouseDashboard = () => {
   );
 };
 const root = ReactDOM.createRoot(document.getElementById("warehouse"));
-root.render(<WarehouseDashboard />);
+root.render(<Warehouse />);
