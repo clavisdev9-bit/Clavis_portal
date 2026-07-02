@@ -546,7 +546,7 @@ const WarehouseDashboard = () => {
             <div class="grid grid-cols-2 content-between mb-2">
               <h4 class="font-semibold pt-1">Warehouse Report</h4>
               <div class="flex justify-end gap-1" ref={filterRef}>
-                <div className="relative">
+                <div className="relative" style={{ zIndex: 9999 }}>
                   <button
                     onClick={() => setShowColumn(!showColumn)}
                     class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"
