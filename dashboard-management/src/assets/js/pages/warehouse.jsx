@@ -326,16 +326,18 @@ const Warehouse = () => {
 
   useEffect(() => {
     const handleDetailClick = (e) => {
-      const btn = e.target.closest(".btn-detail");
-      if (!btn) return;
-      const code = btn.getAttribute("data-code");
-      if (!code) return;
+      const tr = e.target.closest("#warehouseTable tbody > tr");
+      if (!tr) return;
 
       const table = tableRef.current;
       if (!table) return;
 
-      const tr = btn.closest("tr");
       const row = table.row(tr);
+      const rowData = row.data();
+      // Abaikan klik pada baris detail (child row) yang tidak punya data asli
+      if (!rowData || !rowData.location_code) return;
+
+      const code = rowData.location_code;
       const colspan = table.columns(":visible").count();
 
       if (row.child.isShown()) {
@@ -433,23 +435,6 @@ const Warehouse = () => {
           { data: "contact_name", title: "Contact Name" },
           { data: "phone", title: "Phone" },
           { data: "email", title: "Email" },
-          {
-            data: null,
-            title: "Actions",
-            orderable: false,
-            searchable: false,
-            className: "sticky-col-right text-center",
-            render: function (_data, _type, row) {
-              return `
-                <button
-                  class="btn-detail relative text-slate-600 hover:text-blue-600 text-lg"
-                  data-code="${row.location_code}"
-                >
-                  <i class="ri-eye-line js-tooltip" data-tooltip="Detail"></i>
-                </button>
-              `;
-            },
-          },
         ],
         columnDefs: [
           ...columns.map((col, i) => ({
@@ -457,6 +442,11 @@ const Warehouse = () => {
             visible: col.default,
           })),
         ],
+        createdRow: function (row) {
+          $(row).addClass(
+            "cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors",
+          );
+        },
         scrollX: true,
       });
     } else {
@@ -643,7 +633,6 @@ const Warehouse = () => {
                       {columns.map((col) => (
                         <th key={col.index}>{col.label}</th>
                       ))}
-                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
