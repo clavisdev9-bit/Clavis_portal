@@ -4,28 +4,29 @@ const SalesOrderTable = () => {
     const [salesOrderData, setSalesOrderData] = useState([]);
     const columns = [
       { label: "Sales Order No", index: 2, default: true },
-      { label: "Invoice No", index: 3, default: true },
-      { label: "Ref No", index: 4, default: true },
-      { label: "Customer Name", index: 5, default: true },
-      { label: "Customer Phone", index: 6, default: true },
-      { label: "Customer Email", index: 7, default: true },
-      { label: "Channel Name", index: 8, default: false },
-      { label: "Store Name", index: 9, default: false },
-      { label: "Transaction Date", index: 10, default: false },
-      { label: "Completed Date", index: 11, default: false },
-      { label: "Internal Status", index: 12, default: false },
-      { label: "Channel Status", index: 13, default: false },
-      { label: "WMS Status", index: 14, default: false },
-      { label: "Payment Method", index: 15, default: false },
-      { label: "Location Name", index: 16, default: false },
-      { label: "Sub Total", index: 17, default: false },
-      { label: "Total Disc", index: 18, default: false },
-      { label: "Total Tax", index: 19, default: false },
-      { label: "Grand Total", index: 20, default: false },
-      { label: "Is Paid", index: 21, default: false },
-      { label: "Is Canceled", index: 22, default: false },
-      { label: "Sync From Jubelio", index: 23, default: false },
-      { label: "Sync From Odoo", index: 24, default: false },
+      { label: "Transaction Date", index: 3, default: true },
+      { label: "No. Resi", index: 4, default: true },
+      { label: "Invoice No", index: 5, default: true },
+      { label: "Ref No", index: 6, default: true },
+      { label: "Customer Name", index: 7, default: true },
+      { label: "Customer Phone", index: 8, default: true },
+      { label: "Customer Email", index: 9, default: true },
+      { label: "Store Name", index: 10, default: false },
+      { label: "Courier", index: 11, default: false },
+      { label: "Completed Date", index: 12, default: false },
+      { label: "Internal Status", index: 13, default: false },
+      { label: "Channel Status", index: 14, default: false },
+      { label: "WMS Status", index: 15, default: false },
+      { label: "Payment Method", index: 16, default: false },
+      { label: "Location Name", index: 17, default: false },
+      { label: "Sub Total", index: 18, default: false },
+      { label: "Total Disc", index: 19, default: false },
+      { label: "Total Tax", index: 20, default: false },
+      { label: "Grand Total", index: 21, default: false },
+      { label: "Is Paid", index: 22, default: false },
+      { label: "Is Canceled", index: 23, default: false },
+      { label: "Sync From Jubelio", index: 24, default: false },
+      { label: "Sync From Odoo", index: 25, default: false },
     ];
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -43,7 +44,7 @@ const SalesOrderTable = () => {
 
     const isAllChecked = visibleColumns.length === columns.length;
     const filterRef = useRef(null);
-    const defaultColumns = [2, 3, 4, 5, 6, 7];
+    const defaultColumns = [2, 3, 4, 5, 6, 7,8,9];
     const lockedColumns = [2, 3];
     const toggleColumn = (index) => {
         if (lockedColumns.includes(index)) {
@@ -169,37 +170,6 @@ const SalesOrderTable = () => {
                             `;
                         }
                     },
-                    { data: "invoice_no", title: "Invoice No" },
-                    { data: "ref_no", title: "Ref No" },
-                    { data: "customer_name", title: "Customer Name" },
-                    { data: "customer_phone", title: "Customer Phone" },
-                    { data: "customer_email", title: "Customer Email" },
-                    { data: "channel_name", title: "Channel Name" },
-                    { data: "store_name", title: "Store Name",
-                        render: function (data) {
-                            if (!data) return "-";
-
-                            let html = data;
-                            html = html.replace(/^Shop\s*\|\s*/i, "");
-                            html = html.replace(/tokopedia/i, `
-                                <img
-                                    src="/assets/images/tokopedia.png"
-                                    alt="Tokopedia"
-                                    class="inline-block h-5 w-5 align-middle mr-1"
-                                />
-                            `);
-
-                            html = html.replace(/shopee/i, `
-                                <img
-                                    src="/assets/images/shopee.png"
-                                    alt="Shopee"
-                                    class="inline-block h-5 w-5 align-middle mr-1"
-                                />
-                            `);
-
-                            return html;
-                        }
-                    },
                     {
                         data: "transaction_date",
                         title: "Transaction Date",
@@ -207,6 +177,34 @@ const SalesOrderTable = () => {
                             return formatDate(data);
                         }
                     },
+                    { data: "shipping.tracking_number", title: "Tracking Number" },
+                    { data: "invoice_no", title: "Invoice No" },
+                    { data: "ref_no", title: "Ref No" },
+                    { data: "customer_name", title: "Customer Name" },
+                    { data: "customer_phone", title: "Customer Phone" },
+                    { data: "customer_email", title: "Customer Email" },
+                    {
+                        data: null,
+                        title: "Store Name",
+                        render: function (data, type, row) {
+                            let logo = "";
+
+                            switch ((row.channel_name || "").toLowerCase()) {
+                                case "shop | tokopedia":
+                                case "tokopedia":
+                                    logo = `<img src="/assets/images/tokopedia.png" class="inline-block h-5 w-5 mr-1" alt="Tokopedia">`;
+                                    break;
+
+                                case "shop | shopee":
+                                case "shopee":
+                                    logo = `<img src="/assets/images/shopee.png" class="inline-block h-5 w-5 mr-1" alt="Shopee">`;
+                                    break;
+                            }
+
+                            return `${logo} ${row.store_name || "-"}`;
+                        }
+                    },
+                    { data: "shipping.courier", title: "Courier" },
                     {
                         data: "completed_date",
                         title: "Completed Date",
@@ -266,7 +264,7 @@ const SalesOrderTable = () => {
                         }
                     },
                     {
-                        data: "sync_from_jubelio",
+                        data: "integration.sync_from_jubelio",
                         title: "Sync From Jubelio",
                         render: function (data) {
                             return data
@@ -275,7 +273,7 @@ const SalesOrderTable = () => {
                         }
                     },
                     {
-                        data: "sync_to_odoo",
+                        data: "integration.sync_to_odoo",
                         title: "Sync To Odoo",
                         render: function (data) {
                             return data
@@ -474,7 +472,56 @@ const SalesOrderTable = () => {
                     <tbody>
                         ${items}
                     </tbody>
+                    <tfoot class="font-semibold">
+                        <tr>
+                            <td colspan="8" class="text-end">
+                                <div>
+                                    <div class="text-xs text-gray-500">Receiver</div>
+                                    <div class="font-semibold">${detail.shipping.receiver}</div>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <div>
+                                    <div class="text-xs text-gray-500">COD</div>
+                                    <div class="font-semibold">${detail.shipping.is_cod===true? `<span class="inline-block px-3 rounded-full border border-green-500 text-green-600 font-medium">Yes</span>`
+                                : `<span class="inline-block px-3 rounded-full border border-red-500 text-red-600 font-medium">No</span>`}</div>
+                                </div>
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td colspan="8" class="text-end">
+                                <div>
+                                    <div class="text-md text-gray-400">Address</div>
+                                    <div class="font-semibold break-words whitespace-normal">${detail.shipping.address}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="text-end">
+                                <div>
+                                    <div class="text-md text-gray-400">Phone Number</div>
+                                    <div class="font-semibold">${detail.shipping.phone}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="text-end">
+                                <div>
+                                    <div class="text-md text-gray-400">Tracking Number</div>
+                                    <div class="font-semibold">${detail.shipping.tracking_number}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="text-end">
+                                <div>
+                                    <div class="text-md text-gray-400">Courier</div>
+                                    <div class="font-semibold">${detail.shipping.courier}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
                     <tfoot class="font-semibold">
                         <tr>
                             <td colspan="8" class="text-end">Sub Total</td>
@@ -517,9 +564,7 @@ const SalesOrderTable = () => {
                             </td>
                         </tr>
                     </tfoot>
-
                 </table>
-
             </div>
         `;
     }

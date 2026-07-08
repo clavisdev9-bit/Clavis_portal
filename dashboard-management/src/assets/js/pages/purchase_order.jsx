@@ -332,7 +332,7 @@ const PurchaseOrderTable = () => {
         }).format(value);
     };
     function renderDetail(detail) {
-
+        const payment_term=detail.payment_term===null?0:detail.payment_term;
         const items = detail.items.map((item, index) => `
             <tr class="border-b">
                 <td class="p-2">${index + 1}</td>
@@ -373,7 +373,7 @@ const PurchaseOrderTable = () => {
                     </div>
                     <div>
                         <div class="text-md text-gray-400">Termin</div>
-                        <div class="font-semibold">${detail.payment_term} Hari</div>
+                        <div class="font-semibold">${payment_term} Hari</div>
                     </div>
                 </div>
 
