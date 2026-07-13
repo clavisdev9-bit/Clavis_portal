@@ -120,13 +120,14 @@ function SalesInvoiceDimCard(){
     const formatDateInput = (date) => {
         return date.toISOString().split("T")[0];
     };
-    const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-    const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
+    const [startDate, setStartDate] = useState(formatDateInput(oneMonthAgo));
+    const [endDate, setEndDate] = useState(formatDateInput(today));
     
     useEffect(()=>{
         setLoading(true);
         axios.get(`${__ODOO_URL__}/api/odoo/web/dataset/call_kw?start_date=${startDate}&end_date=${endDate}`)
         .then(res=>{
+            console.log(res.data);
             setSalesInvoiceDimData(res.data.data.data);
         })
         .catch(err=>console.error(err))
