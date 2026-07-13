@@ -120,8 +120,8 @@ function SalesInvoiceDimCard(){
     const formatDateInput = (date) => {
         return date.toISOString().split("T")[0];
     };
-    const [startDate, setStartDate] = useState(formatDateInput(oneMonthAgo));
-    const [endDate, setEndDate] = useState(formatDateInput(today));
+    const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
+    const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
     
     useEffect(()=>{
         setLoading(true);

@@ -418,7 +418,7 @@ function SalesInvoiceCard(){
                     item.invoice_date === 'false' ? '-' : formatMonth(item.invoice_date),
                     item.invoice_date === 'false' ? '-' : formatYear(item.invoice_date),
                     item.invoice_partner_display_name,
-                    item.invoice_origin==='false'?'-':item.invoice_origin,
+                    item.invoice_origin===false?'-':item.invoice_origin,
                     item.name === false ? '-' : item.name,
                     item.ref,
                     line.product_id === null ? '-' : line.product_id[1],
