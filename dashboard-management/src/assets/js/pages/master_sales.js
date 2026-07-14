@@ -30,7 +30,7 @@ function loadSales() {
                 formatDate(sales.write_date),
                 sales.partner_invoice_id?.[1] ?? "-",
                 sales.write_uid?.[1] ?? "-",
-                formatDollar(sales.amount_total),
+                formatCurrency(sales.amount_total),
                 sales.type_name,
                 sales.company_id?.[1] ?? "-"
             ]);
@@ -76,7 +76,13 @@ const formatDollar = (value) => {
         minimumFractionDigits: 2
     }).format(value);
 };
-
+const formatCurrency = (value) => {
+    if (value == null) return "-";
+    return "Rp." + new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    }).format(value);
+};
 const socketeu = new WebSocket("ws://localhost:3000");
 
 socketeu.onmessage = (msg) => {
