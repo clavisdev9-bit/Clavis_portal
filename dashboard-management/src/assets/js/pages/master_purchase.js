@@ -11,43 +11,65 @@ function loadTotalPurchase() {
         .catch(err => console.error("API Error:", err));
 }
             
-function loadPurchase() {
-    fetch(`${__API_URL__}/purchase/master`)
+function loadPurchase(startDate = "", endDate = "") {
+
+    const params = new URLSearchParams();
+
+    if (startDate) {
+        params.append("date_from", startDate);
+    }
+
+    if (endDate) {
+        params.append("date_to", endDate);
+    }
+
+    const url = `${__API_URL__}/purchase/master${
+        params.toString() ? `?${params.toString()}` : ""
+    }`;
+
+    fetch(url)
         .then(res => res.json())
         .then(data => {
-            console.log(data);
+
             if ($.fn.DataTable.isDataTable('#purchaseTable')) {
                 $('#purchaseTable').DataTable().clear().destroy();
             }
-            // siapkan array untuk DataTables
-            const tableData = data.map(purchase => {
-                return [
-                    formatRupiah(purchase.amount_total),
-                    purchase.display_name,
-                    purchase.name,
-                    formatDate(purchase.write_date),
-                    purchase.write_uid[1],
-                    purchase.company_id[1]
-                ];
-            });
 
-            // Inisialisasi DataTable
+            const tableData = data.map((purchase, i) => [
+                i + 1,
+                purchase.display_name,
+                purchase.partner_id[1] ? purchase.partner_id[1]:"-",
+                formatRupiah(purchase.amount_total),
+                formatDate(purchase.write_date),
+                purchase.invoice_status,
+            ]);
+
             $("#purchaseTable").DataTable({
                 data: tableData,
                 columns: [
+                    { title: "No", width: "50px" },
+                    { title: "Number" },
+                    { title: "Vendor" },
                     { title: "Total" },
-                    { title: "Number" },
-                    { title: "Number" },
                     { title: "Creation Date" },
-                    { title: "Sales Person" },
-                    { title: "Company" },
+                    { title: "Status" },
                 ]
             });
-            $('#purchaseTable').DataTable();
 
         })
-        .catch(err => console.error("API Error:", err));
-        
+        .catch(err => console.error(err));
+}
+
+loadPurchase();
+
+document.getElementById("startDate").addEventListener("change", reloadData);
+document.getElementById("endDate").addEventListener("change", reloadData);
+
+function reloadData() {
+    loadPurchase(
+        document.getElementById("startDate").value,
+        document.getElementById("endDate").value
+    );
 }
 const formatDate = (dateStr) => {
     if (!dateStr) return "-";

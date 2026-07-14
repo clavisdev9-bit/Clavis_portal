@@ -1,10 +1,41 @@
 import pool from "../db.js";
 const BASE_URL=process.env.CLAVIS_BASE_URL;
-export const get_purchase=async(req, res)=>{
-    let query = 'SELECT * FROM purchase_orders';
-    const result = await pool.query(query);
-    res.json(result.rows);
-}
+export const get_purchase = async (req, res) => {
+    try {
+        const { date_from, date_to } = req.query;
+
+        let query = `SELECT * FROM purchase_orders`;
+        const conditions = [];
+        const values = [];
+
+        if (date_from) {
+            values.push(date_from);
+            conditions.push(`write_date >= $${values.length}`);
+        }
+
+        if (date_to) {
+            values.push(date_to);
+            // Mengambil seluruh data hingga akhir tanggal yang dipilih
+            conditions.push(`write_date < ($${values.length}::date + interval '1 day')`);
+        }
+
+        if (conditions.length > 0) {
+            query += ` WHERE ` + conditions.join(" AND ");
+        }
+
+        query += ` ORDER BY write_date DESC`;
+
+        const result = await pool.query(query, values);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 export const get_total_purchase=async(req, res)=>{
     let query = 'SELECT SUM(COALESCE(amount_total, 0)) AS total_amount FROM purchase_orders';
     const result = await pool.query(query);

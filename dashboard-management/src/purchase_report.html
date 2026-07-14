@@ -5,6 +5,26 @@
     {{> partials/title-meta title="Blog" }}
 
     {{> partials/head-css }}
+    <script>
+        document.addEventListener('alpine:initialized', () => {
+            const app = Alpine.store('app');
+            const applyMode = () => {
+                if (app.mode === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            };
+
+            // initial
+            applyMode();
+
+            // watch perubahan
+            Alpine.effect(() => {
+                applyMode();
+            });
+        });
+    </script>
     <style>
         #purchaseTable_length select {
             width: 6vh;
@@ -12,6 +32,15 @@
         
         #purchaseTable {
             width: 100% !important;
+        }
+        .dark .date-input {
+            background-color: #0f172a !important;
+            color: white !important;
+        }
+
+        .dark .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -38,8 +67,8 @@
             {{> partials/topbar }}
             <!-- Start Content -->
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
-                
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+                <div id="purchase_report_summary"></div>
+                <!-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 xl:grid-cols-5">
                     <div class="card">
                         <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="shopping-bag" class="size-4"></i> Total Purchase</p>
                         <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100" id="total_purchase">
@@ -75,14 +104,39 @@
                         </h4>
                         <p class="mt-2 text-muted"><span class="font-semibold text-danger">548</span> than last month</p>
                     </div>
-                </div>
+                </div> -->
                 <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 2xl:col-span-12 order-[17] card">
                             <div id="purchase_order"></div>
-                            <div class="flex items-center gap-3 mb-4">
-                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Purchase Report</h2>
-                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
+                            <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+
+                                <div class="flex flex-wrap items-end gap-3">
+
+                                    <div>
+                                        <label class="block mb-1 text-xs font-medium">
+                                            Start Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="startDate"
+                                            class="border border-gray-300 rounded-md dark:bg-dark date-input"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block mb-1 text-xs font-medium ">
+                                            End Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="endDate"
+                                            class="border border-gray-300 rounded-md dark:bg-dark date-input"
+                                        >
+                                    </div>
+
+                                </div>
+
                             </div>
                             <div class="w-full overflow-x-auto">
                                 <table id="purchaseTable" class="display w-full"></table>
@@ -97,6 +151,9 @@
 
 {{> partials/vendor-scripts }}
 
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
 <script src="assets/libs/jquery/jquery.js"></script>
@@ -109,6 +166,7 @@
 
 <script type="module" src="assets/js/main.js"></script>
 <script src="assets/js/pages/master_purchase.js"></script>
+<script type="text/babel" src="assets\js\pages\purchase_report_summary.jsx"></script>
 <script type="text/babel" src="assets\js\pages\purchase_report.jsx"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

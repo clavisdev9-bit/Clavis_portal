@@ -5,6 +5,26 @@
     {{> partials/title-meta title="Project " }}
 
     {{> partials/head-css }}
+    <script>
+        document.addEventListener('alpine:initialized', () => {
+            const app = Alpine.store('app');
+            const applyMode = () => {
+                if (app.mode === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            };
+
+            // initial
+            applyMode();
+
+            // watch perubahan
+            Alpine.effect(() => {
+                applyMode();
+            });
+        });
+    </script>
     <style>
         #salesTable_length select {
             width: 6vh;
@@ -12,6 +32,15 @@
         
         #salesTable {
             width: 100% !important;
+        }
+        .dark .date-input {
+            background-color: #0f172a !important;
+            color: white !important;
+        }
+
+        .dark .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -80,9 +109,34 @@
                 <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 2xl:col-span-12 order-[17] card">
-                            <div class="flex items-center gap-3 mb-4">
-                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Sales Report</h2>
-                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
+                            <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+
+                                <div class="flex flex-wrap items-end gap-3">
+
+                                    <div>
+                                        <label class="block mb-1 text-xs font-medium">
+                                            Start Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="startDate"
+                                            class="border border-gray-300 rounded-md dark:bg-dark date-input"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block mb-1 text-xs font-medium ">
+                                            End Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="endDate"
+                                            class="border border-gray-300 rounded-md dark:bg-dark date-input"
+                                        >
+                                    </div>
+
+                                </div>
+
                             </div>
                             <div class="w-full overflow-x-auto">
                                 <table id="salesTable" class="display w-full"></table>

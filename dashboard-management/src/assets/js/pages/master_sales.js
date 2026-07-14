@@ -11,10 +11,20 @@ function loadTotalSales() {
         .catch(err => console.error("API Error:", err));
 }
             
-function loadSales() {
-    let company = localStorage.getItem("company");
+function loadSales(startDate = "", endDate = "") {
+    const params = new URLSearchParams();
 
-    fetch(`${__API_URL__}/sales/master?company=${company}`)
+    if (startDate) {
+        params.append("date_from", startDate);
+    }
+
+    if (endDate) {
+        params.append("date_to", endDate);
+    }
+    const url = `${__API_URL__}/sales/master${
+        params.toString() ? `?${params.toString()}` : ""
+    }`;
+    fetch(url)
         .then(res => res.json())
         .then(data => {
             console.log(data);
@@ -51,6 +61,17 @@ function loadSales() {
             });
         })
         .catch(err => console.error("API Error:", err));
+}
+loadSales();
+
+document.getElementById("startDate").addEventListener("change", reloadData);
+document.getElementById("endDate").addEventListener("change", reloadData);
+
+function reloadData() {
+    loadSales(
+        document.getElementById("startDate").value,
+        document.getElementById("endDate").value
+    );
 }
 const formatDate = (dateStr) => {
     if (!dateStr) return "-";
