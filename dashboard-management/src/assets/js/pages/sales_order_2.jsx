@@ -198,7 +198,7 @@ const SalesOrderTable = () => {
                     },
                     { data: "state", title: "Status" },
                     {
-                        data: "delivery_date",
+                        data: "commitment_date",
                         title: "Delivery Date",
                         render: function(data) {
                             return formatDate(data);
