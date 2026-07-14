@@ -1,13 +1,8 @@
 import pool from '../db.js';
 export const get_sales=async(req, res)=>{
     const { company } = req.query;
-    console.log(company);
-    const query = `
-            SELECT * 
-            FROM sales_orders 
-            WHERE company_id->>1 = $1
-        `;
-    const result = await pool.query(query, [company]);
+    const query = `SELECT * FROM sales_orders order by write_date desc`;
+    const result = await pool.query(query);
     res.json(result.rows);
 }
 export const get_total_sales=async(req, res)=>{

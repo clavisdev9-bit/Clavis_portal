@@ -13,46 +13,44 @@ function loadTotalSales() {
             
 function loadSales() {
     let company = localStorage.getItem("company");
+
     fetch(`${__API_URL__}/sales/master?company=${company}`)
         .then(res => res.json())
         .then(data => {
             console.log(data);
+
             if ($.fn.DataTable.isDataTable('#salesTable')) {
                 $('#salesTable').DataTable().clear().destroy();
             }
-            // siapkan array untuk DataTables
-            const tableData = data.map(sales => {
-                return [
-                    formatDollar(sales.amount_total),
-                    sales.display_name,
-                    sales.name,
-                    sales.partner_invoice_id[1],
-                    sales.type_name,
-                    formatDate(sales.write_date),
-                    sales.write_uid[1],
-                    sales.company_id[1]
-                ];
-            });
+
+            // Siapkan data untuk DataTables
+            const tableData = data.map((sales, i) => [
+                i + 1, // Nomor
+                sales.display_name,
+                formatDate(sales.write_date),
+                sales.partner_invoice_id?.[1] ?? "-",
+                sales.write_uid?.[1] ?? "-",
+                formatDollar(sales.amount_total),
+                sales.type_name,
+                sales.company_id?.[1] ?? "-"
+            ]);
 
             // Inisialisasi DataTable
             $("#salesTable").DataTable({
                 data: tableData,
                 columns: [
-                    { title: "Total" },
+                    { title: "No", width: "50px" },
                     { title: "Number" },
-                    { title: "Number" },
-                    { title: "Customers" },
-                    { title: "Status" },
                     { title: "Creation Date" },
+                    { title: "Customers" },
                     { title: "Sales Person" },
-                    { title: "Company" },
+                    { title: "Total" },
+                    { title: "Status" },
+                    { title: "Company" }
                 ]
             });
-            $('#salesTable').DataTable();
-
         })
         .catch(err => console.error("API Error:", err));
-        
 }
 const formatDate = (dateStr) => {
     if (!dateStr) return "-";
