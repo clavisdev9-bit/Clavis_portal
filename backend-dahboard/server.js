@@ -53,7 +53,7 @@ import { startUserIcon } from './jobs/userCron.js';
 
 dotenv.config();
 const app = express();
-// startUserIcon();
+startUserIcon();
 const upload=multer({dest:'uploads/'});
 const client_google_vision=new vision.ImageAnnotatorClient({
     keyFilename:'./ocr-test.json'

@@ -3,6 +3,7 @@ function PaymentCard(){
     const [totalPayment,setTotalPayment]=useState([]);
     const [uniqueCustomer,setUniqueCustomer]=useState([]);
     const [averagePayment,setAveragePayment]=useState([]);
+    const [monthGrowth,setMonthGrowth]=useState([]);
     const [customerPayment,setCustomerPayment]=useState([]);
     const [topCustomer,setTopCustomer]=useState([]);
     const [methodDistribution,setMethodDistribution]=useState([]);
@@ -24,6 +25,11 @@ function PaymentCard(){
     useEffect(()=>{
         axios.get(`${__API_URL__}/payment/average_payment`)
         .then(res=>setAveragePayment(res.data.rows[0].average_payment))
+        .catch(err=>console.error(err));
+    },[]);
+    useEffect(()=>{
+        axios.get(`${__API_URL__}/payment/month_over_month_growth`)
+        .then(res=>setMonthGrowth(res.data.rows[0].month_growth))
         .catch(err=>console.error(err));
     },[]);
     useEffect(()=>{
@@ -358,6 +364,7 @@ function PaymentCard(){
                     <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Month-over-Month Growth</h2>
 
                     <h4 className="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">
+                        {monthGrowth} %
                     </h4>
                 </div>
             </div>

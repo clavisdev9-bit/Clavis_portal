@@ -1,12 +1,12 @@
 import pool from "../db.js";
 const BASE_URL=process.env.CLAVIS_BASE_URL;
 export const get_purchase=async(req, res)=>{
-    let query = 'SELECT * FROM sales_orders';
+    let query = 'SELECT * FROM purchase_orders';
     const result = await pool.query(query);
     res.json(result.rows);
 }
 export const get_total_purchase=async(req, res)=>{
-    let query = 'SELECT SUM(COALESCE(amount_total, 0)) AS total_amount FROM sales_orders';
+    let query = 'SELECT SUM(COALESCE(amount_total, 0)) AS total_amount FROM purchase_orders';
     const result = await pool.query(query);
     res.json(result.rows);
 }

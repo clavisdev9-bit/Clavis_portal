@@ -434,6 +434,57 @@ const PurchaseOrderTable = () => {
             </div>
         `;
     }
+    const exportExcel = () => {
+        if (!purchaseOrderData.length) {
+            alert("Tidak ada data untuk diexport");
+            return;
+        }
+
+        const data = purchaseOrderData.map((row) => ({
+            "Purchase Order No": row.purchaseorder_no,
+            "Ref No": row.ref_no,
+            "Supplier Name": row.supplier_name,
+            "Supplier Email": row.supplier_email,
+            "Transaction Date": formatDate(row.transaction_date),
+            "Status": row.status,
+            "Payment Method": row.payment_method,
+            "Payment Term": row.payment_term,
+            "Location Name": row.location_name,
+            "Sub Total": row.sub_total,
+            "Total Discount": row.total_disc,
+            "Total Tax": row.total_tax,
+            "Grand Total": row.grand_total,
+            "Detail Fetched": row.detail_fetched===true ? "Yes" : "No",
+            "Sync From Jubelio": row.sync_from_jubelio===true ? "Yes" : "No",
+            "Sync To Odoo": row.sync_to_odoo===true ? "Yes" : "No",
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+
+        // Auto fit column width (sama seperti Sales Order)
+        const columnWidths = Object.keys(data[0]).map((key) => {
+            const headerLength = key.length;
+
+            const maxCellLength = data.reduce((max, row) => {
+                const value = row[key] == null ? "" : String(row[key]);
+                return Math.max(max, value.length);
+            }, headerLength);
+
+            return {
+                wch: Math.min(Math.max(maxCellLength + 2, 12), 50)
+            };
+        });
+
+        worksheet["!cols"] = columnWidths;
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Purchase Orders");
+
+        XLSX.writeFile(
+            workbook,
+            `PurchaseOrders_${new Date().toISOString().slice(0, 10)}.xlsx`
+        );
+    };
     return (
         <div>
             <div class="card m-5 p-0">
@@ -476,10 +527,10 @@ const PurchaseOrderTable = () => {
                         <div class="grid grid-cols-2 content-between mb-2">
                             <h4 class="font-semibold pt-1">Purchase Orders</h4>
                             <div class="flex justify-end gap-1" ref={filterRef}>
-                                {/* <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-excel-line text-md"></i> XLSX</button>
+                                <button onClick={exportExcel} class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-excel-line text-md"></i> XLSX</button>
                                 <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-pdf-2-line text-md"></i> PDF</button>
                                 <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-file-hwp-line text-md"></i> CSV</button>
-                                <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-printer-line text-md"></i> PRINT</button> */}
+                                <button id="exportExcel" class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-printer-line text-md"></i> PRINT</button>
                                 
                                 <div className="relative">
                                     <button onClick={() => setShowColumn(!showColumn)} class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-layout-vertical-line text-md"></i> Columns</button>

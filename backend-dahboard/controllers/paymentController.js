@@ -7,8 +7,8 @@ export const get_payments=async(req,res)=>{
     journal_id,
     payment_method_line_id,
     partner_id,
-    TO_CHAR(amount_signed, 'L9,999,999,999.00') AS amount_in_currency,
-    TO_CHAR(amount_company_currency_signed, 'L9,999,999,999.00') AS amount,
+    TO_CHAR(amount_signed, 'FMRp 999,999,999,990.00') AS amount_in_currency,
+    TO_CHAR(amount_company_currency_signed, 'FMRp 999,999,999,990.00') AS amount,
     INITCAP(state) AS state
     FROM
     payments
@@ -39,6 +39,11 @@ export const get_average_payment=async(req,res)=>{
     FROM payments
     WHERE payment_method_line_id->>1 = 'inbound'
     AND state = 'posted'`;
+    const result = await pool.query(query);
+    res.json(result);
+}
+export const get_month_over_month_growth=async(req,res)=>{
+    let query = `SELECT COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE) THEN amount_signed END), 0) AS current_month, COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') THEN amount_signed END), 0) AS previous_month, ROUND(CASE WHEN COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') THEN amount_signed END), 0) = 0 THEN 0 ELSE ((COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE) THEN amount_signed END), 0) - COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') THEN amount_signed END), 0)) / COALESCE(SUM(CASE WHEN DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') THEN amount_signed END), 0)) * 100 END, 2) AS month_growth FROM payments;`;
     const result = await pool.query(query);
     res.json(result);
 }
