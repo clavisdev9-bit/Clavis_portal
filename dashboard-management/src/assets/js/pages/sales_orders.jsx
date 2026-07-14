@@ -317,6 +317,27 @@ function SalesOrderCard(){
             }
         };
     },[salesPerson]);
+    const formatDate = (dateStr) => {
+        if (!dateStr) return "-";
+
+        const date = new Date(dateStr);
+
+        const datePart = new Intl.DateTimeFormat("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        }).format(date);
+
+        const timePart = new Intl.DateTimeFormat("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        })
+            .format(date)
+            .replace(" ", ""); // Menghilangkan spasi sebelum AM/PM
+
+        return `${datePart}, ${timePart}`;
+    };
     return (
     <div className="w-full overflow-x-auto">
         <div className="flex gap-4">

@@ -1,7 +1,8 @@
 import express from 'express';
-import { get_total_sales, get_average_order,get_margin_percent,get_order_invoice,get_total_margin,get_total_orders,get_sales_trend,top_customers,sales_person } from '../controllers/saleOrderController.js';
+import { get_sale_orders, get_total_sales, get_average_order,get_margin_percent,get_order_invoice,get_total_margin,get_total_orders,get_sales_trend,top_customers,sales_person } from '../controllers/saleOrderController.js';
 const router = express.Router();
 
+router.get('/master',get_sale_orders);
 router.get('/total_sales',get_total_sales);
 router.get('/total_orders',get_total_orders);
 router.get('/average_order',get_average_order);

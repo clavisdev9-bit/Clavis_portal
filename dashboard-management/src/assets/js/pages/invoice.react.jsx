@@ -62,7 +62,8 @@ function InvoiceTable() {
         }
 
         $(tableRef.current).DataTable({
-            data: invoices.map(p => [
+            data: invoices.map((p, i) => [
+                i + 1, // Nomor
                 `<strong>${p.name}</strong>`,
                 (p.partner_id && p.partner_id[1]) ? p.partner_id[1] : "-",
                 formatDate(p.invoice_date),
@@ -70,15 +71,16 @@ function InvoiceTable() {
                 formatCurrency(p.amount_total),
                 renderPaymentState(p.payment_state)
             ]),
-            scrollX: true,              // 🔥 PENTING
+            scrollX: true,
             autoWidth: false,
             columns: [
+                { title: "No", width: "50px" },
                 { title: "Number" },
                 { title: "Customer" },
                 { title: "Invoice Date" },
                 { title: "Due Date" },
                 { title: "Total" },
-                { title: "Status"},
+                { title: "Status" },
             ]
         });
     }, [invoices]);

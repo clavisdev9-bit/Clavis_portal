@@ -5,6 +5,38 @@
     {{> partials/title-meta title="Blog" }}
 
     {{> partials/head-css }}
+    <script>
+        document.addEventListener('alpine:initialized', () => {
+            const app = Alpine.store('app');
+            const applyMode = () => {
+                if (app.mode === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            };
+
+            // initial
+            applyMode();
+
+            // watch perubahan
+            Alpine.effect(() => {
+                applyMode();
+            });
+        });
+    </script>
+    <style>
+        
+        .dark .date-input {
+            background-color: #0f172a !important;
+            color: white !important;
+        }
+
+        .dark .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
 
 </head>
 
@@ -31,6 +63,7 @@
             <!-- Start Content -->
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
                 <div id="salesOrderTable"></div>
+                <div id="sales_order_2"></div>
             </div>
         </div>
     </div>
@@ -53,6 +86,7 @@
 
 <script type="module" src="assets/js/main.js"></script>
 <script type="text/babel" src="assets/js/pages/sales_orders.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order_2.jsx"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

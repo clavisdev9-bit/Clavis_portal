@@ -1,5 +1,40 @@
 import pool from "../db.js";
 const BASE_URL=process.env.CLAVIS_BASE_URL;
+export const get_sale_orders = async (req, res) => {
+    try {
+        const { date_from, date_to } = req.query;
+
+        let query = `SELECT * FROM sale_orders`;
+        const values = [];
+        const conditions = [];
+
+        if (date_from) {
+            values.push(date_from);
+            conditions.push(`date_order >= $${values.length}`);
+        }
+
+        if (date_to) {
+            values.push(date_to);
+            conditions.push(`date_order <= $${values.length}`);
+        }
+
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(" AND ")}`;
+        }
+
+        query += ` ORDER BY date_order DESC`;
+
+        const result = await pool.query(query, values);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
 export const get_total_sales=async(req,res)=>{
     let query=`SELECT SUM(amount_total) AS total_sales
     FROM sale_orders
