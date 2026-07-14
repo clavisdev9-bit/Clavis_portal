@@ -22,6 +22,11 @@ function SalesOrderCard(){
             maximumFractionDigits: 2
         }).format(value);
     };
+    useEffect(() => {
+        if (window.feather) {
+            feather.replace();
+        }
+    }, [totalSales]);
     useEffect(()=>{
         axios.get(`${__API_URL__}/sale_order/total_sales`)
         .then(res=>setTotalSales(res.data[0].total_sales))
@@ -71,7 +76,7 @@ function SalesOrderCard(){
             },
             series: [
                 {
-                    name: "Current Week",
+                    name: "Amount Total",
                     data: seriesData,
                 },
             ],
@@ -132,6 +137,9 @@ function SalesOrderCard(){
                         fontSize: "12px",
                         cssClass: "apexcharts-yaxis-title",
                     },
+                    formatter: function (value) {
+                        return (value / 1000000).toFixed(0) + " jt";
+                    }
                 },
                 opposite: false,
                 lines: {
@@ -204,7 +212,7 @@ function SalesOrderCard(){
         var options = {
             series: [
                 {
-                    name: "PRODUCT A",
+                    name: "Amount Total",
                     data: seriesData,
                 },
             ],
@@ -233,6 +241,24 @@ function SalesOrderCard(){
             },
             xaxis: {
                 categories: categories,
+            },
+            yaxis: {
+                tickAmount: 5,
+                labels: {
+                    offsetX: -10,
+                    offsetY: 0,
+                    style: {
+                        fontSize: "12px",
+                        cssClass: "apexcharts-yaxis-title",
+                    },
+                    formatter: function (value) {
+                        return (value / 1000000).toFixed(0) + " jt";
+                    }
+                },
+                opposite: false,
+                lines: {
+                    show: true,    // ⬅️ aktifkan garis vertikal
+                },
             },
             legend: {
                 show: false,
@@ -343,17 +369,26 @@ function SalesOrderCard(){
         <div className="flex gap-4">
 
             <div className="card flex-1 min-w-0">
-                <h2 className="mb-2 text-sm font-semibold">Total Sales Amount</h2>
+                <p className="flex items-center gap-2 text-base dark:text-gray-300">
+                    <i data-feather="shopping-bag" className="size-4"></i>
+                    Total Sales Amount
+                </p>
                 <h4 className="text-2xl font-bold">{formatCurrency(totalSales)}</h4>
             </div>
 
             <div className="card flex-1 min-w-0">
-                <h2 className="mb-2 text-sm font-semibold">Total Orders</h2>
+                <p className="flex items-center gap-2 text-base dark:text-gray-300">
+                    <i data-feather="shopping-bag" className="size-4"></i>
+                    Total Orders
+                </p>
                 <h4 className="text-2xl font-bold">{totalOrder}</h4>
             </div>
 
             <div className="card flex-1 min-w-0">
-                <h2 className="mb-2 text-sm font-semibold">Average Order Value</h2>
+                <p className="flex items-center gap-2 text-base dark:text-gray-300">
+                    <i data-feather="bar-chart-2" className="size-4"></i>
+                    Average Order Value
+                </p>
                 <h4 className="text-2xl font-bold">{formatCurrency(averageOrder)}</h4>
             </div>
 

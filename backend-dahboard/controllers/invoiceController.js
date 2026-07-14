@@ -1,11 +1,41 @@
 import pool from "../db.js";
 const BASE_URL=process.env.CLAVIS_BASE_URL;
 
-export const get_invoices=async(req,res)=>{
-    let query = 'SELECT * FROM invoices';
-    const result = await pool.query(query);
-    res.json(result.rows);
-}
+export const get_invoices = async (req, res) => {
+    try {
+        const { date_from, date_to } = req.query;
+
+        let query = `SELECT * FROM invoices`;
+        const values = [];
+        const conditions = [];
+
+        if (date_from) {
+            values.push(date_from);
+            conditions.push(`invoice_date >= $${values.length}`);
+        }
+
+        if (date_to) {
+            values.push(date_to);
+            conditions.push(`invoice_date <= $${values.length}`);
+        }
+
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(" AND ")}`;
+        }
+
+        query += ` ORDER BY invoice_date DESC`;
+
+        const result = await pool.query(query, values);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};
 export const get_total_invoice=async(req,res)=>{
     let query='SELECT COUNT(*) AS total_invoices FROM invoices';
     const result = await pool.query(query);

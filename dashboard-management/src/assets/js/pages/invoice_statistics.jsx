@@ -54,7 +54,7 @@ function InvoiceCard(){
             },
             series: [
                 {
-                    name: "Current Week",
+                    name: "Amount Total",
                     data: seriesData,
                 },
             ],
@@ -109,6 +109,9 @@ function InvoiceCard(){
             yaxis: {
                 tickAmount: 5,
                 labels: {
+                    formatter: function (value) {
+                        return (value / 1000000).toFixed(0) + " jt";
+                    },
                     offsetX: -10,
                     offsetY: 0,
                     style: {
@@ -242,6 +245,13 @@ function InvoiceCard(){
                     show: true,
                     color: "#e8e8e8",
                 },
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return (value / 1000000).toFixed(0) + " jt";
+                    }
+                }
             },
             fill: {
                 type: "gradient",

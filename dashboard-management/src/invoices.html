@@ -5,6 +5,38 @@
     {{> partials/title-meta title="Blog" }}
 
     {{> partials/head-css }}
+    <script>
+        document.addEventListener('alpine:initialized', () => {
+            const app = Alpine.store('app');
+            const applyMode = () => {
+                if (app.mode === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            };
+
+            // initial
+            applyMode();
+
+            // watch perubahan
+            Alpine.effect(() => {
+                applyMode();
+            });
+        });
+    </script>
+    <style>
+        
+        .dark .date-input {
+            background-color: #0f172a !important;
+            color: white !important;
+        }
+
+        .dark .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
 
 </head>
 
@@ -32,7 +64,8 @@
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
                 <div id="invoice_summary"></div>
                 <div id="invoice_statistics"></div>
-                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                <div id="invoice_2"></div>
+                <!-- <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 2xl:col-span-12 order-[17] card">
                             <div class="flex items-center gap-3 mb-4">
@@ -42,7 +75,7 @@
                             <div id="InvoiceTableRoot"></div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -64,7 +97,8 @@
 <script src="assets/js/pages/blog.js"></script>
 
 <script type="module" src="assets/js/main.js"></script>
-<script type="text/babel" src="assets/js/pages/invoice.react.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoice_2.jsx"></script> 
+<!-- <script type="text/babel" src="assets/js/pages/invoice.react.jsx"></script> -->
 <script type="text/babel" src="assets/js/pages/invoice_summary.jsx"></script>
 <script type="text/babel" src="assets/js/pages/invoice_statistics.jsx"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
