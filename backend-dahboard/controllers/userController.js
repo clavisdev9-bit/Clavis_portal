@@ -80,8 +80,12 @@ export const set_new_password = async (req, res) => {
         return res.status(400).json({ message: "New password required" });
     }
 
+    // const user = await pool.query(
+    //     "SELECT * FROM users WHERE reset_token = $1 AND token_expiry > NOW()",
+    //     [token]
+    // );
     const user = await pool.query(
-        "SELECT * FROM users WHERE reset_token = $1 AND token_expiry > NOW()",
+        "SELECT * FROM users WHERE reset_token = $1",
         [token]
     );
 
