@@ -22,7 +22,7 @@ function loadPurchase() {
             // siapkan array untuk DataTables
             const tableData = data.map(purchase => {
                 return [
-                    formatDollar(purchase.amount_total),
+                    formatRupiah(purchase.amount_total),
                     purchase.display_name,
                     purchase.name,
                     formatDate(purchase.write_date),
@@ -71,5 +71,14 @@ const formatDollar = (value) => {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 2
+    }).format(value);
+};
+const formatRupiah = (value) => {
+    if (value == null) return "-";
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0, // Rupiah biasanya tanpa desimal
+        maximumFractionDigits: 0
     }).format(value);
 };

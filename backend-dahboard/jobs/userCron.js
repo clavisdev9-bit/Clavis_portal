@@ -1,5 +1,5 @@
 import cron from "node-cron";
-// import { selfReminder } from "../controllers/userController.js";
+import { selfReminder } from "../controllers/userController.js";
 import { truncateInsert } from "../controllers/purchaseController.js";
 // import { truncateInsertPartnerReports } from "../controllers/partnerController.js";
 // import { truncateInsertVendor } from "../controllers/vendorController.js";
@@ -10,17 +10,17 @@ import { truncateInsertPayments } from "../controllers/paymentController.js";
 // import { truncateInsertJournalEntry } from "../controllers/journalEntryController.js";
 // import { truncateInsertJournalItem } from "../controllers/JournalItemController.js";
 // import { truncateInsertMoveHistory } from "../controllers/moveHistoryController.js";
-// import { truncateInsertSaleOrders } from "../controllers/saleOrderController.js";
+import { truncateInsertSaleOrders } from "../controllers/saleOrderController.js";
 // import { truncateInsertAnalyticItem } from "../controllers/analyticItemController.js";
 // import { truncateInsertPurchaseOrderOustanding } from "../controllers/purchaseOutstandingController.js";
 export const startUserIcon=()=>{
     cron.schedule("* * * * *", async () => {
 
-        // try {
-        //     await selfReminder();
-        // } catch (err) {
-        //     console.log("selfReminder gagal, skip:", err.message);
-        // }
+        try {
+            await selfReminder();
+        } catch (err) {
+            console.log("selfReminder gagal, skip:", err.message);
+        }
 
         try {
             await truncateInsert();
@@ -82,11 +82,11 @@ export const startUserIcon=()=>{
         //     console.log("move history gagal:", err.message);
         // }
 
-        // try {
-        //     await truncateInsertSaleOrders();
-        // } catch (err) {
-        //     console.log("sale orders gagal:", err.message);
-        // }
+        try {
+            await truncateInsertSaleOrders();
+        } catch (err) {
+            console.log("sale orders gagal:", err.message);
+        }
 
         // try {
         //     await truncateInsertAnalyticItem();

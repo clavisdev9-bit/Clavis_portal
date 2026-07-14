@@ -371,6 +371,13 @@ function InvoiceCard(){
             }
         };
     }, [agingAnalysis]);
+    const formatCurrency = (value) => {
+        if (value == null) return "-";
+        return new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }).format(value).replace(/^/, "Rp. ");
+    };
     return (
         <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -390,40 +397,56 @@ function InvoiceCard(){
                     <h2 class="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">Customers with Highest Outstanding Balance</h2>
                     <div class="flex flex-col md:flex-row gap-4 text-sm">
                         <div class="basis-1/2 flex-1 bg-blue-400 overflow-x-scroll">
-                            <table className="border">
+                            <table className="w-full border table-fixed">
                                 <thead>
                                     <tr>
-                                        <th>Customer</th>
-                                        <th>Billing</th>
+                                        <th className="w-[70%] border px-2 py-1 text-left">
+                                            Customer
+                                        </th>
+                                        <th className="w-[30%] border px-2 py-1 text-right">
+                                            Billing
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {topCustomer.map((p, i) => (
                                         <tr key={i}>
-                                            <td>{p.partner_id[1]?p.partner_id[1]:'-'}</td>
-                                            <td>{p.total_billed}</td>
+                                            <td className="border px-2 py-1 whitespace-normal break-words">
+                                                {p.partner_id[1] ? p.partner_id[1] : "-"}
+                                            </td>
+                                            <td className="border px-2 py-1 text-right whitespace-normal break-words">
+                                                {formatCurrency(p.total_billed)}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div class="basis-1/2 flex-1 bg-blue-400 overflow-x-scroll">
-                            <table className="border">
+                        <div className="basis-1/2 flex-1 bg-blue-400 overflow-x-auto">
+                            <table className="w-full border table-fixed">
                                 <thead>
                                     <tr>
-                                        <th>Customer</th>
-                                        <th>Outstanding Balance</th>
+                                        <th className="w-[70%] border px-2 py-1 text-left">
+                                            Customer
+                                        </th>
+                                        <th className="w-[30%] border px-2 py-1 text-left">
+                                            Outstanding Balance
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {topCustomerOutstanding.map((p, i) => (
                                         <tr key={i}>
-                                            <td>{p.partner_id[1]?p.partner_id[1]:'-'}</td>
-                                            <td>{p.outstanding_balance}</td>
+                                            <td className="border px-2 py-1 whitespace-normal break-words">
+                                                {p.partner_id[1] ? p.partner_id[1] : "-"}
+                                            </td>
+                                            <td className="border px-2 py-1 whitespace-normal break-words">
+                                                {formatCurrency(p.outstanding_balance)}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
-                            </table>   
+                            </table>
                         </div>
                     </div>
                 </div>

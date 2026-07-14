@@ -100,7 +100,7 @@ export const set_new_password = async (req, res) => {
 }
 export const selfReminder=async(req,res)=>{
     const response = await fetch(
-        `${BASE_URL}/clavis_connect/sales/GetSalesOrder`
+        `https://political-gerard-uncertainly.ngrok-free.app/clavis_connect/sales/GetSalesOrder`
     );
 
     if (!response.ok) {
@@ -183,25 +183,22 @@ export const selfReminder=async(req,res)=>{
                 picking_ids,
                 planning_initial_date,
                 pricelist_id,
-                procurement_group_id,
                 tax_calculation_rounding_method,
                 tax_country_id,
                 team_id,
-                transaction_ids,
                 type_name,
                 user_id,
                 validity_date,
                 warehouse_id,
                 write_date,
-                write_uid,
-                x_studio_email
+                write_uid
                 )
                 VALUES (
                     $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
                     $11::jsonb,$12,$13,$14,$15::jsonb,$16::jsonb,$17,$18,$19,$20,
                     $21,$22,$23,$24,$25,$26,$27,$28,$29,$30,
-                    $31::jsonb,$32::jsonb,$33::jsonb,$34,$35,$36::jsonb,$37::jsonb,$38,$39::jsonb,$40::jsonb,
-                    $41,$42,$43::jsonb,$44,$45::jsonb,$46,$47::jsonb,$48
+                    $31::jsonb,$32::jsonb,$33::jsonb,$34,$35,$36::jsonb,$37,$38::jsonb,$39::jsonb,
+                    $40,$41::jsonb,$42,$43::jsonb,$44,$45::jsonb
                 )`,
                 [
                     r.id,
@@ -240,18 +237,18 @@ export const selfReminder=async(req,res)=>{
                     [r.picking_ids],
                     r.planning_initial_date,
                     toJsonArray(r.pricelist_id),
-                    toJsonArray(r.procurement_group_id),
+                    // toJsonArray(r.procurement_group_id),
                     r.tax_calculation_rounding_method,
                     toJsonArray(r.tax_country_id),
                     toJsonArray(r.team_id),
-                    [r.transaction_ids],
+                    // [r.transaction_ids],
                     r.type_name,
                     toJsonArray(r.user_id),
                     r.validity_date,
                     toJsonArray(r.warehouse_id),
                     r.write_date ? new Date(r.write_date) : null,
-                    toJsonArray(r.write_uid),
-                    r.x_studio_email
+                    toJsonArray(r.write_uid)
+                    // r.x_studio_email
                 ]
             );
         }

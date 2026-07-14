@@ -82,7 +82,7 @@ export const sales_person=async(req,res)=>{
 }
 export const truncateInsertSaleOrders=async(req,res)=>{
     const response = await fetch(
-        `${BASE_URL}/sales/get/so`
+        `https://political-gerard-uncertainly.ngrok-free.app/sales/get/so`
     );
 
     if (!response.ok) {
@@ -163,21 +163,19 @@ export const truncateInsertSaleOrders=async(req,res)=>{
                 margin,
                 margin_percent,
                 pricelist_id,
-                procurement_group_id,
                 payment_term_id,
                 require_signature,
                 require_payment,
                 create_date,
                 create_uid,
                 write_date,
-                write_uid,
-                x_studio_email
+                write_uid
                 )
                 VALUES (
                     $1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10::jsonb,
                     $11::jsonb,$12::jsonb,$13::jsonb,$14::jsonb,$15::jsonb,$16::jsonb,$17,$18,$19,$20,
                     $21,$22,$23,$24,$25,$26,$27,$28,$29,$30::jsonb,
-                    $31::jsonb,$32::jsonb,$33,$34,$35,$36::jsonb,$37,$38::jsonb,$39
+                    $31::jsonb,$32,$33,$34,$35::jsonb,$36,$37::jsonb
                 )
                 ON CONFLICT (id) DO NOTHING`,
                 [
@@ -211,15 +209,15 @@ export const truncateInsertSaleOrders=async(req,res)=>{
                     r.margin,
                     r.margin_percent,
                     toJsonArray(r.pricelist_id),
-                    toJsonArray(r.procurement_group_id),
+                    // toJsonArray(r.procurement_group_id),
                     toJsonArray(r.payment_term_id),
                     r.require_signature,
                     r.require_payment,
                     toTimestamp(r.create_date),
                     toJsonArray(r.create_uid),
                     toTimestamp(r.write_date),
-                    toJsonArray(r.write_uid),
-                    r.x_studio_email
+                    toJsonArray(r.write_uid)
+                    // r.x_studio_email
                 ]
             );
         }
