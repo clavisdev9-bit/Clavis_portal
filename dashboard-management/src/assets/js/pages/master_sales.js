@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadSales();
     loadTotalSales();
+    loadTotalOrders();
+    loadAverageOrders();
+    loadTotalMargin();
+    loadMarginPercent();
+    loadDeliveryFull();
 });
 function loadTotalSales() {
     fetch(`${__API_URL__}/sales/total_sales`)
@@ -11,6 +16,46 @@ function loadTotalSales() {
         .catch(err => console.error("API Error:", err));
 }
             
+function loadTotalOrders() {
+    fetch(`${__API_URL__}/sales/total_orders`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('total_orders').innerHTML=formatDollar(data[0].total_orders);
+        })
+        .catch(err => console.error("API Error:", err));
+}
+function loadAverageOrders() {
+    fetch(`${__API_URL__}/sales/average_orders`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('average_orders').innerHTML=formatDollar(data[0].average_orders);
+        })
+        .catch(err => console.error("API Error:", err));
+}
+function loadTotalMargin() {
+    fetch(`${__API_URL__}/sales/total_margin`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('total_margin').innerHTML=formatDollar(data[0].total_margin);
+        })
+        .catch(err => console.error("API Error:", err));
+}
+function loadMarginPercent() {
+    fetch(`${__API_URL__}/sales/margin_percent`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('margin_percent').innerHTML=formatDollar(data[0].margin_percent);
+        })
+        .catch(err => console.error("API Error:", err));
+}
+function loadDeliveryFull() {
+    fetch(`${__API_URL__}/sales/delivery_full`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('delivery_full').innerHTML=formatDollar(data[0].order_delivery_full);
+        })
+        .catch(err => console.error("API Error:", err));
+}
 function loadSales(startDate = "", endDate = "") {
     const params = new URLSearchParams();
 

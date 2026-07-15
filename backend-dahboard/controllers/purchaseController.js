@@ -37,8 +37,43 @@ export const get_purchase = async (req, res) => {
     }
 };
 export const get_total_purchase=async(req, res)=>{
+    let query = 'SELECT COUNT(id) AS total_purchase FROM purchase_orders';
+    const result = await pool.query(query);
+    res.json(result.rows);
+}
+export const get_total_amount=async(req, res)=>{
     let query = 'SELECT SUM(COALESCE(amount_total, 0)) AS total_amount FROM purchase_orders';
     const result = await pool.query(query);
+    res.json(result.rows);
+}
+export const get_total_tax=async(req, res)=>{
+    let query = 'SELECT SUM(COALESCE(amount_tax, 0)) AS total_tax FROM purchase_orders';
+    const result = await pool.query(query);
+    res.json(result.rows);
+}
+export const get_number_of_item=async(req, res)=>{
+    let query = 'SELECT SUM(cardinality(order_line)) AS total_item_count FROM purchase_orders';
+    const result = await pool.query(query);
+    res.json(result.rows);
+}
+export const get_purchase_invoice=async(req,res)=>{
+    let query=`SELECT COUNT(id) AS purchase_to_invoice FROM purchase_orders WHERE invoice_status = 'to invoice'`;
+    const result=await pool.query(query);
+    res.json(result.rows);
+}
+export const get_purchase_trend=async(req,res)=>{
+    let query=`SELECT DATE_TRUNC('month', date_order) AS month, TO_CHAR(DATE_TRUNC('month', date_order), 'Mon YYYY') AS month_year, SUM(amount_total) AS monthly_purchase FROM purchase_orders GROUP BY month ORDER BY month`;
+    const result=await pool.query(query);
+    res.json(result.rows);
+}
+export const get_top_supplier=async(req,res)=>{
+    let query=`SELECT partner_id[1], SUM(amount_total) AS total_purchase FROM purchase_orders GROUP BY partner_id[1] ORDER BY total_purchase DESC LIMIT 10`;
+    const result=await pool.query(query);
+    res.json(result.rows);
+}
+export const get_sales_person=async(req,res)=>{
+    let query=`SELECT create_uid[1], SUM(amount_total) AS total_purchase FROM purchase_orders GROUP BY create_uid[1]`;
+    const result=await pool.query(query);
     res.json(result.rows);
 }
 export const truncateInsert=async(req,res)=>{
