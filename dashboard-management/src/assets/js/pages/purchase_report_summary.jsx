@@ -1,4 +1,4 @@
-const {useEffect,useState}=React;
+const {useEffect,useState,useRef}=React;
 function PurchaseReportCard(){
     console.log('tes');
     const [totalPurchase,setTotalPurchase]=useState([]);
