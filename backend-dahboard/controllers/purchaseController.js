@@ -36,6 +36,11 @@ export const get_purchase = async (req, res) => {
         });
     }
 };
+export const get_supplier=async(req,res)=>{
+    let query='select partner_id[1] from purchase_orders group by partner_id[1]';
+    const result=await pool.query(query);
+    res.json(result.rows);
+}
 export const get_total_purchase=async(req, res)=>{
     let query = 'SELECT COUNT(id) AS total_purchase FROM purchase_orders';
     const result = await pool.query(query);

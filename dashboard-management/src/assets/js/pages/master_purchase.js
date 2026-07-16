@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadPurchase();
     loadTotalPurchase();
+    loadSupplier();
 });
 function loadTotalPurchase() {
     fetch(`${__API_URL__}/purchase/total_purchase`)
@@ -10,7 +11,14 @@ function loadTotalPurchase() {
         })
         .catch(err => console.error("API Error:", err));
 }
-            
+function loadSupplier(){
+    fetch(`${__API_URL__}/purchase/supplier`)
+        .then(res => console.log(res))
+        .then(data => {
+            console.log(data);
+        })
+        .catch(err => console.error("API Error:", err));
+}  
 function loadPurchase(startDate = "", endDate = "") {
 
     const params = new URLSearchParams();

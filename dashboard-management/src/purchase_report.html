@@ -68,44 +68,8 @@
             <!-- Start Content -->
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
                 <div id="purchase_report_summary"></div>
-                <!-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 xl:grid-cols-5">
-                    <div class="card">
-                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="shopping-bag" class="size-4"></i> Total Purchase</p>
-                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100" id="total_purchase">
-                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 6.7%</span>
-                        </h4>
-                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.7k</span> than last month</p>
-                    </div>
-                    <div class="card">
-                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="dollar-sign" class="size-4"></i> Earnings</p>
-                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$974.66M
-                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 14.6%</span>
-                        </h4>
-                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+$141k</span> than last month</p>
-                    </div>
-                    <div class="card">
-                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="activity" class="size-4"></i> Conversation Rate</p>
-                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">60%
-                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 7%</span>
-                        </h4>
-                        <p class="mt-2 text-muted"><span class="font-semibold text-success">2%</span> than last month</p>
-                    </div>
-                    <div class="card">
-                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="truck" class="size-4"></i> Average Order Value</p>
-                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">$450
-                            <span class="p-1 text-sm leading-none rounded-md bg-success/20 text-success"><i class="ri-arrow-up-line"></i> 2.5%</span>
-                        </h4>
-                        <p class="mt-2 text-muted"><span class="font-semibold text-success">+1.5k</span> than last month</p>
-                    </div>
-                    <div class="card">
-                        <p class="flex items-center gap-2 text-base dark:text-gray-300"><i data-feather="stop-circle" class="size-4"></i> Total Deal</p>
-                        <h4 class="flex items-center gap-4 mt-3 text-2xl font-semibold text-slate-800 dark:text-slate-100">5k
-                            <span class="p-1 text-sm leading-none rounded-md bg-danger/20 text-danger"><i class="ri-arrow-down-line"></i> 1.2%</span>
-                        </h4>
-                        <p class="mt-2 text-muted"><span class="font-semibold text-danger">548</span> than last month</p>
-                    </div>
-                </div> -->
-                <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
+                <div id="purchase_report"></div>
+                <!-- <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 2xl:col-span-12 order-[17] card">
                             <div id="purchase_order"></div>
@@ -134,6 +98,14 @@
                                             class="border border-gray-300 rounded-md dark:bg-dark date-input"
                                         >
                                     </div>
+                                    <div>
+                                        <label class="block mb-1 text-xs font-medium ">
+                                            Supplier
+                                        </label>
+                                        <select class="border border-gray-300 rounded-md dark:bg-dark date-input">
+                                            <option value="">Choose Supplier</option>
+                                        </select>
+                                    </div>
 
                                 </div>
 
@@ -142,7 +114,7 @@
                                 <table id="purchaseTable" class="display w-full"></table>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -165,7 +137,7 @@
 <script src="assets/js/pages/blog.js"></script>
 
 <script type="module" src="assets/js/main.js"></script>
-<script src="assets/js/pages/master_purchase.js"></script>
+<!-- <script src="assets/js/pages/master_purchase.js"></script> -->
 <script type="text/babel" src="assets\js\pages\purchase_report_summary.jsx"></script>
 <script type="text/babel" src="assets\js\pages\purchase_report.jsx"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

@@ -19,8 +19,6 @@ function SalesReportCard(){
         axios.get(`${__API_URL__}/sales/total_sales`)
         .then(res=>setTotalSales(res.data[0].total_amount))
         .catch(err=>console.error(err));
-    },[]);
-    useEffect(()=>{
         axios.get(`${__API_URL__}/sales/total_orders`)
         .then(res=>setTotalOrders(res.data[0].total_orders))
         .catch(err=>console.error(err));
@@ -410,21 +408,21 @@ function SalesReportCard(){
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mt-4">
-                <div class="bg-white rounded-lg shadow p-4 dark:bg-gray-800">
+                <div class="card">
                     <h3 class="text-lg font-semibold mb-2">Sales Trend</h3>
                     <p class="text-sm text-gray-600">
                         <div ref={chartRef}></div>
                     </p>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-4 dark:bg-gray-800">
+                <div class="card">
                     <h3 class="text-lg font-semibold mb-2">Top Customers</h3>
                     <p class="text-sm text-gray-600 dark:text-white">
                         <div ref={chartRef2}></div>
                     </p>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-4 dark:bg-gray-800">
+                <div class="card">
                     <h3 class="text-lg font-semibold mb-2">Sales by Salesperson</h3>
                     <p class="text-sm text-gray-600 dark:text-white mb-2">
                         <div ref={chartRef3}/>
