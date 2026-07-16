@@ -9,10 +9,10 @@ const PurchaseReportTable = () => {
       { label: "Company", index: 5, default: true },
       { label: "Salesperson", index: 6, default: true },
       { label: "Total", index: 7, default: true },
-      { label: "Status", index: 8, default: true },
-      { label: "Product", index: 9, default: false },
-      { label: "Amount Tax", index: 10, default: false },
-      { label: "Amount Untaxed", index: 11, default: false },
+      { label: "Amount Tax", index: 8, default: false },
+      { label: "Amount Untaxed", index: 9, default: false },
+      { label: "Status", index: 10, default: true },
+      { label: "Product", index: 11, default: false },
       { label: "Currency", index: 12, default: false },
       { label: "Date Approve", index: 13, default: false },
       { label: "Date Calendar Start", index: 14, default: false },
@@ -37,7 +37,7 @@ const PurchaseReportTable = () => {
 
     const isAllChecked = visibleColumns.length === columns.length;
     const filterRef = useRef(null);
-    const defaultColumns = [2, 3, 4, 5, 6, 7];
+    const defaultColumns = [2, 3, 4, 5, 6, 7, 10];
     const lockedColumns = [2, 3];
     const toggleColumn = (index) => {
         if (lockedColumns.includes(index)) {
@@ -179,14 +179,6 @@ const PurchaseReportTable = () => {
                             return formatCurrency(data, currency);
                         }
                     },
-                    { data: "invoice_status", title: "Status" },
-                    {
-                        data: "product_id",
-                        title: "Product",
-                        render: function(data) {
-                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
-                        }
-                    },
                     {
                         data: "amount_tax",
                         title: "Amount Tax",
@@ -201,6 +193,14 @@ const PurchaseReportTable = () => {
                         render: function (data, type, row) {
                             const currency = currencyMap[row.currency_id[1]];
                             return formatCurrency(data, currency);
+                        }
+                    },
+                    { data: "invoice_status", title: "Status" },
+                    {
+                        data: "product_id",
+                        title: "Product",
+                        render: function(data) {
+                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
                         }
                     },
                     {
@@ -262,6 +262,44 @@ const PurchaseReportTable = () => {
                 autoWidth: false,
                 fixedColumns: {
                     leftColumns: 1
+                },
+                footerCallback: function () {
+                    const api = this.api();
+
+                    const grandTotal = api
+                        .rows({ search: 'applied' })
+                        .data()
+                        .toArray()
+                        .reduce((sum, row) => sum + Number(row.amount_total || 0), 0);
+                    const grandTotalTax = api
+                        .rows({ search: 'applied' })
+                        .data()
+                        .toArray()
+                        .reduce((sum, row) => sum + Number(row.amount_tax || 0), 0);
+                    const grandTotalUntaxed = api
+                        .rows({ search: 'applied' })
+                        .data()
+                        .toArray()
+                        .reduce((sum, row) => sum + Number(row.amount_untaxed || 0), 0);
+
+                    const firstRow = api.rows().data()[0];
+                    const currency = firstRow
+                        ? currencyMap[firstRow.currency_id[1]]
+                        : "IDR";
+
+                    // kolom Salesperson (index 5)
+                    $(api.column(5).footer()).html("<h6>Grand Total</h6>");
+
+                    // kolom Total (index 6)
+                    $(api.column(6).footer()).html(
+                        `${formatCurrency(grandTotal, currency)}`
+                    );
+                    $(api.column(7).footer()).html(
+                        `${formatCurrency(grandTotalTax, currency)}`
+                    );
+                    $(api.column(8).footer()).html(
+                        `${formatCurrency(grandTotalUntaxed, currency)}`
+                    );
                 },
                 createdRow: function(row, data) {
                     $(row).addClass('cursor-pointer hover:bg-slate-100');
@@ -479,6 +517,26 @@ const PurchaseReportTable = () => {
                                     <tbody>
                                         
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colSpan={6} style={{ textAlign: "right" }}>
+                                                Grand Total :
+                                            </th>
+
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
