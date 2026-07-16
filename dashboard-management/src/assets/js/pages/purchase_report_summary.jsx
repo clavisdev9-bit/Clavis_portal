@@ -83,11 +83,12 @@ function PurchaseReportCard(){
             },
             colors: ["#0ea5e9"],
             markers: {
-                size: 0, // ⬅️ point jelas di setiap data
+                size: 3,
+                colors: ["#0ea5e9"],
+                strokeColors: "#0ea5e9",
                 strokeWidth: 1,
-                strokeColors: "#000000ff",
                 hover: {
-                    size: 1,
+                    size: 5,
                 },
             },
             labels: categories,
@@ -402,7 +403,7 @@ function PurchaseReportCard(){
                     </h4>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-start mt-4">
                 <div class="card rounded-xs shadow p-4">
                     <h3 class="text-lg font-semibold mb-2">Monthly Chart</h3>
                     <p class="text-sm">
