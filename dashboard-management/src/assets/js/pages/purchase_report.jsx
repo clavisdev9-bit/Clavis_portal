@@ -5,15 +5,15 @@ const PurchaseReportTable = () => {
     const columns = [
       { label: "Number", index: 2, default: true },
       { label: "Creation Date", index: 3, default: true },
-      { label: "Vendor", index: 4, default: true },
-      { label: "Company", index: 5, default: true },
-      { label: "Salesperson", index: 6, default: true },
-      { label: "Total", index: 7, default: true },
-      { label: "Amount Tax", index: 8, default: false },
-      { label: "Amount Untaxed", index: 9, default: false },
-      { label: "Status", index: 10, default: true },
-      { label: "Product", index: 11, default: false },
-      { label: "Currency", index: 12, default: false },
+      { label: "Product", index: 4, default: false },
+      { label: "Vendor", index: 5, default: true },
+      { label: "Company", index: 6, default: true },
+      { label: "Salesperson", index: 7, default: true },
+      { label: "Currency", index: 8, default: false },
+      { label: "Total", index: 9, default: true },
+      { label: "Amount Tax", index: 10, default: false },
+      { label: "Amount Untaxed", index: 11, default: false },
+      { label: "Status", index: 12, default: true },
       { label: "Date Approve", index: 13, default: false },
       { label: "Date Calendar Start", index: 14, default: false },
       { label: "Date Order", index: 15, default: false },
@@ -37,7 +37,7 @@ const PurchaseReportTable = () => {
 
     const isAllChecked = visibleColumns.length === columns.length;
     const filterRef = useRef(null);
-    const defaultColumns = [2, 3, 4, 5, 6, 7, 10];
+    const defaultColumns = [2, 3, 5, 6, 7, 9, 12];
     const lockedColumns = [2, 3];
     const toggleColumn = (index) => {
         if (lockedColumns.includes(index)) {
@@ -151,6 +151,13 @@ const PurchaseReportTable = () => {
                         }
                     },
                     {
+                        data: "product_id",
+                        title: "Product",
+                        render: function(data) {
+                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
+                        }
+                    },
+                    {
                         data: "partner_id",
                         title: "Vendor",
                         render: function(data) {
@@ -167,6 +174,13 @@ const PurchaseReportTable = () => {
                     {
                         data: "write_uid",
                         title: "Salesperson",
+                        render: function(data) {
+                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
+                        }
+                    },
+                    {
+                        data: "currency_id",
+                        title: "Currency",
                         render: function(data) {
                             return Array.isArray(data) && data.length > 1 ? data[1] : "-";
                         }
@@ -196,20 +210,6 @@ const PurchaseReportTable = () => {
                         }
                     },
                     { data: "invoice_status", title: "Status" },
-                    {
-                        data: "product_id",
-                        title: "Product",
-                        render: function(data) {
-                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
-                        }
-                    },
-                    {
-                        data: "currency_id",
-                        title: "Currency",
-                        render: function(data) {
-                            return Array.isArray(data) && data.length > 1 ? data[1] : "-";
-                        }
-                    },
                     {
                         data: "date_approve",
                         title: "Date Approve",
@@ -288,16 +288,16 @@ const PurchaseReportTable = () => {
                         : "IDR";
 
                     // kolom Salesperson (index 5)
-                    $(api.column(5).footer()).html("<h6>Grand Total</h6>");
+                    $(api.column(7).footer()).html("<h6>Grand Total</h6>");
 
                     // kolom Total (index 6)
-                    $(api.column(6).footer()).html(
+                    $(api.column(8).footer()).html(
                         `${formatCurrency(grandTotal, currency)}`
                     );
-                    $(api.column(7).footer()).html(
+                    $(api.column(9).footer()).html(
                         `${formatCurrency(grandTotalTax, currency)}`
                     );
-                    $(api.column(8).footer()).html(
+                    $(api.column(10).footer()).html(
                         `${formatCurrency(grandTotalUntaxed, currency)}`
                     );
                 },
@@ -519,12 +519,10 @@ const PurchaseReportTable = () => {
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colSpan={6} style={{ textAlign: "right" }}>
+                                            <th colSpan={8} style={{ textAlign: "right" }}>
                                                 Grand Total :
                                             </th>
 
-                                            <th></th>
-                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>

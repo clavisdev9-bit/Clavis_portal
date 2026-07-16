@@ -6,17 +6,17 @@ const SalesReportTable = () => {
       { label: "Number", index: 2, default: true },
       { label: "Creation Date", index: 3, default: true },
       { label: "Customer", index: 4, default: true },
-      { label: "Salesperson", index: 5, default: true },
-      { label: "Total", index: 6, default: true },
-      { label: "Status", index: 7, default: true },
-      { label: "Company", index: 8, default: true },
-      { label: "Amount Invoiced", index: 9, default: false },
-      { label: "Amount Paid", index: 10, default: false },
-      { label: "Amount Tax", index: 11, default: false },
-      { label: "Amount To Invoice", index: 12, default: false },
-      { label: "Amount Undiscounted", index: 13, default: false },
+      { label: "Company", index: 5, default: true },
+      { label: "Salesperson", index: 6, default: true },
+      { label: "Currency", index: 7, default: false },
+      { label: "Amount Invoiced", index: 8, default: false },
+      { label: "Amount Paid", index: 9, default: false },
+      { label: "Amount To Invoice", index: 10, default: false },
+      { label: "Amount Undiscounted", index: 11, default: false },
+      { label: "Total", index: 12, default: true },
+      { label: "Amount Tax", index: 13, default: false },
       { label: "Amount Untaxed", index: 14, default: false },
-      { label: "Currency", index: 15, default: false },
+      { label: "Status", index: 15, default: true },
       { label: "Date Order", index: 16, default: false },
       { label: "Delivery Status", index: 17, default: false },
       { label: "Effective Date", index: 18, default: false },
@@ -44,7 +44,7 @@ const SalesReportTable = () => {
 
     const isAllChecked = visibleColumns.length === columns.length;
     const filterRef = useRef(null);
-    const defaultColumns = [2, 3, 4, 5, 6, 7, 8];
+    const defaultColumns = [2, 3, 4, 5, 6, 12, 15];
     const lockedColumns = [2, 3];
     const toggleColumn = (index) => {
       if (lockedColumns.includes(index)) {
@@ -186,6 +186,13 @@ const SalesReportTable = () => {
               },
             },
             {
+              data: "company_id",
+              title: "Company",
+              render: function (data) {
+                return Array.isArray(data) && data.length > 1 ? data[1] : "-";
+              },
+            },
+            {
               data: "write_uid",
               title: "Salesperson",
               render: function (data) {
@@ -193,17 +200,8 @@ const SalesReportTable = () => {
               },
             },
             {
-              data: "amount_total",
-              title: "Total",
-              render: function (data, type, row) {
-                const currency = currencyMap[row.currency_id[1]];
-                return formatCurrency(data, currency);
-              },
-            },
-            { data: "type_name", title: "Status" },
-            {
-              data: "company_id",
-              title: "Company",
+              data: "currency_id",
+              title: "Currency",
               render: function (data) {
                 return Array.isArray(data) && data.length > 1 ? data[1] : "-";
               },
@@ -219,14 +217,6 @@ const SalesReportTable = () => {
             {
               data: "amount_paid",
               title: "Amount Paid",
-              render: function (data, type, row) {
-                const currency = currencyMap[row.currency_id[1]];
-                return formatCurrency(data, currency);
-              },
-            },
-            {
-              data: "amount_tax",
-              title: "Amount Tax",
               render: function (data, type, row) {
                 const currency = currencyMap[row.currency_id[1]];
                 return formatCurrency(data, currency);
@@ -249,6 +239,22 @@ const SalesReportTable = () => {
               },
             },
             {
+              data: "amount_total",
+              title: "Total",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            {
+              data: "amount_tax",
+              title: "Amount Tax",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            {
               data: "amount_untaxed",
               title: "Amount Untexed",
               render: function (data, type, row) {
@@ -256,13 +262,7 @@ const SalesReportTable = () => {
                 return formatCurrency(data, currency);
               },
             },
-            {
-              data: "currency_id",
-              title: "Currency",
-              render: function (data) {
-                return Array.isArray(data) && data.length > 1 ? data[1] : "-";
-              },
-            },
+            { data: "type_name", title: "Status" },
             {
               data: "date_order",
               title: "Date Order",
@@ -347,17 +347,17 @@ const SalesReportTable = () => {
 
             // key = index kolom DataTables (0-based, sesuai definisi columns[])
             const totalsConfig = {
-              5: "amount_total", // Total
-              8: "amount_invoiced",
-              9: "amount_paid",
-              10: "amount_tax",
-              11: "amount_to_invoice",
-              12: "amount_undiscounted",
+              11: "amount_total", // Total
+              7: "amount_invoiced",
+              8: "amount_paid",
+              12: "amount_tax",
+              9: "amount_to_invoice",
+              10: "amount_undiscounted",
               13: "amount_untaxed",
               20: "margin",
             };
 
-            $(api.column(4).footer()).html("<h6>Grand Total</h6>"); // label di Salesperson
+            $(api.column(5).footer()).html("<h6>Grand Total</h6>"); // label di Salesperson
 
             Object.entries(totalsConfig).forEach(([pos, field]) => {
               const col = api.column(Number(pos));
