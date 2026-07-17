@@ -89,11 +89,21 @@ function SalesReportCard(){
             },
             colors: ["#0ea5e9"],
             markers: {
-                size: 0, // ⬅️ point jelas di setiap data
+                size: 3,
+                colors: ["#0ea5e9"],
+                strokeColors: "#0ea5e9",
                 strokeWidth: 1,
-                strokeColors: "#000000ff",
                 hover: {
-                    size: 1,
+                    size: 5,
+                },
+            },
+            markers: {
+                size: 3, // ⬅️ point jelas di setiap data
+                strokeWidth: 1,
+                colors: ["#0ea5e9"],
+                strokeColors: "#0ea5e9",
+                hover: {
+                    size: 5,
                 },
             },
             labels: categories,
