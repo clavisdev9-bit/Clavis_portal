@@ -8,11 +8,16 @@ const InvoiceTable = () => {
       { label: "Invoice Date", index: 4, default: true },
       { label: "Due Date", index: 5, default: true },
       { label: "Total", index: 6, default: true },
-      { label: "Status", index: 7, default: true },
+      { label: "Payment State", index: 7, default: true },
       { label: "Source Document", index: 8, default: false },
       { label: "Salesperson", index: 9, default: false },
       { label: "Sales Team", index: 10, default: false },
       { label: "Invoice Currency", index: 11, default: false },
+      { label: "Amount Untaxed", index: 12, default: false },
+      { label: "Amount Tax", index: 13, default: false },
+      { label: "Amount Residual", index: 14, default: false },
+      { label: "Amount Paid", index: 15, default: false },
+      { label: "Invoice State", index: 16, default: false },
     ];
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -200,7 +205,7 @@ const InvoiceTable = () => {
                 return formatCurrency(data, currency);
               },
             },
-            { data: "payment_state", title: "Status" },
+            { data: "payment_state", title: "Payment State" },
             {
               data: "invoice_origin",
               title: "Source Document",
@@ -229,6 +234,39 @@ const InvoiceTable = () => {
                 return Array.isArray(data) && data.length > 1 ? data[1] : "-";
               },
             },
+            {
+              data: "amount_untaxed",
+              title: "Amount Untaxed",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            {
+              data: "amount_tax",
+              title: "Amount Tax",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            {
+              data: "amount_residual",
+              title: "Amount Residual",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            {
+              data: "amount_paid",
+              title: "Amount Paid",
+              render: function (data, type, row) {
+                const currency = currencyMap[row.currency_id[1]];
+                return formatCurrency(data, currency);
+              },
+            },
+            { data: "state", title: "Invoice State" },
           ],
           columnDefs: columns.map((col, i) => ({
             targets: i + 1,
@@ -255,6 +293,10 @@ const InvoiceTable = () => {
             // Hanya kolom "Total" (index 5) yang punya nilai numerik untuk dijumlah
             const totalsConfig = {
               5: "amount_total", // Total
+              11: "amount_untaxed", // Total
+              12: "amount_tax", // Total
+              13: "amount_residual", // Total
+              14: "amount_paid", // Total
             };
 
             $(api.column(4).footer()).html("<h6>Grand Total</h6>"); // label di kolom Due Date

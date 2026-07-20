@@ -99,7 +99,7 @@ export const get_aging_analysis=async(req,res)=>{
         END AS aging_bucket,
         SUM(amount_residual) AS outstanding_balance
         FROM invoices
-        WHERE state = 'Not Paid'
+        WHERE payment_state = 'not_paid'
         GROUP BY aging_bucket
         ORDER BY aging_bucket`;
     const result=await pool.query(query);
