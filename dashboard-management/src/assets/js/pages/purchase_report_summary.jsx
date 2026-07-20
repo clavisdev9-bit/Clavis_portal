@@ -192,9 +192,15 @@ function PurchaseReportCard(){
     useEffect(() => {
         if (!topSupplier.length) return;
 
-        const categories = topSupplier.map(item => item.partner_id);
         const seriesData = topSupplier.map(item => Number(item.total_purchase));
+        const MAX_LENGTH = 12;
 
+        const categories = topSupplier.map(item => {
+            const text = item.partner_id;
+            return text.length > MAX_LENGTH
+                ? text.substring(0, MAX_LENGTH) + "..."
+                : text;
+        });
         var options = {
             series: [
                 {

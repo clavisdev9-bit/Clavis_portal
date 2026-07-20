@@ -206,10 +206,15 @@ function SalesReportCard(){
     }, [salesTrend]);
     useEffect(() => {
         if (!topCustomer.length) return;
-
-        const categories = topCustomer.map(item => item.partner_id);
         const seriesData = topCustomer.map(item => Number(item.total_sales));
+        const MAX_LENGTH = 12;
 
+        const categories = topCustomer.map(item => {
+            const text = item.partner_id;
+            return text.length > MAX_LENGTH
+                ? text.substring(0, MAX_LENGTH) + "..."
+                : text;
+        });
         var options = {
             series: [
                 {
