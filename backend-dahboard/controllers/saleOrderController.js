@@ -117,7 +117,7 @@ export const sales_person=async(req,res)=>{
 }
 export const truncateInsertSaleOrders=async(req,res)=>{
     const response = await fetch(
-        `https://political-gerard-uncertainly.ngrok-free.app/sales/get/so`
+        `${BASE_URL}/sales/get/so`
     );
 
     if (!response.ok) {

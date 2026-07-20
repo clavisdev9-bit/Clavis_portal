@@ -104,7 +104,7 @@ export const set_new_password = async (req, res) => {
 }
 export const selfReminder=async(req,res)=>{
     const response = await fetch(
-        `https://political-gerard-uncertainly.ngrok-free.app/clavis_connect/sales/GetSalesOrder`
+        `${BASE_URL}/clavis_connect/sales/GetSalesOrder`
     );
 
     if (!response.ok) {
