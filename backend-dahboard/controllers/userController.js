@@ -128,8 +128,13 @@ export const selfReminder=async(req,res)=>{
             );
 
             if (!response.ok) {
+                const errorText = await response.text();
+
+                console.error("Odoo API Status:", response.status);
+                console.error("Odoo API Response:", errorText);
+
                 throw new Error(
-                    `External API error: ${response.status}`
+                    `External API error: ${response.status} - ${errorText}`
                 );
             }
 
