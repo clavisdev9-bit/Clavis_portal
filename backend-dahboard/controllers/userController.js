@@ -102,7 +102,7 @@ export const set_new_password = async (req, res) => {
 
     return res.json({ message: "Password updated successfully" });
 }
-export const selfReminder=async(req,res)=>{
+export const selfReminder=async()=>{
     const client = await pool.connect();
 
     const limit = 500;
@@ -298,11 +298,11 @@ export const selfReminder=async(req,res)=>{
 
         await client.query("COMMIT");
 
-        return res.status(200).json({
+        return {
             status: "success",
             message: "SYNC SUCCESS",
             inserted: totalInserted,
-        });
+        };
 
     } catch (err) {
 
@@ -310,11 +310,7 @@ export const selfReminder=async(req,res)=>{
 
         console.error("SYNC ERROR:", err);
 
-        return res.status(500).json({
-            status: "error",
-            message: "Gagal melakukan sync sales orders",
-            error: err.message,
-        });
+        throw err;
 
     } finally {
         client.release();
