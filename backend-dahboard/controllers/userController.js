@@ -152,31 +152,20 @@ export const selfReminder=async(req,res)=>{
 
             for (const r of rows) {
 
-                const toJsonArray = (v) => {
-                    if (v === null || v === undefined) {
+                const toJson = (value) => {
+                    if (value === null || value === undefined) {
                         return null;
                     }
 
-                    if (Array.isArray(v) || typeof v === "object") {
-                        return JSON.stringify(v);
-                    }
-
-                    if (typeof v === "string") {
-                        const fixed = v
-                            .replace(/^{/, "[")
-                            .replace(/}$/, "]")
-                            .replace(/""/g, '"');
-
+                    if (typeof value === "string") {
                         try {
-                            return JSON.stringify(
-                                JSON.parse(fixed)
-                            );
+                            return JSON.stringify(JSON.parse(value));
                         } catch {
-                            return JSON.stringify([]);
+                            return JSON.stringify(value);
                         }
                     }
 
-                    return JSON.stringify(v);
+                    return JSON.stringify(value);
                 };
 
                 await client.query(
@@ -247,18 +236,18 @@ export const selfReminder=async(req,res)=>{
                         r.amount_undiscounted,
                         r.amount_unpaid,
                         r.amount_untaxed,
-                        toJsonArray(r.company_id),
+                        toJson(r.company_id),
                         r.company_price_include,
                         r.country_code,
                         r.create_date ? new Date(r.create_date) : null,
-                        toJsonArray(r.create_uid),
-                        toJsonArray(r.currency_id),
+                        toJson(r.create_uid),
+                        toJson(r.currency_id),
                         r.customizable_pdf_form_fields,
                         r.date_order ? new Date(r.date_order) : null,
                         r.delivery_count,
                         r.delivery_status,
                         r.display_name,
-                        toJsonArray(r.duplicated_order_ids),
+                        toJson(r.duplicated_order_ids),
                         r.effective_date
                             ? new Date(r.effective_date)
                             : null,
@@ -268,26 +257,26 @@ export const selfReminder=async(req,res)=>{
                         r.expense_count,
                         r.margin,
                         r.margin_percent,
-                        toJsonArray(r.medium_id),
+                        toJson(r.medium_id),
                         r.name,
-                        toJsonArray(r.order_line),
-                        toJsonArray(r.partner_id),
-                        toJsonArray(r.partner_invoice_id),
-                        toJsonArray(r.partner_shipping_id),
-                        toJsonArray(r.picking_ids),
+                        toJson(r.order_line),
+                        toJson(r.partner_id),
+                        toJson(r.partner_invoice_id),
+                        toJson(r.partner_shipping_id),
+                        toJson(r.picking_ids),
                         r.planning_initial_date,
-                        toJsonArray(r.pricelist_id),
+                        toJson(r.pricelist_id),
                         r.tax_calculation_rounding_method,
-                        toJsonArray(r.tax_country_id),
-                        toJsonArray(r.team_id),
+                        toJson(r.tax_country_id),
+                        toJson(r.team_id),
                         r.type_name,
-                        toJsonArray(r.user_id),
+                        toJson(r.user_id),
                         r.validity_date,
-                        toJsonArray(r.warehouse_id),
+                        toJson(r.warehouse_id),
                         r.write_date
                             ? new Date(r.write_date)
                             : null,
-                        toJsonArray(r.write_uid)
+                        toJson(r.write_uid)
                     ]
                 );
             }
