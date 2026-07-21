@@ -19,14 +19,14 @@ export const startUserIcon=()=>{
         try {
             await selfReminder();
         } catch (err) {
-            console.log("selfReminder gagal, skip:", err.message);
-        }
-
-        try {
-            await truncateInsert();
-        } catch (err) {
             console.log("truncateInsert gagal:", err.message);
         }
+
+        // try {
+        //     await truncateInsert();
+        // } catch (err) {
+        //     console.log("truncateInsert gagal:", err.message);
+        // }
 
         // try {
         //     await truncateInsertPartnerReports();
@@ -46,17 +46,17 @@ export const startUserIcon=()=>{
         //     console.log("account move gagal:", err.message);
         // }
 
-        try {
-            await truncateInsertInvoices();
-        } catch (err) {
-            console.log("invoice gagal:", err.message);
-        }
+        // try {
+        //     await truncateInsertInvoices();
+        // } catch (err) {
+        //     console.log("invoice gagal:", err.message);
+        // }
 
-        try {
-            await truncateInsertPayments();
-        } catch (err) {
-            console.log("payment gagal:", err.message);
-        }
+        // try {
+        //     await truncateInsertPayments();
+        // } catch (err) {
+        //     console.log("payment gagal:", err.message);
+        // }
 
         // try {
         //     await truncateInsertVendorPayment();
@@ -82,11 +82,11 @@ export const startUserIcon=()=>{
         //     console.log("move history gagal:", err.message);
         // }
 
-        try {
-            await truncateInsertSaleOrders();
-        } catch (err) {
-            console.log("sale orders gagal:", err.message);
-        }
+        // try {
+        //     await truncateInsertSaleOrders();
+        // } catch (err) {
+        //     console.log("sale orders gagal:", err.message);
+        // }
 
         // try {
         //     await truncateInsertAnalyticItem();
