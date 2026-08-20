@@ -124,7 +124,7 @@ export const selfReminder=async()=>{
             );
 
             const response = await fetch(
-                `${BASE_URL}/clavis_connect/sales/GetSalesOrder?limit=${limit}&offset=${offset}`
+                `${BASE_URL}/sales/get/so_analytic?limit=${limit}&offset=${offset}`
             );
 
             if (!response.ok) {
@@ -195,9 +195,6 @@ export const selfReminder=async()=>{
                         duplicated_order_ids,
                         effective_date,
                         expected_date,
-                        expense_count,
-                        margin,
-                        margin_percent,
                         medium_id,
                         name,
                         order_line,
@@ -220,9 +217,9 @@ export const selfReminder=async()=>{
                     VALUES (
                         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
                         $11::jsonb,$12,$13,$14,$15::jsonb,$16::jsonb,$17,$18,$19,$20,
-                        $21,$22,$23,$24,$25,$26,$27,$28,$29,$30,
-                        $31::jsonb,$32::jsonb,$33::jsonb,$34,$35,$36::jsonb,$37,$38::jsonb,$39::jsonb,
-                        $40,$41::jsonb,$42,$43::jsonb,$44,$45::jsonb
+                        $21,$22,$23,$24,$25,$26,$27::jsonb,
+                        $28::jsonb,$29::jsonb,$30::jsonb,$31,$32,$33::jsonb,$34,$35::jsonb,$36::jsonb,
+                        $37,$38::jsonb,$39,$40::jsonb,$41,$42::jsonb
                     )
                     `,
                     [
@@ -254,12 +251,12 @@ export const selfReminder=async()=>{
                         r.expected_date
                             ? new Date(r.expected_date)
                             : null,
-                        r.expense_count,
-                        r.margin,
-                        r.margin_percent,
+                        // r.expense_count,
+                        // r.margin,
+                        // r.margin_percent,
                         toJson(r.medium_id),
                         r.name,
-                        toJson(r.order_line),
+                        toJson(r.lines),
                         toJson(r.partner_id),
                         toJson(r.partner_invoice_id),
                         toJson(r.partner_shipping_id),
@@ -271,7 +268,7 @@ export const selfReminder=async()=>{
                         toJson(r.team_id),
                         r.type_name,
                         toJson(r.user_id),
-                        r.validity_date,
+                        r.validity_date ? new Date(r.validity_date) : null,
                         toJson(r.warehouse_id),
                         r.write_date
                             ? new Date(r.write_date)
@@ -300,7 +297,7 @@ export const selfReminder=async()=>{
 
         return {
             status: "success",
-            message: "SYNC SUCCESS",
+            message: "SYNC SUCCESS — truncate & insert sales orders table",
             inserted: totalInserted,
         };
 

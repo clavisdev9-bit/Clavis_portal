@@ -31,7 +31,6 @@ const checkAuth = async () => {
                 params: { id_page: pageIds.join(",") }
             }
         );
-
         const pages = pageResponse.data;
 
         // halaman sekarang
@@ -46,7 +45,10 @@ const checkAuth = async () => {
 
         // kalau tidak punya akses → redirect
         if (!hasAccess) {
-            const defaultPage = pages.find(item => item.level === 2);
+            const parentPage = pages.find(item => item.level === 1);
+            const defaultPage = pages.find(
+                item => item.level === 2 && item.parent === parentPage.id
+            );
 
             if (defaultPage) {
                 window.location.href =

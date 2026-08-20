@@ -1,7 +1,10 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  content: ["./src/**/*.{html,js}", "./src/assets/libs/*"],
+  content: [
+    "./src/**/*.{html,js,jsx,ts,tsx}",
+    "./src/assets/libs/*",
+  ],
   safelist: [
     "bg-emerald-100",
     "bg-yellow-500",
@@ -21,6 +24,7 @@ module.exports = {
     "rounded-full",
     "dark:bg-gray-950",
     "dark:bg-blue-950",
+    "bg-slate-800"
   ],
   darkMode: ["class", '[data-mode="dark"]'],
   theme: {

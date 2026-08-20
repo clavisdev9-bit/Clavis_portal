@@ -1,5 +1,5 @@
 import express from 'express';
-import { get_invoices, get_total_invoice, get_total_billed, get_billing_trend, get_collection_trend, get_aging_analysis, top_customer, top_customer_outstanding, get_average_days_to_payment, get_percent_paid_on_time } from '../controllers/invoiceController.js';
+import { get_invoices, get_total_invoice, get_total_billed, get_billing_trend, get_collection_trend, get_aging_analysis, top_customer, top_customer_outstanding, get_average_days_to_payment, get_percent_paid_on_time, first_last_date, get_sales_stats, get_company_revenue, get_invoice_report_ytd, get_total_invoice_by_company, get_invoice_stats, get_top_category, get_top_products, get_top_customers, get_top_brands, get_companies, get_invoice_report_mtd, get_total_orders_by_company, get_company_residual, get_company_paid, get_aging_analys, get_invoice_stats_ytd, get_company_invoices, get_payment_collection_trend } from '../controllers/invoiceController.js';
 const router = express.Router();
 
 router.get('/master', get_invoices);
@@ -8,9 +8,28 @@ router.get('/total_billed', get_total_billed);
 router.get('/billing_trend', get_billing_trend);
 router.get('/collection_trend', get_collection_trend);
 router.get('/aging_analysis', get_aging_analysis);
+router.get('/aging_analys', get_aging_analys);
 router.get('/top_customer', top_customer);
+router.get('/first_last_date', first_last_date);
+router.get('/sales_stats', get_sales_stats);
+router.get('/company_revenue', get_company_revenue);
+router.get('/company_residual', get_company_residual);
+router.get('/company_paid', get_company_paid);
+router.get('/total_orders_by_company', get_total_orders_by_company);
 router.get('/top_customer_outstanding', top_customer_outstanding);
 router.get('/average_days_to_payment', get_average_days_to_payment);
 router.get('/percent_paid_on_time', get_percent_paid_on_time);
+router.get('/report_mtd',get_invoice_report_mtd);
+router.get('/report_ytd',get_invoice_report_ytd);
+router.get('/stats_ytd',get_invoice_stats_ytd);
+router.get('/total_invoices',get_total_invoice_by_company);
+router.get('/invoice_stats',get_invoice_stats);
+router.get('/top_category',get_top_category);
+router.get('/top_products',get_top_products);
+router.get('/top_customers',get_top_customers);
+router.get('/top_brands',get_top_brands);
+router.get('/companies',get_companies);
+router.get('/company_invoices',get_company_invoices);
+router.get('/payment_collection_trend',get_payment_collection_trend);
 
 export default router;
