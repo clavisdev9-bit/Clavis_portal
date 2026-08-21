@@ -1761,9 +1761,9 @@ function SalesInvoicesCard() {
                         <td class="py-1.5 px-2">${productName}</td>
                         <td class="py-1.5 px-2">${brand}</td>
                         <td class="py-1.5 px-2">${categName}</td>
-                        <td class="py-1.5 px-2 text-right">${formatCurrency(line.price_unit)}</td>
+                        <td class="py-1.5 px-2 text-right">${formatRupiah(line.price_unit)}</td>
                         <td class="py-1.5 px-2 text-right">${line.qty_invoiced}</td>
-                        <td class="py-1.5 px-2 text-right">${formatCurrency(line.price_subtotal)}</td>
+                        <td class="py-1.5 px-2 text-right">${formatRupiah(line.price_subtotal)}</td>
                     </tr>
                 `;
             });
