@@ -31,6 +31,7 @@ function SalesInvoicesCard() {
     const [defaultDates, setDefaultDates] = useState(null);
     const [monthDates, setMonthDates] = useState(null);
     const [yearDates, setYearDates] = useState(null);
+    const [showAllProducts, setShowAllProducts] = useState(false);
     const customerColors = [
         '#008FFB',
         '#00E396',
@@ -59,16 +60,24 @@ function SalesInvoicesCard() {
     const [reportMom, setReportMom]=useState([]);
     const [reportMtd, setReportMtd]=useState([]);
     const [reportYtd, setReportYtd]=useState([]);
+    const [paymentCollectionTrend, setPaymentCollectionTrend]=useState([]);
+    const [activeTrendSeries, setActiveTrendSeries] = useState("Outstanding Amount");
     const [statsYtd, setStatsYtd]=useState([]);
     const [companyResidual, setCompanyResidual]=useState([]);
     const [companyPaid, setCompanyPaid]=useState([]);
     const [salesStats, setSalesStats] = useState([]);
     const [companyRevenue, setCompanyRevenue] = useState([]);
+    const [invoiceData, setInvoiceData] = useState([]);
+    const invoiceTableRef = useRef({});
+    const invoiceDataTableInstance = useRef({});
     const [companySalesStats, setCompanySalesStats] = useState([]);
     const [companyStats, setCompanyStats] = useState([]);
     const [filterType, setFilterType] = useState("date");
     const [selectedFilterBy, setSelectedFilterBy] = useState("company");
+    const [showAllLabelsPaymentCollectionTrend, setShowAllLabelsPaymentCollectionTrend] = useState(false);
     const [showAllLabelsYtd, setShowAllLabelsYtd] = useState(false);
+    const chartRef8 = useRef({});
+    const chartInstance8 = useRef({});
     const chartRef7 = useRef({});
     const chartInstance7 = useRef({});
     const chartRef6 = useRef({});
@@ -89,6 +98,7 @@ function SalesInvoicesCard() {
     const [showAllLabels2, setShowAllLabels2] = useState(false);
     const [searchCustomer, setSearchCustomer] = useState("");
     const [topCustomers, setTopCustomers] = useState([]);
+    const [showAllCustomers, setShowAllCustomers] = useState(false);
     const [agingAnalysis, setAgingAnalysis]=useState([]);
     const [topCategory, setTopCategory] = useState([]);
     const chartRefCategory = useRef({});
@@ -96,7 +106,11 @@ function SalesInvoicesCard() {
     const categoryColors = ["#3b82f6", "#22c55e", "#8b5cf6", "#f97316", "#94a3b8"];
     const [topProducts, setTopProducts] = useState([]);
     const [topBrands, setTopBrands] = useState([]);
+    const [showAllBrands, setShowAllBrands] = useState(false);
     const [showStatsModal, setShowStatsModal] = useState(false);
+    const [showStatsOutstandingModal, setShowStatsOutstandingModal] = useState(false);
+    const [showInvoiceDataModal, setShowInvoiceDataModal] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState("");
     useEffect(() => {
         setDefaultDates([dayjs().startOf('month'), dayjs()]);
     }, []);
@@ -214,6 +228,7 @@ function SalesInvoicesCard() {
             setStartDate(dayjs().startOf('year').format("YYYY-MM"));
             setEndDate(dayjs().format("YYYY-MM"));
             setMonthDates([dayjs().startOf('year'), dayjs()]);
+            setDefaultDates(null);
             setYearDates(null);
             setFilterType("month");
             setFilterLabel(
@@ -508,6 +523,27 @@ function SalesInvoicesCard() {
     }, [selectedCompany]);
     useEffect(() => {
         const params = {};
+        if (startDate && endDate && filterType) {
+            params.start_date = startDate;
+            params.end_date = endDate;
+            params.filter_type = filterType;
+        }
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+
+        axios.get(`${__API_URL__}/invoices/payment_collection_trend`, {
+            params,
+        })
+        .then(res => {
+            setPaymentCollectionTrend(res.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, [startDate,endDate,selectedCompany]);
+    useEffect(() => {
+        const params = {};
 
         if (selectedCompany) {
             params.company_id = selectedCompany;
@@ -534,7 +570,6 @@ function SalesInvoicesCard() {
             params,
         })
         .then(res => {
-            console.log(res.data);
             setStatsYtd(res.data);
         })
         .catch(error => {
@@ -644,6 +679,191 @@ function SalesInvoicesCard() {
         selectedFilterBy
     ]);
     // EFFECT 1: Buat chart (tidak bergantung pada showAllLabelsYtd)
+    // EFFECT 1: Buat chart (tidak bergantung pada showAllLabelsPaymentCollectionTrend)
+    useEffect(() => {
+        if (!paymentCollectionTrend.length || !selectedCompany) return;
+        const targetEl = chartRef8.current[selectedCompany];
+        if (!targetEl) return;
+
+        const dates = [...new Set(paymentCollectionTrend.map(item => item.write_date))].sort();
+
+        const categories = dates.map(date => {
+            if (filterType === "year") {
+                return date;
+            }
+            if (filterType === "month") {
+                return dayjs(date + "-01").format("MMM YYYY");
+            }
+            return dayjs(date).format("DD MMM YYYY");
+        });
+
+        const dataMap = {};
+        paymentCollectionTrend.forEach(item => {
+            dataMap[item.write_date] = {
+                amount_paid: parseFloat(item.amount_paid),
+                outstanding_amount: parseFloat(item.outstanding_amount),
+            };
+        });
+
+        const series = [
+            {
+                name: "Amount Paid",
+                data: dates.map((date) => (dataMap[date] ? dataMap[date].amount_paid : 0)),
+            },
+            {
+                name: "Outstanding Amount",
+                data: dates.map((date) => (dataMap[date] ? dataMap[date].outstanding_amount : 0)),
+            },
+        ];
+
+        const formatShort = (value) => {
+            if (value >= 1000000000) {
+                return (value / 1000000000).toFixed(1) + "B";
+            }
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + "M";
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + "K";
+            }
+            return value.toLocaleString("id-ID");
+        };
+
+        const colors = ["#3b82f6", "#4c1d95"];
+
+        const options = {
+            chart: {
+                type: "line",
+                height: 300,
+                toolbar: { show: false },
+                zoom: { enabled: false },
+            },
+            series: series,
+            colors: colors,
+            stroke: {
+                width: 3,
+                curve: "straight",
+            },
+            markers: {
+                size: 0,
+                hover: { size: 5 },
+            },
+            dataLabels: {
+                enabled: showAllLabelsPaymentCollectionTrend,
+                offsetY: -10,
+                style: {
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    colors: ["#334155"],
+                },
+                formatter: function (value) {
+                    if (value <= 0) return "";
+                    return formatShort(value);
+                },
+            },
+            xaxis: {
+                categories: categories,
+                axisBorder: { show: false },
+                axisTicks: { show: false },
+                labels: {
+                    style: { fontSize: "12px", colors: "#64748b" },
+                },
+            },
+            yaxis: {
+                labels: {
+                    style: { fontSize: "12px", colors: "#64748b" },
+                    formatter: formatShort,
+                },
+            },
+            grid: {
+                show: true,
+                borderColor: "#e5e7eb",
+                strokeDashArray: 3,
+                xaxis: { lines: { show: false } },
+                yaxis: { lines: { show: true } },
+                padding: { top: 0, right: 20, bottom: 0, left: 10 },
+            },
+            legend: {
+                show: true,
+                position: "top",
+                horizontalAlign: "left",
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (value) {
+                        return formatCurrency(value);
+                    },
+                },
+            },
+            legend: {
+                show: true,
+                position: "top",
+                horizontalAlign: "right",
+            },
+        };
+
+        if (chartInstance8.current[selectedCompany]) {
+            chartInstance8.current[selectedCompany].destroy();
+        }
+
+        chartInstance8.current[selectedCompany] = new ApexCharts(targetEl, options);
+        chartInstance8.current[selectedCompany].render().then(() => {
+            const allSeriesNames = ["Amount Paid", "Outstanding Amount"];
+
+            allSeriesNames.forEach((name) => {
+                if (name === activeTrendSeries) {
+                    chartInstance8.current[selectedCompany].showSeries(name);
+                } else {
+                    chartInstance8.current[selectedCompany].hideSeries(name);
+                }
+            });
+        });
+
+        return () => {
+            if (chartInstance8.current[selectedCompany]) {
+                chartInstance8.current[selectedCompany].destroy();
+                delete chartInstance8.current[selectedCompany];
+            }
+        };
+        // showAllLabelsPaymentCollectionTrend sengaja tidak dimasukkan di sini
+    }, [paymentCollectionTrend, selectedCompany, showStatsOutstandingModal, activeTrendSeries]);
+
+    // EFFECT 2: Update dataLabels saja saat checkbox berubah, tanpa render ulang chart
+    useEffect(() => {
+        if (!selectedCompany) return;
+        if (!chartInstance8.current[selectedCompany]) return;
+
+        const formatShort = (value) => {
+            if (value >= 1000000000) {
+                return (value / 1000000000).toFixed(1) + "B";
+            }
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + "M";
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + "K";
+            }
+            return value.toLocaleString("id-ID");
+        };
+
+        chartInstance8.current[selectedCompany].updateOptions({
+            dataLabels: {
+                enabled: showAllLabelsPaymentCollectionTrend,
+                offsetY: -10,
+                style: {
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    colors: ["#334155"],
+                },
+                formatter: function (value) {
+                    if (value <= 0) return "";
+                    return formatShort(value);
+                },
+            },
+        }, false, false);
+    }, [showAllLabelsPaymentCollectionTrend, selectedCompany]);
     useEffect(() => {
         if (!statsYtd.length || !selectedCompany) return;
         const targetEl = chartRef7.current[selectedCompany];
@@ -1450,6 +1670,248 @@ function SalesInvoicesCard() {
         };
     },[companyRevenue, selectedCompany]);
     useEffect(() => {
+        const params = {};
+        if (startDate && endDate && filterType) {
+            params.start_date = startDate;
+            params.end_date = endDate;
+            params.filter_type = filterType;
+        }
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+        if (selectedCustomer) {
+            params.partner_id = selectedCustomer;
+        }
+        axios.get(`${__API_URL__}/invoices/company_invoices`, {
+            params,
+        })
+        .then(res => {
+            console.log(res.data);
+            setInvoiceData(res.data);
+        })
+        .catch(error => {
+
+        });
+
+    }, [
+        startDate,
+        endDate,
+        filterType,
+        selectedCompany,
+        selectedCustomer
+    ]);
+    useEffect(() => {
+        if (!invoiceData.length || !selectedCompany) return;
+        const targetEl = invoiceTableRef.current[selectedCompany];
+        if (!targetEl) return;
+
+        if (invoiceDataTableInstance.current[selectedCompany]) {
+            invoiceDataTableInstance.current[selectedCompany].destroy();
+            invoiceDataTableInstance.current[selectedCompany] = null;
+        }
+
+        const paymentStateBadge = (state) => {
+            const stateMap = {
+                not_paid: { label: "Not Paid", className: "bg-danger/20 text-danger" },
+                paid: { label: "Paid", className: "bg-success/20 text-success" },
+                partial: { label: "Partial", className: "bg-warning/20 text-warning" },
+                in_payment: { label: "In Payment", className: "bg-info/20 text-info" },
+            };
+            const config = stateMap[state] || { label: state, className: "bg-slate-100 text-slate-600" };
+            return `<span class="px-2 py-1 rounded-md text-xs font-medium ${config.className}">${config.label}</span>`;
+        };
+
+        // Bangun HTML tabel produk untuk child row
+        const buildProductDetailHtml = (rowData) => {
+            const origin = rowData.invoice_origin;
+
+            if (!origin || !Array.isArray(origin) || origin.length === 0) {
+                return `<div class="p-3 text-sm text-muted">Tidak ada detail produk</div>`;
+            }
+
+            // Kumpulkan semua lines dari semua origin, filter qty_invoiced != 0
+            const allLines = [];
+            origin.forEach((o) => {
+                if (o.lines && Array.isArray(o.lines)) {
+                    o.lines.forEach((line) => {
+                        if (line.qty_invoiced && line.qty_invoiced !== 0) {
+                            allLines.push(line);
+                        }
+                    });
+                }
+            });
+
+            if (allLines.length === 0) {
+                return `<div class="p-3 text-sm bg-blue-400 text-muted">Tidak ada detail produk</div>`;
+            }
+
+            let rows = "";
+            allLines.forEach((line) => {
+                const template = line.product_template || {};
+                const productName = template.name || "-";
+                const brand = template.x_studio_brand && Array.isArray(template.x_studio_brand)
+                    ? template.x_studio_brand[1]
+                    : "-";
+                const categName = template.categ_id && Array.isArray(template.categ_id)
+                    ? template.categ_id[1]
+                    : "-";
+
+                rows += `
+                    <tr class="border-b border-slate-100 dark:border-slate-700">
+                        <td class="py-1.5 px-2">${productName}</td>
+                        <td class="py-1.5 px-2">${brand}</td>
+                        <td class="py-1.5 px-2">${categName}</td>
+                        <td class="py-1.5 px-2 text-right">${formatCurrency(line.price_unit)}</td>
+                        <td class="py-1.5 px-2 text-right">${line.qty_invoiced}</td>
+                        <td class="py-1.5 px-2 text-right">${formatCurrency(line.price_subtotal)}</td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <div class="p-3 bg-slate-50 dark:bg-slate-900">
+                    <div class="max-h-[250px] overflow-y-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900">
+                                <tr class="border-b bg-blue-200 border-slate-200 dark:border-slate-700 text-left text-slate-500 dark:text-slate-400">
+                                    <th class="py-1.5 px-2">Product Name</th>
+                                    <th class="py-1.5 px-2">Brand</th>
+                                    <th class="py-1.5 px-2">Category</th>
+                                    <th class="py-1.5 px-2 text-right">Price Unit</th>
+                                    <th class="py-1.5 px-2 text-right">Qty Invoiced</th>
+                                    <th class="py-1.5 px-2 text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        };
+
+        const table = $(targetEl).DataTable({
+            data: invoiceData,
+            destroy: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            order: [[1, "desc"]],
+            columns: [
+                {
+                    title: "No",
+                    data: null,
+                    className: "text-center",
+                    render: function (data, type, row, meta) {
+                        return meta.settings._iDisplayStart + meta.row + 1;
+                    }
+                },
+                {
+                    title: "Invoice Date",
+                    data: "invoice_date",
+                    render: function (data) {
+                        return dayjs(data).format("DD MMM YYYY");
+                    }
+                },
+                {
+                    title: "Customer",
+                    data: "customer_name",
+                },
+                {
+                    title: "Total",
+                    data: "amount_total",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    title: "Tax",
+                    data: "amount_tax",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    title: "Paid",
+                    data: "amount_paid",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    title: "Outstanding",
+                    data: "amount_residual",
+                    className: "text-right",
+                    render: function (data) {
+                        return `<span class="text-purple font-medium">${formatRupiah(data)}</span>`;
+                    }
+                },
+                {
+                    title: "Status",
+                    data: "payment_state",
+                    render: function (data) {
+                        return paymentStateBadge(data);
+                    }
+                },
+                {
+                    title: "Due Date",
+                    data: "invoice_date_due",
+                    render: function (data) {
+                        return dayjs(data).format("DD MMM YYYY");
+                    }
+                },
+            ],
+            language: {
+                search: "Search:",
+                info: "Showing _START_ to _END_ of _TOTAL_ invoices",
+                paginate: {
+                    previous: "Prev",
+                    next: "Next",
+                },
+            },
+            createdRow: function (row) {
+                // Tambahkan style cursor pointer & hint bahwa baris bisa diklik
+                $(row).css("cursor", "pointer");
+            },
+        });
+
+        invoiceDataTableInstance.current[selectedCompany] = table;
+
+        // Event klik baris untuk expand/collapse child row
+        $(targetEl).off("click", "tbody tr").on("click", "tbody tr", function () {
+            const tr = $(this);
+            const row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // Sudah terbuka -> tutup
+                row.child.hide();
+                tr.removeClass("shown");
+            } else {
+                // Tutup child row lain yang mungkin masih terbuka (opsional, biar rapi)
+                table.rows().every(function () {
+                    if (this.child.isShown()) {
+                        this.child.hide();
+                        $(this.node()).removeClass("shown");
+                    }
+                });
+
+                // Buka child row untuk baris ini
+                row.child(buildProductDetailHtml(row.data())).show();
+                tr.addClass("shown");
+            }
+        });
+
+        return () => {
+            if (invoiceDataTableInstance.current[selectedCompany]) {
+                invoiceDataTableInstance.current[selectedCompany].destroy();
+                delete invoiceDataTableInstance.current[selectedCompany];
+            }
+        };
+    }, [invoiceData, selectedCompany, showInvoiceDataModal]);
+    useEffect(() => {
         if (!selectedCompany) return;
         if (!chartInstance.current[selectedCompany]) return;
 
@@ -2006,6 +2468,9 @@ function SalesInvoicesCard() {
         if (selectedCompany) {
             params.company_id = selectedCompany;
         }
+        if (showAllCustomers) {
+            params.show_all = "true";
+        }
         axios.get(`${__API_URL__}/invoices/top_customers`, {
             params,
         })
@@ -2020,7 +2485,8 @@ function SalesInvoicesCard() {
         startDate,
         endDate,
         filterType,
-        selectedCompany
+        selectedCompany,
+        showAllCustomers
     ]);
     useEffect(() => {
         const params = {};
@@ -2261,6 +2727,9 @@ function SalesInvoicesCard() {
         if (selectedCompany) {
             params.company_id = selectedCompany;
         }
+        if (showAllProducts) {
+            params.show_all = "true";
+        }
         axios.get(`${__API_URL__}/invoices/top_products`, {
             params,
         })
@@ -2275,7 +2744,8 @@ function SalesInvoicesCard() {
         startDate,
         endDate,
         filterType,
-        selectedCompany
+        selectedCompany,
+        showAllProducts
     ]);
     useEffect(() => {
         const params = {};
@@ -2286,6 +2756,9 @@ function SalesInvoicesCard() {
         }
         if (selectedCompany) {
             params.company_id = selectedCompany;
+        }
+        if (showAllBrands) {
+            params.show_all = "true";
         }
         axios.get(`${__API_URL__}/invoices/top_brands`, {
             params,
@@ -2301,8 +2774,19 @@ function SalesInvoicesCard() {
         startDate,
         endDate,
         filterType,
-        selectedCompany
+        selectedCompany,
+        showAllBrands
     ]);
+    const formatRupiah = (value) => {
+        const amount = Number(value);
+
+        if (isNaN(amount)) return "-";
+
+        // Jika < 1 juta
+        return `Rp.`+new Intl.NumberFormat("en-US", {
+            maximumFractionDigits: 2
+        }).format(amount);
+    };
     const formatCurrency = (value) => {
         const amount = Number(value);
 
@@ -2542,12 +3026,14 @@ function SalesInvoicesCard() {
                                                             {formatCurrency(totalTahunIni)}
                                                         </h4>
                                                         <p className="text-muted text-sm mb-1">({data.label_tahun_ini})</p>
-                                                        <p 
-                                                            className="text-blue-400 text-sm text-right mb-1 cursor-pointer hover:underline"
-                                                            onClick={() => setShowStatsModal(true)}
-                                                        >
-                                                            see stats
-                                                        </p>
+                                                        <div class="text-right">
+                                                            <button 
+                                                                className="text-white bg-blue-600 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-blue-700"
+                                                                onClick={() => setShowStatsModal(true)}
+                                                            >
+                                                                see stats
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2643,6 +3129,17 @@ function SalesInvoicesCard() {
                                                     {totalOrder}
                                                 </h4>
                                                 <p className="text-muted text-sm mb-1">Orders</p>
+                                                <div class="text-right">
+                                                    <button 
+                                                        className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
+                                                        onClick={() => {
+                                                            setShowInvoiceDataModal(true);
+                                                            setSelectedCustomer("");
+                                                        }}
+                                                    >
+                                                        see data
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2668,6 +3165,17 @@ function SalesInvoicesCard() {
                                                     {formatCurrency(companyResidual.residual_amount)}
                                                 </h4>
                                                 <p className="text-muted text-sm mb-1">({filterLabel})</p>
+                                                <div class="text-right">
+                                                    <button 
+                                                        className="text-white bg-blue-600 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-blue-700"
+                                                        onClick={() => {
+                                                            setActiveTrendSeries("Outstanding Amount");
+                                                            setShowStatsOutstandingModal(true);
+                                                        }}
+                                                    >
+                                                        see stats
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2693,12 +3201,23 @@ function SalesInvoicesCard() {
                                                     {formatCurrency(companyPaid.amount_paid)}
                                                 </h4>
                                                 <p className="text-muted text-sm mb-1">({filterLabel})</p>
+                                                <div class="text-right">
+                                                    <button 
+                                                        className="text-white bg-blue-600 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-blue-700"
+                                                        onClick={() => {
+                                                            setActiveTrendSeries("Amount Paid");
+                                                            setShowStatsOutstandingModal(true);
+                                                        }}
+                                                    >
+                                                        see stats
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-12 gap-4 mt-2">
-                                    <div class="col-span-12 xl:col-span-5 min-h-0 card">
+                                    <div class="col-span-12 xl:col-span-5 p-6 min-h-0 card">
                                         {salesStats.length > 0 ? (
                                             <div class="grid grid-cols-12">
                                                 <div className={selectedFilterBy === 'company' ? 'col-span-12' : 'col-span-8'}>
@@ -3011,7 +3530,7 @@ function SalesInvoicesCard() {
                                         )}
                                     </div>
                                     <div className="col-span-12 xl:col-span-4 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
                                             {topCategory.length > 0 ? (
                                                 <div>
                                                     <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-800 dark:text-slate-100">
@@ -3039,7 +3558,7 @@ function SalesInvoicesCard() {
                                                                     />
 
                                                                     {/* Label */}
-                                                                    <span className="text-sm text-slate-700 dark:text-slate-200 w-28 truncate flex-none">
+                                                                    <span  title={item.categ_name} className="text-sm text-slate-700 dark:text-slate-200 w-28 truncate flex-none">
                                                                         {item.categ_name}
                                                                     </span>
 
@@ -3076,10 +3595,18 @@ function SalesInvoicesCard() {
                                         </div>
                                     </div>
                                     <div className="col-span-12 xl:col-span-3 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
-                                            <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
-                                                Top 10 Products
-                                            </h2>
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
+                                            <div className="grid grid-cols-12">
+                                                <h2 className="col-span-6 mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
+                                                    Top 10 Products
+                                                </h2>
+                                                <h2 
+                                                    className="col-span-6 pt-1 pr-2 text-right mb-4 text-sm cursor-pointer capitalize text-blue-600 align-bottom hover:underline"
+                                                    onClick={() => setShowAllProducts(prev => !prev)}
+                                                >
+                                                    {showAllProducts ? "Show Less" : "View All"}
+                                                </h2>
+                                            </div>
 
                                             {/* SCROLL AREA */}
                                             <div className="flex-1 min-h-0 overflow-y-auto pr-2">
@@ -3090,10 +3617,10 @@ function SalesInvoicesCard() {
                                                         >
                                                             {/* Baris 1: Nama produk + Amount */}
                                                             <div className="flex items-start justify-between gap-4 leading-tight">
-                                                                <p className="dark:text-white truncate text-sm leading-tight mb-1">
+                                                                <p className="dark:text-white truncate text-sm leading-tight mb-1" title={product.product_name}>
                                                                     {index + 1}. {product.product_name?(product.product_name.length>29?`${product.product_name.slice(0, 29)}...`: product.product_name):''}
                                                                 </p>
-                                                                <p className="text-purple text-[15px] leading-tight font-medium flex-none mb-1">
+                                                                <p className="text-[15px] leading-tight font-medium flex-none mb-1">
                                                                     {formatCurrency(product.total_amount)}
                                                                 </p>
                                                             </div>
@@ -3121,11 +3648,19 @@ function SalesInvoicesCard() {
                                 </div>
                                 <div className="grid grid-cols-12 gap-4 mt-2">
                                     <div class="col-span-12 xl:col-span-4 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
 
-                                            <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
-                                                Top 10 Customers
-                                            </h2>
+                                            <div className="grid grid-cols-12">
+                                                <h2 className="col-span-6 mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
+                                                    Top 10 Customers
+                                                </h2>
+                                                <h2 
+                                                    className="col-span-6 pt-1 pr-2 text-right mb-4 text-sm cursor-pointer capitalize text-blue-600 align-bottom hover:underline"
+                                                    onClick={() => setShowAllCustomers(prev => !prev)}
+                                                >
+                                                    {showAllCustomers ? "Show Less" : "View All"}
+                                                </h2>
+                                            </div>
 
                                             {/* SCROLL AREA */}
                                             <div className="flex-1 min-h-0 overflow-y-auto pr-2">
@@ -3147,7 +3682,10 @@ function SalesInvoicesCard() {
                                                                             <div className="text-[15px] leading-tight font-medium w-24 whitespace-nowrap">
                                                                                 {formatCurrency(customer.total_amount)}
                                                                             </div>
-                                                                            <div className="text-[15px] font-medium w-16 text-right">
+                                                                            <div className="text-[15px] font-medium text-purple hover:underline cursor-pointer w-16 text-right" onClick={() =>{
+                                                                                setShowInvoiceDataModal(true);
+                                                                                setSelectedCustomer(customer.partner_id);
+                                                                            }}>
                                                                                 {customer.total_order} Orders
                                                                             </div>
                                                                         </div>
@@ -3175,7 +3713,7 @@ function SalesInvoicesCard() {
                                     </div>
                                     <div className="col-span-12 xl:col-span-5 min-h-0">
                                         
-                                        <div className="p-4 card h-full flex flex-col min-h-0">
+                                        <div className="p-6 card h-full flex flex-col min-h-0">
                                             <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-800 dark:text-slate-100">
                                                 Aging Analysis
                                             </h2>
@@ -3195,10 +3733,18 @@ function SalesInvoicesCard() {
                                         </div>
                                     </div>
                                     <div className="col-span-12 xl:col-span-3 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
-                                            <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
-                                                Top 10 Brands
-                                            </h2>
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
+                                            <div className="grid grid-cols-12">
+                                                <h2 className="col-span-6 mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
+                                                    Top 10 Brands
+                                                </h2>
+                                                <h2 
+                                                    className="col-span-6 pt-1 pr-2 text-right mb-4 text-sm cursor-pointer capitalize text-blue-600 align-bottom hover:underline"
+                                                    onClick={() => setShowAllBrands(prev => !prev)}
+                                                >
+                                                    {showAllBrands ? "Show Less" : "View All"}
+                                                </h2>
+                                            </div>
                                             <div className="flex-1 min-h-0 overflow-y-auto pr-2">
                                                 <div className="grid grid-cols-1 gap-3">
                                                     {topBrands.map((brand, index) => (
@@ -3291,7 +3837,101 @@ function SalesInvoicesCard() {
                     </div>
                 </div>
             )}
-            
+            {showStatsOutstandingModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    onClick={() => setShowStatsOutstandingModal(false)}
+                >
+                    <div 
+                        className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                                Payment Collection Trend
+                            </h3>
+                            <button
+                                onClick={() => setShowStatsOutstandingModal(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    
+                        <div className="text-slate-700 dark:text-slate-200 relative">
+                            <label className="absolute top-0 left-0 z-20 flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={showAllLabelsPaymentCollectionTrend}
+                                    onChange={(e) => setShowAllLabelsPaymentCollectionTrend(e.target.checked)}
+                                />
+                                <span className="text-sm">Show All Values</span>
+                            </label>
+                            <div ref={(el) => {
+                                if (el) {
+                                    chartRef8.current[selectedCompany] = el;
+                                }
+                            }} />
+                        </div>
+
+                        <div className="mt-6 text-right">
+                            <button
+                                onClick={() => setShowStatsOutstandingModal(false)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showInvoiceDataModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    onClick={() => setShowInvoiceDataModal(false)}
+                >
+                    <div 
+                        className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-7xl mx-4 p-6 max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                                Invoice Data
+                            </h3>
+                            <button
+                                onClick={() => setShowInvoiceDataModal(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        
+                        <div className="overflow-x-auto">
+                            <table 
+                                ref={(el) => {
+                                    if (el) {
+                                        invoiceTableRef.current[selectedCompany] = el;
+                                    }
+                                }}
+                                className="w-full text-sm stripe hover" 
+                                style={{ width: "100%" }}
+                            >
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <div className="mt-6 text-right">
+                            <button
+                                onClick={() => setShowInvoiceDataModal(false)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             
         </div>
     );

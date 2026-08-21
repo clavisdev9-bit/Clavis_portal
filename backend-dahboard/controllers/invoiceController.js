@@ -346,7 +346,8 @@ export const get_company_invoices = async (req, res) => {
             start_date,
             end_date,
             filter_type,
-            company_id
+            company_id,
+            partner_id
         } = req.query;
 
         const values = [];
@@ -451,6 +452,13 @@ export const get_company_invoices = async (req, res) => {
                 `(company_id->>0)::integer = $${values.length}`
             );
         }
+        if (partner_id) {
+            values.push(Number(partner_id));
+
+            conditions.push(
+                `(partner_id->>0)::integer = $${values.length}`
+            );
+        }
 
         /*
          * ==========================================
@@ -470,7 +478,7 @@ export const get_company_invoices = async (req, res) => {
          */
 
         const query = `
-            select invoice_date,partner_id->>1 customer_name,amount_total,(amount_total-amount_residual) amount_paid,invoice_date_due
+            select invoice_date,partner_id->>1 customer_name,amount_total,amount_tax,(amount_total-amount_residual) amount_paid,amount_residual,payment_state,invoice_date_due,invoice_origin
             from invoices ${whereClause} AND invoice_origin IS NOT NULL AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0 AND amount_total>0
         `;
@@ -909,7 +917,6 @@ export const get_payment_collection_trend = async (req, res) => {
             ORDER BY
                 TO_CHAR(invoice_date,'${format}')
         `;
-        console.log(query);
         const result = await pool.query(query, values);
         res.json(result.rows);
     } catch (error) {
@@ -1251,7 +1258,8 @@ export const get_top_products = async (req, res) => {
             start_date,
             end_date,
             filter_type,
-            company_id
+            company_id,
+            show_all
         } = req.query;
 
         const values = [];
@@ -1331,7 +1339,7 @@ export const get_top_products = async (req, res) => {
             conditions.length > 0
                 ? `WHERE ${conditions.join(" AND ")}`
                 : "";
-
+        const limitClause = show_all === "true" ? "" : "LIMIT 10";
         /*
          * ==========================================
          * QUERY TOP PRODUCTS
@@ -1374,7 +1382,7 @@ export const get_top_products = async (req, res) => {
                 GROUP BY (company_id->>0)::integer, company_id->>1, product_name
                 HAVING SUM((line->>'po_qty')::numeric) > 0
             ) sub
-            ORDER BY total_amount DESC;
+            ORDER BY total_amount DESC ${limitClause};
         `;
         const result = await pool.query(query, values);
 
@@ -1395,7 +1403,8 @@ export const get_top_customers = async (req, res) => {
             start_date,
             end_date,
             filter_type,
-            company_id
+            company_id,
+            show_all 
         } = req.query;
 
         const values = [];
@@ -1511,7 +1520,7 @@ export const get_top_customers = async (req, res) => {
             conditions.length > 0
                 ? `WHERE ${conditions.join(" AND ")}`
                 : "";
-
+        const limitClause = show_all === "true" ? "" : "LIMIT 10";
         /*
          * ==========================================
          * QUERY TOP CUSTOMERS
@@ -1551,7 +1560,7 @@ export const get_top_customers = async (req, res) => {
 
             ORDER BY total_amount DESC
 
-            LIMIT 10
+            ${limitClause}
         `;
         const result = await pool.query(query, values);
 
@@ -1620,7 +1629,8 @@ export const get_top_brands = async (req, res) => {
             start_date,
             end_date,
             filter_type,
-            company_id
+            company_id,
+            show_all
         } = req.query;
 
         const values = [];
@@ -1713,7 +1723,7 @@ export const get_top_brands = async (req, res) => {
             conditions.length > 0
                 ? `WHERE ${conditions.join(" AND ")}`
                 : "";
-
+        const limitClause = show_all === "true" ? "" : "LIMIT 10";
         /*
          * ==========================================
          * QUERY TOP BRANDS
@@ -1802,7 +1812,7 @@ export const get_top_brands = async (req, res) => {
 
             ORDER BY total_amount DESC
 
-            LIMIT 10
+            ${limitClause}
         `;
 
         const result = await pool.query(query, values);
