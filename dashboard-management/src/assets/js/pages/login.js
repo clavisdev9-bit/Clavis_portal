@@ -60,7 +60,6 @@ async function submitLoginController(data) {
                     }
                 );
                 const pageData=response.data[0].map(Number);
-                pageData.sort((a, b) => a - b);
 
                 // 🔹 ambil detail page
                 const pageData2 = await axios.get(
@@ -70,9 +69,30 @@ async function submitLoginController(data) {
                     }
                 );
 
-                const firstLevel = pageData2.data.find(item => item.level === 2);
-                console.log(firstLevel.page_name)
-                window.location.href = "/"+firstLevel.page_name+".html";
+                const pages = pageData2.data;
+
+                // halaman sekarang
+                const currentPage = window.location.pathname
+                    .replace("/", "")
+                    .replace(".html", "");
+
+                // cek apakah user punya akses
+                const hasAccess = pages.some(
+                    item => item.page_name === currentPage
+                );
+
+                // kalau tidak punya akses → redirect
+                if (!hasAccess) {
+                    const parentPage = pages.find(item => item.level === 1);
+                    const defaultPage = pages.find(
+                        item => item.level === 2 && item.parent === parentPage.id
+                    );
+
+                    if (defaultPage) {
+                        window.location.href =
+                            "/" + defaultPage.page_name + ".html";
+                    }
+                }
                 
             } catch (err) {
                 console.error("Gagal fetch:", err);
