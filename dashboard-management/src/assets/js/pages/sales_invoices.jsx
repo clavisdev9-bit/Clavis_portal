@@ -122,6 +122,7 @@ function SalesInvoicesCard() {
             setStartDate(dayjs().format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
             setFilterLabel("Today");
+            setFilterType("date");
         }
     };
     const onMonthRangeChange = (date, dateString) => {
@@ -140,6 +141,7 @@ function SalesInvoicesCard() {
             setStartDate(dayjs().format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
             setFilterLabel("Today");
+            setFilterType("date");
         }
     };
     const onYearRangeChange = (date, dateString) => {
@@ -156,6 +158,7 @@ function SalesInvoicesCard() {
             setStartDate(dayjs().format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
             setFilterLabel("Today");
+            setFilterType("date");
         }
     };
     const [selectedRadio, setSelectedRadio] = useState("this month");
@@ -1432,14 +1435,14 @@ function SalesInvoicesCard() {
                 const template = line.product_template || {};
                 const productName = template.name || "-";
                 const brandRaw = template.x_studio_brand && Array.isArray(template.x_studio_brand)
-            ? template.x_studio_brand[1]
-            : "-";
-            const categRaw = template.categ_id && Array.isArray(template.categ_id)
-                ? template.categ_id[1]
+                ? template.x_studio_brand[1]
                 : "-";
+                const categRaw = template.categ_id && Array.isArray(template.categ_id)
+                    ? template.categ_id[1]
+                    : "-";
 
-            const brand = getLastSegment(brandRaw);
-            const categName = getLastSegment(categRaw);
+                const brand = getLastSegment(brandRaw);
+                const categName = getLastSegment(categRaw);
 
 
                 rows += `
