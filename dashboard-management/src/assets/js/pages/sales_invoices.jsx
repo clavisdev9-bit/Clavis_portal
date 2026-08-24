@@ -2923,6 +2923,7 @@ function SalesInvoicesCard() {
                                                         onClick={() => {
                                                             setShowOrderDataModal(true);
                                                             setSelectedCustomer("");
+                                                            setToInvoice("");
                                                         }}
                                                     >
                                                         see data
@@ -2981,10 +2982,12 @@ function SalesInvoicesCard() {
                                                 <p className="text-muted text-sm mb-1">
                                                     <button className="bg-yellow-500 hover:bg-yellow-600  text-white px-1" onClick={() => {
                                                         setToInvoice("to invoice");
+                                                        setSelectedCustomer("");
                                                         setShowOrderDataModal(true);
                                                     }}>{invoicePercentage.to_invoice} To Invoice</button> 
                                                     <button className="bg-green-500 hover:bg-green-600 text-white px-1" onClick={() => {
                                                         setToInvoice("invoiced");
+                                                        setSelectedCustomer("");
                                                         setShowOrderDataModal(true);
                                                     }}>{invoicePercentage.invoiced} Invoiced</button>
                                                 </p>
@@ -3447,6 +3450,7 @@ function SalesInvoicesCard() {
                                                                             <div className="text-[15px] font-medium text-purple hover:underline cursor-pointer w-16 text-right" onClick={() =>{
                                                                                 setShowOrderDataModal(true);
                                                                                 setSelectedCustomer(customer.partner_id);
+                                                                                setToInvoice("");
                                                                             }}>
                                                                                 {customer.total_order} Orders
                                                                             </div>
