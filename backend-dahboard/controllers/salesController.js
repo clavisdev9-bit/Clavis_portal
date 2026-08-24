@@ -1236,27 +1236,6 @@ export const get_sales_stats = async (req, res) => {
         format = "YYYY";
     }
 
-    // Jika start_date === end_date, cari tanggal sebelumnya yang punya data amount_total
-    let effectiveStartDate = start_date;
-    if (start_date && end_date && start_date === end_date) {
-        const prevDateResult = await pool.query(
-            `
-            SELECT DATE(date_order) AS prev_date
-            FROM sales_orders
-            WHERE DATE(date_order) < $1
-                AND amount_total > 0
-            ORDER BY DATE(date_order) DESC
-            LIMIT 1
-            `,
-            [start_date]
-        );
-
-        if (prevDateResult.rows.length > 0) {
-            effectiveStartDate = dayjs(prevDateResult.rows[0].prev_date).format('YYYY-MM-DD');
-        }
-        // Jika tidak ada data sebelumnya sama sekali, biarkan effectiveStartDate = start_date (tidak berubah)
-    }
-
     let query = `
         SELECT
             TO_CHAR(date_order,'${format}') AS write_date,
@@ -1270,13 +1249,14 @@ export const get_sales_stats = async (req, res) => {
     const values = [];
     const conditions = [];
 
-    if (effectiveStartDate && end_date) {
-        values.push(effectiveStartDate, end_date);
+    if (start_date && end_date) {
+        values.push(start_date, end_date);
 
         conditions.push(
             `TO_CHAR(date_order,'${format}') BETWEEN $${values.length - 1} AND $${values.length}`
         );
     } else {
+        // Default: 7 hari terakhir
         conditions.push(`
             DATE(date_order) IN (
                 SELECT DISTINCT DATE(date_order)

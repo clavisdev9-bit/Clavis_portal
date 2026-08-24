@@ -1414,7 +1414,7 @@ function SalesInvoicesCard() {
             }
             return dayjs(date).format("DD MMM YYYY");
         });
-
+        const isSinglePoint = dates.length === 1;
         // =========================================
         // CREATE SERIES
         // =========================================
@@ -1456,7 +1456,7 @@ function SalesInvoicesCard() {
         // =========================================
         const options = {
             chart: {
-                type: 'area',
+                type: isSinglePoint ? "bar" : "area",
                 height: 200,
                 animations: {
                     enabled: true,
@@ -1479,17 +1479,21 @@ function SalesInvoicesCard() {
                 }
             },
             stroke: { 
-                width: 3,
+                width: isSinglePoint ? 0 : 3,
                 curve:'straight'
             },
-            markers: {
+            markers: isSinglePoint ? {
+                size: 0   // <-- sembunyikan marker kalau bar, tidak diperlukan
+            } : {
                 size: 4,
                 colors: ["#3b82f6"],
                 strokeColors: "#fff",
                 strokeWidth: 2,
                 hover: { size: 7 },
             },
-            fill: {
+            fill: isSinglePoint ? {
+                opacity: 1   // <-- bar solid, tidak pakai gradient
+            } : {
                 type: "gradient",
                 gradient: {
                     shadeIntensity: 1,
@@ -1498,6 +1502,12 @@ function SalesInvoicesCard() {
                     stops: [0, 90, 100],
                 },
             },
+            plotOptions: isSinglePoint ? {
+                bar: {
+                    columnWidth: "8%",
+                    borderRadius: 4,
+                }
+            } : {},
             legend: { show: false },
             tooltip: {
                 shared: true,
@@ -1532,6 +1542,9 @@ function SalesInvoicesCard() {
             dataLabels: {
                 enabled: showAllLabels,
                 offsetY: -10,
+                formatter: function (value) {
+                    return formatCurrency(value * 1000000);
+                },
             }
         };
 
@@ -1921,7 +1934,7 @@ function SalesInvoicesCard() {
                 enabledOnSeries: undefined,
                 formatter(value) {
                     if (value <= 0) return "";
-                    return formatCurrency(value)+'M';   // samakan dengan formatter di useEffect utama
+                    return formatCurrency(value * 1000000);   // samakan dengan formatter di useEffect utama
                 }
             }
         });

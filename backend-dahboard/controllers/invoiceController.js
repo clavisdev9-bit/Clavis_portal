@@ -1031,7 +1031,7 @@ export const get_invoice_stats = async (req, res) => {
         conditions.push(`
             DATE(invoice_date) IN (
                 SELECT DISTINCT DATE(invoice_date)
-                FROM sales_orders
+                FROM invoices
                 ORDER BY DATE(invoice_date) DESC
                 LIMIT 7
             )
