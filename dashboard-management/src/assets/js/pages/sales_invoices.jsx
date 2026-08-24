@@ -31,6 +31,7 @@ function SalesInvoicesCard() {
     const [defaultDates, setDefaultDates] = useState(null);
     const [monthDates, setMonthDates] = useState(null);
     const [yearDates, setYearDates] = useState(null);
+    const [showAllProducts, setShowAllProducts] = useState(false);
     const totalAmountsRef6 = useRef({});
     const customerColors = [
         '#008FFB',
@@ -2523,6 +2524,9 @@ function SalesInvoicesCard() {
         if (selectedCompany) {
             params.company_id = selectedCompany;
         }
+        if (showAllProducts) {
+            params.show_all = "true";
+        }
         axios.get(`${__API_URL__}/sales/top_products`, {
             params,
         })
@@ -2537,7 +2541,8 @@ function SalesInvoicesCard() {
         startDate,
         endDate,
         filterType,
-        selectedCompany
+        selectedCompany,
+        showAllProducts
     ]);
     useEffect(() => {
         const params = {};
@@ -3377,9 +3382,17 @@ function SalesInvoicesCard() {
                                     </div>
                                     <div className="col-span-12 xl:col-span-3 min-h-0">
                                         <div className="p-4 card h-96 flex flex-col min-h-0">
-                                            <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
-                                                Top Products
-                                            </h2>
+                                            <div className="grid grid-cols-12">
+                                                <h2 className="col-span-6 mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
+                                                    Top 10 Products
+                                                </h2>
+                                                <h2 
+                                                    className="col-span-6 pt-1 pr-2 text-right mb-4 text-sm cursor-pointer capitalize text-blue-600 align-bottom hover:underline"
+                                                    onClick={() => setShowAllProducts(prev => !prev)}
+                                                >
+                                                    {showAllProducts ? "Show Less" : "View All"}
+                                                </h2>
+                                            </div>
 
                                             {/* SCROLL AREA */}
                                             <div className="flex-1 min-h-0 overflow-y-auto pr-2">

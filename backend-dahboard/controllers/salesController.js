@@ -408,7 +408,6 @@ export const get_company_orders = async (req, res) => {
         const query = `
             select date_order,delivery_date,partner_id->>1 customer_name,amount_total,amount_tax,order_line,invoice_status,delivery_status from sales_orders ${whereClause} AND amount_total>0
         `;
-        console.log(query,values);
         const result = await pool.query(query, values);
 
         res.json(result.rows);
@@ -2685,7 +2684,8 @@ export const get_top_products = async (req, res) => {
             start_date,
             end_date,
             filter_type,
-            company_id
+            company_id,
+            show_all
         } = req.query;
 
         const values = [];
@@ -2696,7 +2696,6 @@ export const get_top_products = async (req, res) => {
          * FILTER TANGGAL
          * ==========================================
          */
-
         if (start_date) {
             if (filter_type === "month") {
                 values.push(`${start_date}-01`);
@@ -2765,6 +2764,7 @@ export const get_top_products = async (req, res) => {
             conditions.length > 0
                 ? `WHERE ${conditions.join(" AND ")}`
                 : "";
+        const limitClause = show_all === "true" ? "" : "LIMIT 10";
 
         /*
          * ==========================================
@@ -2799,7 +2799,8 @@ export const get_top_products = async (req, res) => {
                 GROUP BY (company_id->>0)::integer, company_id->>1, product_name
                 HAVING SUM((elem->>'po_qty')::numeric) > 0
             ) sub
-            ORDER BY total_amount DESC;
+            ORDER BY total_amount DESC
+            ${limitClause}
         `;
         const result = await pool.query(query, values);
 
