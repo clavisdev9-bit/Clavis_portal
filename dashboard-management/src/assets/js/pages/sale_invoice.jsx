@@ -1741,7 +1741,11 @@ function SalesInvoicesCard() {
             if (!origin || !Array.isArray(origin) || origin.length === 0) {
                 return `<div class="p-3 text-sm text-muted">Tidak ada detail produk</div>`;
             }
-
+            const getLastSegment = (str) => {
+                if (!str || typeof str !== "string") return "-";
+                const parts = str.split("/");
+                return parts[parts.length - 1].trim();
+            };
             // Kumpulkan semua lines dari semua origin, filter qty_invoiced != 0
             const allLines = [];
             origin.forEach((o) => {
@@ -1762,13 +1766,15 @@ function SalesInvoicesCard() {
             allLines.forEach((line) => {
                 const template = line.product_template || {};
                 const productName = template.name || "-";
-                const brand = template.x_studio_brand && Array.isArray(template.x_studio_brand)
-                    ? template.x_studio_brand[1]
-                    : "-";
-                const categName = template.categ_id && Array.isArray(template.categ_id)
-                    ? template.categ_id[1]
-                    : "-";
+                const brandRaw = template.x_studio_brand && Array.isArray(template.x_studio_brand)
+                ? template.x_studio_brand[1]
+                : "-";
+                const categRaw = template.categ_id && Array.isArray(template.categ_id)
+                ? template.categ_id[1]
+                : "-";
 
+                const brand = getLastSegment(brandRaw);
+                const categName = getLastSegment(categRaw);
                 rows += `
                     <tr class="border-b border-slate-100 dark:border-slate-700">
                         <td class="py-1.5 px-2">${productName}</td>
