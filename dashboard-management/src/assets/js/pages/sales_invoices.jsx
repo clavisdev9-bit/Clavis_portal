@@ -1461,7 +1461,7 @@ function SalesInvoicesCard() {
                 <div class="p-3 bg-slate-50 dark:bg-slate-900">
                     <div class="max-h-[250px] overflow-y-auto">
                         <table class="w-full text-xs">
-                            <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900">
+                            <thead class="sticky top-0 bg-blue-200 dark:bg-slate-900">
                                 <tr class="border-b bg-blue-200 border-slate-200 dark:border-slate-700 text-left text-slate-500 dark:text-slate-400">
                                     <th class="py-1.5 px-2">Product Name</th>
                                     <th class="py-1.5 px-2">Brand</th>
