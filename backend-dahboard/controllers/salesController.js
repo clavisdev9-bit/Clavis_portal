@@ -1751,7 +1751,7 @@ export const get_top_customers = async (req, res) => {
                 company_id->>1,
                 (partner_id->>0)::integer,
                 partner_id->>1
-
+            HAVING SUM(amount_total) > 0
             ORDER BY total_amount DESC
 
             LIMIT 10
