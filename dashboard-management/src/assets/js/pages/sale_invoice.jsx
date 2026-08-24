@@ -2531,7 +2531,7 @@ function SalesInvoicesCard() {
         const options = {
             chart: {
                 type: "bar",
-                height: 300,
+                height: 250,
                 toolbar: { show: false },
                 zoom: { enabled: false },
             },

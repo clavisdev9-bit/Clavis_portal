@@ -1729,7 +1729,7 @@ function SalesInvoicesCard() {
                 },
             ],
             chart: {
-                height: 300,
+                height: 250,
                 type: 'bar',
                 toolbar: { show: false },
             },
@@ -3001,7 +3001,7 @@ function SalesInvoicesCard() {
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-12 gap-4 mt-2">
-                                    <div class="col-span-12 xl:col-span-5 min-h-0 card">
+                                    <div class="col-span-12 xl:col-span-5 min-h-0 card p-6">
                                         {salesStats.length > 0 ? (
                                             <div class="grid grid-cols-12">
                                                 <div className={selectedFilterBy === 'company' ? 'col-span-12' : 'col-span-8'}>
@@ -3314,7 +3314,7 @@ function SalesInvoicesCard() {
                                         )}
                                     </div>
                                     <div className="col-span-12 xl:col-span-4 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
                                         {topCategory.length > 0 ? (
                                             <div>
                                                 <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-800 dark:text-slate-100">
@@ -3381,7 +3381,7 @@ function SalesInvoicesCard() {
                                         </div>
                                     </div>
                                     <div className="col-span-12 xl:col-span-3 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
                                             <div className="grid grid-cols-12">
                                                 <h2 className="col-span-6 mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
                                                     Top 10 Products
@@ -3434,7 +3434,7 @@ function SalesInvoicesCard() {
                                 </div>
                                 <div className="grid grid-cols-12 gap-4 mt-2">
                                     <div class="col-span-12 xl:col-span-4 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
 
                                             <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
                                                 Top 10 Customers
@@ -3491,7 +3491,7 @@ function SalesInvoicesCard() {
                                         </div>
                                     </div>
                                     <div className="col-span-12 xl:col-span-5 min-h-0">
-                                        <div className="p-4 card h-full flex flex-col min-h-0">
+                                        <div className="p-6 card h-full flex flex-col min-h-0">
                                             <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
                                                 Order Fullfilment
                                             </h2>
@@ -3516,7 +3516,7 @@ function SalesInvoicesCard() {
                                         </div>
                                     </div>
                                     <div className="col-span-12 xl:col-span-3 min-h-0">
-                                        <div className="p-4 card h-96 flex flex-col min-h-0">
+                                        <div className="p-6 card h-96 flex flex-col min-h-0">
                                             <h2 className="mb-4 text-base font-semibold capitalize text-slate-800 dark:text-slate-100 flex-none">
                                                 Top 10 Brands
                                             </h2>
