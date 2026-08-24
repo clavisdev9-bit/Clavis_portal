@@ -3123,12 +3123,12 @@ function SalesInvoicesCard() {
                                             </div>
                                             <div>
                                                 <div className="flex flex-col text-base dark:text-gray-300 mb-1">
-                                                    <span>&nbsp;Total Orders</span>
+                                                    <span>&nbsp;Total Invoice</span>
                                                 </div>
                                                 <h4 className="flex mb-2 items-center gap-4 text-2xl font-semibold text-slate-800 dark:text-slate-100">
                                                     {totalOrder}
                                                 </h4>
-                                                <p className="text-muted text-sm mb-1">Orders</p>
+                                                <p className="text-muted text-sm mb-1">Invoice</p>
                                                 <div class="text-right">
                                                     <button 
                                                         className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"

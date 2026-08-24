@@ -60,12 +60,23 @@ function SalesInvoicesCard() {
     const [reportMom, setReportMom]=useState([]);
     const [reportMtd, setReportMtd]=useState([]);
     const [reportYtd, setReportYtd]=useState([]);
+    const [showStatsModal, setShowStatsModal] = useState(false);
+    const [showAllLabelsYtd, setShowAllLabelsYtd] = useState(false);
+    const [statsYtd, setStatsYtd]=useState([]);
+    const [showOrderDataModal, setShowOrderDataModal] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState("");
+    const [toInvoice, setToInvoice] = useState("");
     const [salesStats, setSalesStats] = useState([]);
     const [companyRevenue, setCompanyRevenue] = useState([]);
+    const [orderData, setOrderData] = useState([]);
+    const orderTableRef = useRef({});
+    const orderDataTableInstance = useRef({});
     const [companySalesStats, setCompanySalesStats] = useState([]);
     const [companyStats, setCompanyStats] = useState([]);
     const [filterType, setFilterType] = useState("date");
     const [selectedFilterBy, setSelectedFilterBy] = useState("company");
+    const chartRef7 = useRef({});
+    const chartInstance7 = useRef({});
     const chartRef6 = useRef({});
     const chartInstance6 = useRef({});
     const chartRef5 = useRef({});
@@ -567,6 +578,199 @@ function SalesInvoicesCard() {
         selectedCompany,
         selectedFilterBy
     ]);
+    useEffect(() => {
+        const params = {};
+
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+
+        axios.get(`${__API_URL__}/sales/stats_ytd`, {
+            params,
+        })
+        .then(res => {
+            setStatsYtd(res.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, [selectedCompany]);
+    useEffect(() => {
+        if (!statsYtd.length || !selectedCompany) return;
+        const targetEl = chartRef7.current[selectedCompany];
+        if (!targetEl) return;
+
+        const monthOrder = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        const parsed = statsYtd.map(item => {
+            const [monthName, year] = item.bulan.split(" ");
+            return {
+                monthName,
+                year,
+                total: parseFloat(item.total),
+            };
+        });
+
+        const years = [...new Set(parsed.map(item => item.year))].sort();
+        const monthsInData = [...new Set(parsed.map(item => item.monthName))];
+        const categories = monthOrder.filter(m => monthsInData.includes(m));
+
+        const dataMap = {};
+        parsed.forEach(item => {
+            dataMap[`${item.year}-${item.monthName}`] = item.total;
+        });
+
+        const colors = ["#64748b", "#3b82f6"];
+        const seriesData = years.map((year, idx) => ({
+            name: year,
+            color: colors[idx % colors.length],
+            data: categories.map(month => dataMap[`${year}-${month}`] || 0),
+        }));
+
+        // ============================================
+        // INJECT CSS untuk paksa warna legend marker
+        // ============================================
+        if (!targetEl.id) {
+            targetEl.id = `chart7-${selectedCompany}`;
+        }
+        const styleId = `legend-style-ytd-${selectedCompany}`;
+        let styleTag = document.getElementById(styleId);
+        if (!styleTag) {
+            styleTag = document.createElement("style");
+            styleTag.id = styleId;
+            document.head.appendChild(styleTag);
+        }
+        styleTag.innerHTML = `
+            #${targetEl.id} .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+                background: ${colors[0]} !important;
+                opacity: 1 !important;
+                border-radius: 50% !important;
+                border: none !important;
+            }
+            #${targetEl.id} .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+                background: ${colors[1]} !important;
+                opacity: 1 !important;
+                border-radius: 50% !important;
+                border: none !important;
+            }
+            #${targetEl.id} .apexcharts-legend-series {
+                margin-right: 16px !important;
+                cursor: pointer !important;
+            }
+        `;
+
+        const options = {
+            chart: {
+                type: "line",
+                height: 350,
+                toolbar: { show: false },
+                zoom: { enabled: false },
+            },
+            series: seriesData,
+            colors: colors,
+            stroke: { width: 3, curve: "straight" },
+            markers: {
+                size: 4,
+                strokeWidth: 2,
+                strokeColors: "#fff",
+                hover: { size: 6 },
+            },
+            dataLabels: {
+                enabled: showAllLabelsYtd,
+                offsetY: -10,
+                style: {
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    colors: ["#334155"],
+                },
+                formatter: function (value) {
+                    if (value <= 0) return "";
+                    return formatCurrency(value);
+                },
+            },
+            xaxis: {
+                categories: categories,
+                axisBorder: { show: false },
+                axisTicks: { show: false },
+                labels: { style: { fontSize: "12px", colors: "#64748b" } },
+            },
+            yaxis: {
+                labels: {
+                    style: { fontSize: "12px", colors: "#64748b" },
+                    formatter: formatCurrency,
+                },
+            },
+            grid: {
+                show: true,
+                borderColor: "#e5e7eb",
+                strokeDashArray: 3,
+                xaxis: { lines: { show: false } },
+                yaxis: { lines: { show: true } },
+                padding: { top: 0, right: 20, bottom: 0, left: 10 },
+            },
+            legend: {
+                show: true,
+                position: "top",
+                horizontalAlign: "right",
+                markers: {
+                    width: 12,
+                    height: 12,
+                    radius: 3,
+                },
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (value) {
+                        return formatCurrency(value);
+                    },
+                },
+            },
+        };
+
+        if (chartInstance7.current[selectedCompany]) {
+            chartInstance7.current[selectedCompany].destroy();
+        }
+
+        chartInstance7.current[selectedCompany] = new ApexCharts(targetEl, options);
+        chartInstance7.current[selectedCompany].render();
+
+        return () => {
+            if (chartInstance7.current[selectedCompany]) {
+                chartInstance7.current[selectedCompany].destroy();
+                delete chartInstance7.current[selectedCompany];
+            }
+            const oldStyleTag = document.getElementById(styleId);
+            if (oldStyleTag) {
+                oldStyleTag.remove();
+            }
+        };
+    }, [statsYtd, selectedCompany, showStatsModal]);
+
+    useEffect(() => {
+        if (!selectedCompany) return;
+        if (!chartInstance7.current[selectedCompany]) return;
+
+        chartInstance7.current[selectedCompany].updateOptions({
+            dataLabels: {
+                enabled: showAllLabelsYtd,
+                offsetY: -10,
+                style: {
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    colors: ["#334155"],
+                },
+                formatter: function (value) {
+                    if (value <= 0) return "";
+                    return formatCurrency(value);
+                },
+            },
+        }, false, false);
+    }, [showAllLabelsYtd, selectedCompany]);
     useEffect(() => {
 
         const controller = new AbortController();
@@ -1126,6 +1330,253 @@ function SalesInvoicesCard() {
         };
         // tambahkan selectedFilterBy ke dependency
     }, [salesStats, selectedCompany, selectedFilterBy]);
+    
+    useEffect(() => {
+        const params = {};
+        if (startDate && endDate && filterType) {
+            params.start_date = startDate;
+            params.end_date = endDate;
+            params.filter_type = filterType;
+        }
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+        if (selectedCustomer) {
+            params.partner_id = selectedCustomer;
+        }
+        if (toInvoice) {
+            params.invoice_status = toInvoice;
+        }
+        axios.get(`${__API_URL__}/sales/company_orders`, {
+            params,
+        })
+        .then(res => {
+            console.log(res.data);
+            setOrderData(res.data);
+        })
+        .catch(error => {
+
+        });
+
+    }, [
+        startDate,
+        endDate,
+        filterType,
+        selectedCompany,
+        selectedCustomer,
+        toInvoice
+    ]);
+    useEffect(() => {
+        if (!orderData.length || !selectedCompany) return;
+        const targetEl = orderTableRef.current[selectedCompany];
+        if (!targetEl) return;
+
+        if (orderDataTableInstance.current[selectedCompany]) {
+            orderDataTableInstance.current[selectedCompany].destroy();
+            orderDataTableInstance.current[selectedCompany] = null;
+        }
+
+        const invoiceStateBadge = (state) => {
+            const stateMap = {
+                no: { label: "Pending", className: "bg-black/20 text-muted" },
+                to_invoice: { label: "To Invoice", className: "bg-warning/20 text-warning" },
+                invoiced: { label: "Invoiced", className: "bg-success/20 text-success" },
+            };
+            const config = stateMap[state] || { label: state, className: "bg-slate-100 text-slate-600" };
+            return `<span class="px-2 py-1 rounded-md text-xs font-medium ${config.className}">${config.label}</span>`;
+        };
+        const deliveryStateBadge = (state) => {
+            const stateMap = {
+                false: { label: "Input process", className: "bg-black/20 text-dark" },
+                pending: { label: "Pending", className: "bg-black/20 text-muted" },
+                started: { label: "Started", className: "bg-info/20 text-info" },
+                partial: { label: "Partial", className: "bg-warning/20 text-warning" },
+                full: { label: "Full", className: "bg-success/20 text-success" },
+            };
+            const config = stateMap[state] || { label: state, className: "bg-slate-100 text-slate-600" };
+            return `<span class="px-2 py-1 rounded-md text-xs font-medium ${config.className}">${config.label}</span>`;
+        };
+
+        // Bangun HTML tabel produk untuk child row
+        const buildProductDetailHtml = (rowData) => {
+            const orderLines = rowData.order_line;
+
+            if (!orderLines || !Array.isArray(orderLines) || orderLines.length === 0) {
+                return `<div class="p-3 text-sm text-muted">Tidak ada detail produk</div>`;
+            }
+            const getLastSegment = (str) => {
+                if (!str || typeof str !== "string") return "-";
+                const parts = str.split("/");
+                return parts[parts.length - 1].trim();
+            };
+            // Filter langsung dari order_line (tidak perlu nested loop lagi)
+            const allLines = orderLines.filter((line) => line.po_qty && line.po_qty !== 0);
+
+            if (allLines.length === 0) {
+                return `<div class="p-3 text-sm bg-blue-400 text-muted">Tidak ada detail produk</div>`;
+            }
+
+            let rows = "";
+            allLines.forEach((line) => {
+                const template = line.product_template || {};
+                const productName = template.name || "-";
+                const brandRaw = template.x_studio_brand && Array.isArray(template.x_studio_brand)
+            ? template.x_studio_brand[1]
+            : "-";
+            const categRaw = template.categ_id && Array.isArray(template.categ_id)
+                ? template.categ_id[1]
+                : "-";
+
+            const brand = getLastSegment(brandRaw);
+            const categName = getLastSegment(categRaw);
+
+
+                rows += `
+                    <tr class="border-b border-slate-100 dark:border-slate-700">
+                        <td class="py-1.5 px-2 max-w-[200px] whitespace-normal break-words">${productName}</td>
+                        <td class="py-1.5 px-2">${brand}</td>
+                        <td class="py-1.5 px-2">${categName}</td>
+                        <td class="py-1.5 px-2 text-right">${formatRupiah(line.price_unit)}</td>
+                        <td class="py-1.5 px-2 text-right">${line.po_qty}</td>
+                        <td class="py-1.5 px-2 text-right">${formatRupiah(line.price_subtotal)}</td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <div class="p-3 bg-slate-50 dark:bg-slate-900">
+                    <div class="max-h-[250px] overflow-y-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900">
+                                <tr class="border-b bg-blue-200 border-slate-200 dark:border-slate-700 text-left text-slate-500 dark:text-slate-400">
+                                    <th class="py-1.5 px-2">Product Name</th>
+                                    <th class="py-1.5 px-2">Brand</th>
+                                    <th class="py-1.5 px-2">Category</th>
+                                    <th class="py-1.5 px-2 text-right">Price Unit</th>
+                                    <th class="py-1.5 px-2 text-right">Qty</th>
+                                    <th class="py-1.5 px-2 text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        };
+
+        const table = $(targetEl).DataTable({
+            data: orderData,
+            destroy: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            order: [[1, "desc"]],
+            columns: [
+                {
+                    title: "No",
+                    data: null,
+                    className: "text-center",
+                    render: function (data, type, row, meta) {
+                        return meta.settings._iDisplayStart + meta.row + 1;
+                    }
+                },
+                {
+                    title: "Order Date",
+                    data: "order_date",
+                    render: function (data) {
+                        return dayjs(data).format("DD MMM YYYY");
+                    }
+                },
+                {
+                    title: "Delivery Date",
+                    data: "delivery_date",
+                    render: function (data) {
+                        return dayjs(data).format("DD MMM YYYY");
+                    }
+                },
+                {
+                    title: "Customer",
+                    data: "customer_name",
+                },
+                {
+                    title: "Total",
+                    data: "amount_total",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    title: "Tax",
+                    data: "amount_tax",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    title: "Invoice Status",
+                    data: "invoice_status",
+                    render: function (data) {
+                        return invoiceStateBadge(data);
+                    }
+                },
+                {
+                    title: "Delivery Status",
+                    data: "delivery_status",
+                    render: function (data) {
+                        return deliveryStateBadge(data);
+                    }
+                },
+            ],
+            language: {
+                search: "Search:",
+                info: "Showing _START_ to _END_ of _TOTAL_ orders",
+                paginate: {
+                    previous: "Prev",
+                    next: "Next",
+                },
+            },
+            createdRow: function (row) {
+                // Tambahkan style cursor pointer & hint bahwa baris bisa diklik
+                $(row).css("cursor", "pointer");
+            },
+        });
+
+        orderDataTableInstance.current[selectedCompany] = table;
+
+        // Event klik baris untuk expand/collapse child row
+        $(targetEl).off("click", "tbody tr").on("click", "tbody tr", function () {
+            const tr = $(this);
+            const row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // Sudah terbuka -> tutup
+                row.child.hide();
+                tr.removeClass("shown");
+            } else {
+                // Tutup child row lain yang mungkin masih terbuka (opsional, biar rapi)
+                table.rows().every(function () {
+                    if (this.child.isShown()) {
+                        this.child.hide();
+                        $(this.node()).removeClass("shown");
+                    }
+                });
+
+                // Buka child row untuk baris ini
+                row.child(buildProductDetailHtml(row.data())).show();
+                tr.addClass("shown");
+            }
+        });
+
+        return () => {
+            if (orderDataTableInstance.current[selectedCompany]) {
+                orderDataTableInstance.current[selectedCompany].destroy();
+                delete orderDataTableInstance.current[selectedCompany];
+            }
+        };
+    }, [orderData, selectedCompany, toInvoice, showOrderDataModal]);
     useEffect(()=>{
         const params = {};
         if (startDate && endDate && filterType) {
@@ -2114,6 +2565,16 @@ function SalesInvoicesCard() {
         filterType,
         selectedCompany
     ]);
+    const formatRupiah = (value) => {
+        const amount = Number(value);
+
+        if (isNaN(amount)) return "-";
+
+        // Jika < 1 juta
+        return `Rp.`+new Intl.NumberFormat("en-US", {
+            maximumFractionDigits: 2
+        }).format(amount);
+    };
     const formatCurrency = (value) => {
         const amount = Number(value);
 
@@ -2353,7 +2814,14 @@ function SalesInvoicesCard() {
                                                             {formatCurrency(totalTahunIni)}
                                                         </h4>
                                                         <p className="text-muted text-sm mb-1">({data.label_tahun_ini})</p>
-                                                        <p className="text-muted text-sm text-right mb-1">see stats</p>
+                                                        <div class="text-right">
+                                                            <button 
+                                                                className="text-white bg-blue-600 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-blue-700"
+                                                                onClick={() => setShowStatsModal(true)}
+                                                            >
+                                                                see stats
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2449,6 +2917,17 @@ function SalesInvoicesCard() {
                                                     {totalOrder}
                                                 </h4>
                                                 <p className="text-muted text-sm mb-1">Orders</p>
+                                                <div class="text-right">
+                                                    <button 
+                                                        className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
+                                                        onClick={() => {
+                                                            setShowOrderDataModal(true);
+                                                            setSelectedCustomer("");
+                                                        }}
+                                                    >
+                                                        see data
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2499,7 +2978,16 @@ function SalesInvoicesCard() {
                                                 <h4 className="flex mb-2 items-center gap-4 text-2xl font-semibold text-slate-800 dark:text-slate-100">
                                                     {invoicePercentage && invoicePercentage.percentage_invoiced ? invoicePercentage.percentage_invoiced : 0}%
                                                 </h4>
-                                                <p className="text-muted text-sm mb-1">{invoicePercentage.to_invoice} To Invoice · {invoicePercentage.invoiced} Invoiced</p>
+                                                <p className="text-muted text-sm mb-1">
+                                                    <button className="bg-yellow-500 hover:bg-yellow-600  text-white px-1" onClick={() => {
+                                                        setToInvoice("to invoice");
+                                                        setShowOrderDataModal(true);
+                                                    }}>{invoicePercentage.to_invoice} To Invoice</button> 
+                                                    <button className="bg-green-500 hover:bg-green-600 text-white px-1" onClick={() => {
+                                                        setToInvoice("invoiced");
+                                                        setShowOrderDataModal(true);
+                                                    }}>{invoicePercentage.invoiced} Invoiced</button>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -2956,7 +3444,10 @@ function SalesInvoicesCard() {
                                                                             <div className="text-[15px] leading-tight font-medium w-24 whitespace-nowrap">
                                                                                 {formatCurrency(customer.total_amount)}
                                                                             </div>
-                                                                            <div className="text-[15px] font-medium w-16 text-right">
+                                                                            <div className="text-[15px] font-medium text-purple hover:underline cursor-pointer w-16 text-right" onClick={() =>{
+                                                                                setShowOrderDataModal(true);
+                                                                                setSelectedCustomer(customer.partner_id);
+                                                                            }}>
                                                                                 {customer.total_order} Orders
                                                                             </div>
                                                                         </div>
@@ -3156,9 +3647,101 @@ function SalesInvoicesCard() {
                     </div>
                 </div>
             </div>
-            
-            
-            
+            {showStatsModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    onClick={() => setShowStatsModal(false)}
+                >
+                    <div 
+                        className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                                YTD Sales Trend — 2025 vs 2026
+                            </h3>
+                            <button
+                                onClick={() => setShowStatsModal(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    
+                        <div className="text-slate-700 dark:text-slate-200">
+                            <div className="flex items-center gap-2 mb-3">
+                                <input
+                                    type="checkbox"
+                                    checked={showAllLabelsYtd}
+                                    onChange={(e) => setShowAllLabelsYtd(e.target.checked)}
+                                />
+                                <span className="text-sm">Show All Values</span>
+                            </div>
+                            <div ref={(el) => {
+                                if (el) {
+                                    chartRef7.current[selectedCompany] = el;
+                                }
+                            }} />
+                        </div>
+
+                        <div className="mt-6 text-right">
+                            <button
+                                onClick={() => setShowStatsModal(false)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showOrderDataModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    onClick={() => setShowOrderDataModal(false)}
+                >
+                    <div 
+                        className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-7xl mx-4 p-6 max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                                Order Data
+                            </h3>
+                            <button
+                                onClick={() => setShowOrderDataModal(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        
+                        <div className="overflow-x-auto">
+                            <table 
+                                ref={(el) => {
+                                    if (el) {
+                                        orderTableRef.current[selectedCompany] = el;
+                                    }
+                                }}
+                                className="w-full text-sm stripe hover" 
+                                style={{ width: "100%" }}
+                            >
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <div className="mt-6 text-right">
+                            <button
+                                onClick={() => setShowOrderDataModal(false)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
     

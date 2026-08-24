@@ -39,6 +39,87 @@ export const get_sales = async (req, res) => {
         });
     }
 };
+export const get_sales_stats_ytd = async (req, res) => {
+    try {
+        const { company_id } = req.query;
+        const values = [];
+        const conditions = [];
+
+        if (company_id) {
+            const parsedId = Number(company_id);
+            if (isNaN(parsedId)) {
+                return res.status(400).json({ error: "company_id harus berupa angka" });
+            }
+            values.push(parsedId);
+            conditions.push(`(company_id->>0)::integer = $${values.length}`);
+        }
+
+        const extraWhere = conditions.length > 0
+            ? `AND ${conditions.join(' AND ')}`
+            : '';
+
+        const query = `
+            WITH agregat AS (
+                SELECT 
+                    DATE_TRUNC('month', date_order) AS bulan_urut,
+                    SUM(amount_total)                 AS total_bulan
+                FROM sales_orders
+                WHERE (
+                        (date_order <= CURRENT_DATE 
+                        AND date_order >= DATE_TRUNC('year', CURRENT_DATE))
+                        OR
+                        (date_order <= CURRENT_DATE - INTERVAL '1 year' 
+                        AND date_order >= DATE_TRUNC('year', CURRENT_DATE) - INTERVAL '1 year')
+                    )
+                ${extraWhere}
+                GROUP BY DATE_TRUNC('month', date_order)
+            ),
+            data AS (
+                SELECT 
+                    bulan_urut,
+                    EXTRACT(YEAR FROM bulan_urut)  AS tahun,
+                    EXTRACT(MONTH FROM bulan_urut) AS bulan_num,
+                    total_bulan
+                FROM agregat
+            ),
+            running AS (
+                SELECT 
+                    *,
+                    SUM(total_bulan) OVER (PARTITION BY tahun ORDER BY bulan_urut) AS running_total
+                FROM data
+            )
+            SELECT 
+                CASE bulan_num
+                    WHEN 1  THEN 'Januari'
+                    WHEN 2  THEN 'Februari'
+                    WHEN 3  THEN 'Maret'
+                    WHEN 4  THEN 'April'
+                    WHEN 5  THEN 'Mei'
+                    WHEN 6  THEN 'Juni'
+                    WHEN 7  THEN 'Juli'
+                    WHEN 8  THEN 'Agustus'
+                    WHEN 9  THEN 'September'
+                    WHEN 10 THEN 'Oktober'
+                    WHEN 11 THEN 'November'
+                    WHEN 12 THEN 'Desember'
+                END || ' ' || tahun AS bulan,
+                running_total AS total
+            FROM running
+            ORDER BY bulan_num, tahun;
+        `;
+        const result = await pool.query(query, values);
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error("get_sales_report_ytd error:", error);
+
+        res.status(500).json({
+            error: "Failed to get report ytd",
+            message: error.message
+        });
+    }
+
+};
 export const get_total_sales = async (req, res) => {
     try {
         const {
@@ -177,6 +258,166 @@ export const get_total_sales = async (req, res) => {
 
         res.status(500).json({
             success: false,
+            message: error.message
+        });
+    }
+};
+export const get_company_orders = async (req, res) => {
+    try {
+        const {
+            start_date,
+            end_date,
+            filter_type,
+            company_id,
+            partner_id,
+            invoice_status
+        } = req.query;
+        const values = [];
+        const conditions = [];
+
+        /*
+         * ==========================================
+         * FILTER TANGGAL
+         * ==========================================
+         */
+
+        if (start_date) {
+            if (filter_type === "month") {
+                // Contoh:
+                // start_date = 2026-07
+                // menjadi 2026-07-01
+                values.push(`${start_date}-01`);
+
+                conditions.push(
+                    `date_order >= $${values.length}::date`
+                );
+
+            } else if (filter_type === "year") {
+                // Contoh:
+                // start_date = 2026
+                // menjadi 2026-01-01
+                values.push(`${start_date}-01-01`);
+
+                conditions.push(
+                    `date_order >= $${values.length}::date`
+                );
+
+            } else {
+                // day
+                // Contoh:
+                // 2026-07-22
+                values.push(start_date);
+
+                conditions.push(
+                    `date_order >= $${values.length}::date`
+                );
+            }
+        }
+
+        if (end_date) {
+            if (filter_type === "month") {
+                // Contoh:
+                // end_date = 2026-07
+                //
+                // Kita gunakan tanggal bulan berikutnya
+                // dengan operator <
+                values.push(`${end_date}-01`);
+
+                conditions.push(
+                    `date_order < (
+                        $${values.length}::date
+                        + INTERVAL '1 month'
+                    )`
+                );
+
+            } else if (filter_type === "year") {
+                // Contoh:
+                // end_date = 2026
+                //
+                // sampai sebelum 2027-01-01
+                values.push(`${end_date}-01-01`);
+
+                conditions.push(
+                    `date_order < (
+                        $${values.length}::date
+                        + INTERVAL '1 year'
+                    )`
+                );
+
+            } else {
+                // day
+                // Contoh:
+                // 2026-07-22
+                //
+                // sampai akhir hari tersebut
+                values.push(end_date);
+
+                conditions.push(
+                    `date_order < (
+                        $${values.length}::date
+                        + INTERVAL '1 day'
+                    )`
+                );
+            }
+        }
+
+        /*
+         * ==========================================
+         * FILTER COMPANY
+         * ==========================================
+         */
+
+        if (company_id) {
+            values.push(Number(company_id));
+
+            conditions.push(
+                `(company_id->>0)::integer = $${values.length}`
+            );
+        }
+        if (partner_id) {
+            values.push(Number(partner_id));
+
+            conditions.push(
+                `(partner_id->>0)::integer = $${values.length}`
+            );
+        }
+        if (invoice_status) {
+            values.push(invoice_status);
+
+            conditions.push(
+                `invoice_status = $${values.length}`
+            );
+        }
+
+        /*
+         * ==========================================
+         * WHERE CLAUSE
+         * ==========================================
+         */
+
+        const whereClause =
+            conditions.length > 0
+                ? `WHERE ${conditions.join(" AND ")}`
+                : "";
+        /*
+         * ==========================================
+         * QUERY TOP CUSTOMERS
+         * ==========================================
+         */
+
+        const query = `
+            select date_order,delivery_date,partner_id->>1 customer_name,amount_total,amount_tax,order_line,invoice_status,delivery_status from sales_orders ${whereClause} AND amount_total>0
+        `;
+        console.log(query,values);
+        const result = await pool.query(query, values);
+
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error("get_company_sales_orders error:", error);
+
+        res.status(500).json({
+            error: "Failed to get company sales orders",
             message: error.message
         });
     }
@@ -2884,6 +3125,7 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         warehouse_id,
                         invoice_status,
                         write_date,
+                        delivery_date,
                         write_uid
                     )
                     VALUES (
@@ -2891,7 +3133,7 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         $11::jsonb,$12,$13,$14,$15::jsonb,$16::jsonb,$17,$18,$19,$20,
                         $21,$22,$23,$24,$25,$26,$27::jsonb,
                         $28::jsonb,$29::jsonb,$30::jsonb,$31,$32,$33::jsonb,$34,$35::jsonb,$36::jsonb,
-                        $37,$38::jsonb,$39,$40::jsonb,$41,$42,$43::jsonb
+                        $37,$38::jsonb,$39,$40::jsonb,$41,$42,$43,$44::jsonb
                     )
                     `,
                     [
@@ -2943,6 +3185,9 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         r.validity_date ? new Date(r.validity_date) : null,
                         toJson(r.warehouse_id),
                         r.invoice_status,
+                        r.commitment_date
+                            ? new Date(r.commitment_date)
+                            : null,
                         r.write_date
                             ? new Date(r.write_date)
                             : null,

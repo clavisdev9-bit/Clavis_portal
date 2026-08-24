@@ -1921,7 +1921,7 @@ export const truncateInsertInvoice=async()=>{
             );
 
             const response = await fetch(
-                `http://127.0.0.1:5001/api/account/invoice_analytics?limit=${limit}&offset=${offset}`
+                `${BASE_URL}/api/account/invoice_analytics?limit=${limit}&offset=${offset}`
             );
 
             if (!response.ok) {
