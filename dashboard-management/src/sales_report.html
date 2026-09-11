@@ -471,8 +471,8 @@
             {{> partials/topbar }}
             <!-- Start Content -->
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
-                <!-- <div id="sales_report_summary"></div> -->
-                <div id="sales_invoices"></div>
+                <div id="sales_order"></div>
+                <!-- <div id="sales_invoices"></div> -->
                 <!-- <div id="sales_report"></div> -->
             </div>
         </div>
@@ -495,9 +495,32 @@
 <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 <script src="assets/js/pages/chartOptions.js"></script>
 <script type="text/babel" src="assets/js/components/SourceDataLink.jsx"></script>
-<script type="text/babel" src="assets/js/pages/sales_invoices.jsx"></script>
-<!-- <script type="text/babel" src="assets/js/pages/sales_report.jsx"></script> -->
-<script type="text/babel" src="assets/js/pages/sales_report_summary.jsx"></script>
+<!-- <script type="text/babel" src="assets/js/pages/sales_invoices.jsx"></script> -->
+<script type="text/babel" src="assets/js/pages/sales_order/format_currency.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/date_range_label.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/loading_overlay.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/mtd_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/report_mtd_panel.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/date_filter_widget.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/company_tabs.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/use_dataset_highlight.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/customer_legend.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/sales_trend_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/company_revenue_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_category_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/order_fulfillment_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/brand_products_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_brands_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/ytd_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/order_data_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/sales_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoices/payment_collection_trend_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/kpi_cards.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_products_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_customers_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/use_dashboard_core.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/sales_order_card.jsx"></script>
+<!-- <script type="text/babel" src="assets/js/pages/sales_report_summary.jsx"></script> -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

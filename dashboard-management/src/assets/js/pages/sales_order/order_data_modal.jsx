@@ -1,0 +1,467 @@
+window.OrderDataModal = function OrderDataModal({
+    show, onClose, startDate, endDate, filterType, selectedCompany,
+    initialToInvoice, initialSelectedCustomer, initialDeliveryStatus,
+}) {
+    const [isLoadingOrder, setIsLoadingOrder] = useState(false);
+    const [orderData, setOrderData] = useState([]);
+    const [toInvoice, setToInvoice] = useState("");
+    const [selectedCustomer, setSelectedCustomer] = useState("");
+    const [deliveryStatusFilter, setDeliveryStatusFilter] = useState("");
+
+    const orderTableElRef = React.useRef(null);
+    const dataTableInstanceRef = React.useRef(null);
+
+    // terapkan preset filter (dari tombol di luar, misal kartu Invoice
+    // Progress) setiap kali modal dibuka
+    useEffect(() => {
+        if (show) {
+            setSelectedCustomer(initialSelectedCustomer || "");
+            setToInvoice(initialToInvoice || "");
+            setDeliveryStatusFilter(initialDeliveryStatus || "");
+        }
+    }, [show, initialToInvoice, initialSelectedCustomer, initialDeliveryStatus]);
+
+    // fetch orders
+    useEffect(() => {
+        const params = {};
+        if (startDate && endDate && filterType) {
+            params.start_date = startDate;
+            params.end_date = endDate;
+            params.filter_type = filterType;
+        }
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+        if (selectedCustomer) {
+            params.partner_id = selectedCustomer;
+        }
+        if (toInvoice) {
+            params.invoice_status = toInvoice;
+        }
+        if (deliveryStatusFilter) {
+            params.delivery_status = deliveryStatusFilter;
+        }
+        setIsLoadingOrder(true);
+        axios.get(`${__API_URL__}/sales/company_orders`, { params })
+            .then(res => {
+                setOrderData(res.data);
+            })
+            .catch(console.error)
+            .finally(() => {
+                setIsLoadingOrder(false);
+            });
+    }, [startDate, endDate, filterType, selectedCompany, selectedCustomer, toInvoice, deliveryStatusFilter]);
+
+    // render datatable — hanya jalan kalau elemen <table> sudah ter-mount
+    // (yaitu saat modal sedang terbuka)
+    useEffect(() => {
+        if (!orderData.length || !orderTableElRef.current) return;
+        const targetEl = orderTableElRef.current;
+
+        if (dataTableInstanceRef.current) {
+            dataTableInstanceRef.current.destroy();
+            dataTableInstanceRef.current = null;
+        }
+
+        // format currency KHUSUS modal ini, dalam satuan ribuan rupiah —
+        // beda dari window.formatCurrency (K/M/B) yang dipakai di halaman
+        // lain. Contoh: 50.000.000 -> "Rp. 50.000", 500.000 -> "Rp. 500"
+        const formatCurrencyThousand = (value) => {
+            const amount = Number(value);
+            if (isNaN(amount)) return "-";
+            return `Rp. ${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(amount / 1000)}`;
+        };
+
+        // format ala accounting: "Rp." & nominal dibungkus dalam kotak
+        // lebar TETAP (bukan w-full — supaya jaraknya tidak ikut melebar
+        // mengikuti lebar kolom), kotak itu sendiri didorong rata kanan
+        // sel lewat ml-auto. Hasilnya: "Rp." tetap sejajar antar baris,
+        // nominal tetap rata kanan, tapi jarak keduanya pendek & konsisten
+        const formatCurrencyAccounting = (value) => {
+            const amount = Number(value);
+            if (isNaN(amount)) return "-";
+            const formatted = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(amount / 1000);
+            return `<span class="flex w-20 ml-auto justify-between"><span class="shrink-0">Rp.</span><span>${formatted}</span></span>`;
+        };
+
+        const invoiceStateBadge = (state) => {
+            const stateMap = {
+                no: { label: "Pending", className: "bg-black/20 text-muted" },
+                to_invoice: { label: "To Invoice", className: "bg-warning/20 text-warning" },
+                invoiced: { label: "Invoiced", className: "bg-success/20 text-success" },
+            };
+            const config = stateMap[state] || { label: state, className: "bg-slate-100 text-slate-600" };
+            return `<span class="px-2 py-1 rounded-md text-xs font-medium ${config.className}">${config.label}</span>`;
+        };
+        const deliveryStateBadge = (state) => {
+            const stateMap = {
+                false: { label: "Input process", className: "bg-black/20 text-dark" },
+                pending: { label: "Pending", className: "bg-black/20 text-muted" },
+                started: { label: "Started", className: "bg-info/20 text-info" },
+                partial: { label: "Partial", className: "bg-warning/20 text-warning" },
+                full: { label: "Full", className: "bg-success/20 text-success" },
+            };
+            const config = stateMap[state] || { label: state, className: "bg-slate-100 text-slate-600" };
+            return `<span class="px-2 py-1 rounded-md text-xs font-medium ${config.className}">${config.label}</span>`;
+        };
+
+        // Bangun HTML tabel produk untuk child row
+        const buildProductDetailHtml = (rowData) => {
+            const orderLines = rowData.order_line;
+
+            if (!orderLines || !Array.isArray(orderLines) || orderLines.length === 0) {
+                return `<div class="p-3 text-sm text-muted">Tidak ada detail produk</div>`;
+            }
+            const getLastSegment = (str) => {
+                if (!str || typeof str !== "string") return "-";
+                const parts = str.split("/");
+                return parts[parts.length - 1].trim();
+            };
+            const allLines = orderLines.filter((line) => line.po_qty && line.po_qty !== 0);
+
+            if (allLines.length === 0) {
+                return `<div class="p-3 text-sm bg-blue-400 text-muted">Tidak ada detail produk</div>`;
+            }
+
+            let rows = "";
+            allLines.forEach((line) => {
+                const template = line.product_template || {};
+                const productName = template.name || "-";
+                const brandRaw = template.x_studio_brand && Array.isArray(template.x_studio_brand)
+                    ? template.x_studio_brand[1]
+                    : "-";
+                const categRaw = template.categ_id && Array.isArray(template.categ_id)
+                    ? template.categ_id[1]
+                    : "-";
+
+                const brand = getLastSegment(brandRaw);
+                const categName = getLastSegment(categRaw);
+
+                rows += `
+                    <tr class="border-b border-slate-100 dark:border-slate-700">
+                        <td class="py-1.5 px-2 max-w-[200px] whitespace-normal break-words">${productName}</td>
+                        <td class="py-1.5 px-2">${brand}</td>
+                        <td class="py-1.5 px-2">${categName}</td>
+                        <td class="py-1.5 px-2 text-right">${formatCurrencyThousand(line.price_unit)}</td>
+                        <td class="py-1.5 px-2 text-right">${line.po_qty}</td>
+                        <td class="py-1.5 px-2 text-right">${formatCurrencyThousand(line.price_subtotal)}</td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <div class="p-3 bg-slate-50 dark:bg-slate-900">
+                    <div class="max-h-[250px] overflow-y-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 bg-blue-200 dark:bg-slate-900">
+                                <tr class="border-b bg-blue-200 border-slate-200 dark:border-slate-700 text-left text-slate-500 dark:text-slate-400">
+                                    <th class="py-1.5 px-2">Product Name</th>
+                                    <th class="py-1.5 px-2">Brand</th>
+                                    <th class="py-1.5 px-2">Category</th>
+                                    <th class="py-1.5 px-2 text-right">Price Unit</th>
+                                    <th class="py-1.5 px-2 text-right">Qty</th>
+                                    <th class="py-1.5 px-2 text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        };
+
+        const baseColumns = [
+            {
+                title: "No",
+                data: null,
+                className: "text-center",
+                // TIDAK pakai render meta.row di sini — meta.row adalah
+                // index di data ASLI (sebelum sorting), bukan posisi
+                // tampilan setelah di-sort. Nomornya diisi lewat
+                // drawCallback di bawah, yang jalan SETELAH DataTables
+                // selesai sorting/paging.
+            },
+            {
+                title: "Order Date",
+                data: "date_order",
+                render: function (data, type) {
+                    // untuk sorting/type internal DataTables, pakai nilai
+                    // tanggal asli (ISO) supaya urut kronologis; untuk
+                    // tampilan (display/filter), pakai format "DD MMM YYYY"
+                    if (type === "sort" || type === "type") {
+                        return data;
+                    }
+                    return dayjs(data).format("DD MMM YYYY");
+                }
+            },
+            {
+                title: "Delivery Date",
+                data: "delivery_date",
+                render: function (data, type) {
+                    if (type === "sort" || type === "type") {
+                        return data;
+                    }
+                    return dayjs(data).format("DD MMM YYYY");
+                }
+            },
+            {
+                title: "Customer",
+                data: "customer_name",
+            },
+            {
+                title: "Untaxed Amount",
+                data: function (row) {
+                    return Number(row.amount_total || 0) - Number(row.amount_tax || 0);
+                },
+                className: "text-left",
+                render: function (data, type) {
+                    // untuk sorting/type internal DataTables, pakai angka
+                    // asli supaya urut numerik; untuk tampilan (display/
+                    // filter), pakai format accounting ("Rp." sejajar,
+                    // nominal rata kiri)
+                    if (type === "sort" || type === "type") {
+                        return data;
+                    }
+                    return formatCurrencyAccounting(data);
+                }
+            },
+            {
+                title: "Tax",
+                data: "amount_tax",
+                className: "text-left",
+                render: function (data, type) {
+                    if (type === "sort" || type === "type") {
+                        return data;
+                    }
+                    return formatCurrencyAccounting(data);
+                }
+            },
+            {
+                title: "Total",
+                data: "amount_total",
+                className: "text-left",
+                render: function (data, type) {
+                    if (type === "sort" || type === "type") {
+                        return data;
+                    }
+                    return formatCurrencyAccounting(data);
+                }
+            },
+            {
+                title: "Invoice Status",
+                data: "invoice_status",
+                render: function (data) {
+                    return invoiceStateBadge(data);
+                }
+            },
+            {
+                title: "Delivery Status",
+                data: "delivery_status",
+                render: function (data) {
+                    return deliveryStateBadge(data);
+                }
+            },
+        ];
+
+        // Sisipkan kolom Company di posisi index 1 (setelah "No"), khusus saat selectedCompany kosong
+        const columns = selectedCompany === ''
+            ? [
+                baseColumns[0],
+                {
+                    title: "Company",
+                    data: "company_name",
+                },
+                ...baseColumns.slice(1),
+            ]
+            : baseColumns;
+
+        // index kolom Total/Tax bergeser +1 kalau kolom Company ikut
+        // disisipkan (saat selectedCompany === '')
+        const colOffset = selectedCompany === '' ? 1 : 0;
+        const untaxedCol = 4 + colOffset;
+        const taxCol = 5 + colOffset;
+        const totalCol = 6 + colOffset;
+
+        const table = $(targetEl).DataTable({
+            data: orderData,
+            destroy: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            order: [[selectedCompany === '' ? 2 : 1, "desc"]],
+            columns: columns,
+            language: {
+                search: "Search:",
+                info: "Showing _START_ to _END_ of _TOTAL_ orders",
+                paginate: {
+                    previous: "Prev",
+                    next: "Next",
+                },
+            },
+            drawCallback: function (settings) {
+                // isi nomor "No" SETELAH DataTables selesai sorting/paging
+                // — i di sini adalah posisi tampilan saat ini (sesuai
+                // urutan sort yang aktif), bukan index data asli
+                const api = this.api();
+                const startIndex = api.context[0]._iDisplayStart;
+                api.column(0, { page: "current" }).nodes().each(function (cell, i) {
+                    cell.innerHTML = startIndex + i + 1;
+                });
+            },
+            createdRow: function (row) {
+                $(row).css("cursor", "pointer");
+            },
+            footerCallback: function (row, data, start, end, display) {
+                // grand total dihitung dari SELURUH data yang lolos
+                // filter/search (bukan cuma yang tampil di halaman aktif)
+                const api = this.api();
+                const sumColumn = (colIndex) => api
+                    .column(colIndex, { search: "applied" })
+                    .data()
+                    .reduce((sum, val) => sum + Number(val || 0), 0);
+
+                [untaxedCol, taxCol, totalCol].forEach((colIndex) => {
+                    const sum = sumColumn(colIndex);
+                    $(api.column(colIndex).footer()).html(
+                        `<span class="font-semibold">${formatCurrencyAccounting(sum)}</span>`
+                    );
+                });
+            },
+        });
+
+        dataTableInstanceRef.current = table;
+
+        // Event klik baris untuk expand/collapse child row
+        $(targetEl).off("click", "tbody tr").on("click", "tbody tr", function () {
+            const tr = $(this);
+            const row = table.row(tr);
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass("shown");
+            } else {
+                table.rows().every(function () {
+                    if (this.child.isShown()) {
+                        this.child.hide();
+                        $(this.node()).removeClass("shown");
+                    }
+                });
+
+                row.child(buildProductDetailHtml(row.data())).show();
+                tr.addClass("shown");
+            }
+        });
+
+        return () => {
+            if (dataTableInstanceRef.current) {
+                dataTableInstanceRef.current.destroy();
+                dataTableInstanceRef.current = null;
+            }
+        };
+    }, [orderData, selectedCompany, toInvoice, show]);
+
+    if (!show) return null;
+
+    return (
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            onClick={onClose}
+        >
+            <div
+                className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-max mx-4 p-6 max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-baseline gap-2">
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                            Order Data
+                        </h3>
+                        <span className="text-dark dark:text-white">(In Thousand Rupiah)</span>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                <div className="relative overflow-x-auto min-h-[200px] min-w-[600px]">
+                    <div
+                        className={`absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-slate-900/60 transition-opacity duration-200 ${
+                            isLoadingOrder ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                        }`}
+                    >
+                        <svg
+                            className="animate-spin h-8 w-8 text-blue-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            ></circle>
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                            ></path>
+                        </svg>
+                    </div>
+
+                    {/* overlay "tidak ada data" — TIDAK boleh unmount <table> di
+                        bawahnya, karena jQuery DataTables memanipulasi DOM
+                        tabel secara langsung; kalau React ikut me-unmount/
+                        remount elemen <table>, terjadi konflik DOM
+                        ("removeChild" error) karena struktur yang React
+                        kira masih ada sudah diubah DataTables */}
+                    <div
+                        className={`absolute inset-0 z-40 flex items-center justify-center border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 transition-opacity duration-200 ${
+                            !isLoadingOrder && orderData.length === 0
+                                ? "opacity-100 pointer-events-auto"
+                                : "opacity-0 pointer-events-none"
+                        }`}
+                    >
+                        <p className="text-muted text-sm">Tidak ada data</p>
+                    </div>
+
+                    <table
+                        ref={orderTableElRef}
+                        className={`w-full text-sm stripe hover transition-all duration-200 ${
+                            isLoadingOrder ? "blur-sm pointer-events-none" : ""
+                        }`}
+                        style={{ width: "100%" }}
+                    >
+                        <thead></thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan={selectedCompany === '' ? 4 : 3}></th>
+                                <th style={{ textAlign: "right" }}>Grand Total</th>
+                                <th style={{ textAlign: "left" }}></th>
+                                <th style={{ textAlign: "left" }}></th>
+                                <th style={{ textAlign: "left" }}></th>
+                                <th colSpan={2}></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div className="mt-6 text-right">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                    >
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};

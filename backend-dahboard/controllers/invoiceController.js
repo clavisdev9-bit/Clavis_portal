@@ -192,7 +192,11 @@ export const get_company_revenue = async (req, res) => {
     let query = `
         SELECT
             company_id[1] company,
-            SUM(amount_total) AS total_amount
+            SUM(amount_total) AS total_amount,
+            ROUND(
+                SUM(amount_total) * 100.0 / NULLIF(SUM(SUM(amount_total)) OVER (), 0),
+                2
+            ) AS percentage
         FROM invoices
     `;
 
@@ -200,7 +204,10 @@ export const get_company_revenue = async (req, res) => {
 
     if (start_date && end_date) {
         query += `
-            WHERE TO_CHAR(invoice_date,'${format}') BETWEEN $1 AND $2
+            WHERE TO_CHAR(invoice_date,'${format}') BETWEEN $1 AND $2 AND invoice_origin IS NOT NULL
+            AND jsonb_typeof(invoice_origin) = 'array'
+            AND jsonb_array_length(invoice_origin) > 0
+            AND state = 'posted'
         `;
         values.push(start_date, end_date);
     } else {
@@ -212,10 +219,12 @@ export const get_company_revenue = async (req, res) => {
                 ORDER BY DATE(invoice_date) DESC
                 LIMIT 7
             )
+            AND state = 'posted'
         `;
     }
 
     query += `GROUP BY company_id[1];`;
+    console.log(query,values);
     const result = await pool.query(query, values);
 
     res.json(result.rows);
@@ -274,6 +283,7 @@ export const get_company_residual=async(req,res)=>{
             AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
+            AND state='posted'
         `;
     }
 
@@ -334,12 +344,54 @@ export const get_company_paid=async(req,res)=>{
             AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
+            AND state='posted'
         `;
     }
 
     const result = await pool.query(query, values);
     res.json(result.rows);
 }
+export const get_company_list = async (req, res) => {
+    try {
+        const { date,filter_type } = req.query;
+        const values = [date];
+        let format = "YYYY-MM-DD";
+
+        if (filter_type === "month") {
+            format = "YYYY-MM";
+        } else if (filter_type === "year") {
+            format = "YYYY";
+        }
+        const query = `
+            SELECT 
+                TO_CHAR(invoice_date,'${format}') AS write_date,
+                company_id[1] AS company_name,
+                SUM(amount_total) AS total_amount
+            FROM 
+                invoices
+            WHERE 
+                TO_CHAR(invoice_date,'${format}') = $1 AND invoice_origin IS NOT NULL AND jsonb_typeof(invoice_origin) = 'array'
+            AND jsonb_array_length(invoice_origin) > 0 AND amount_total>0
+            GROUP BY
+                TO_CHAR(invoice_date,'${format}'),
+                company_id[1]
+            HAVING SUM(amount_total) <> 0
+            ORDER BY
+                TO_CHAR(invoice_date,'${format}');
+        `;
+        const result = await pool.query(query, values);
+
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error("get_company_list error:", error);
+
+        res.status(500).json({
+            error: "Failed to get company list",
+            message: error.message
+        });
+    }
+};
 export const get_company_invoices = async (req, res) => {
     try {
         const {
@@ -347,7 +399,10 @@ export const get_company_invoices = async (req, res) => {
             end_date,
             filter_type,
             company_id,
-            partner_id
+            partner_id,
+            outstanding_balance,
+            amount_paid_positive,
+            aging
         } = req.query;
 
         const values = [];
@@ -356,10 +411,14 @@ export const get_company_invoices = async (req, res) => {
         /*
          * ==========================================
          * FILTER TANGGAL
+         * kalau ada filter aging, JANGAN ikut filter tanggal invoice_date —
+         * aging analysis itu soal jatuh tempo (invoice_date_due) relatif
+         * terhadap HARI INI, bukan soal rentang tanggal invoice yang lagi
+         * dipilih di halaman
          * ==========================================
          */
 
-        if (start_date) {
+        if (start_date && !aging) {
             if (filter_type === "month") {
                 // Contoh:
                 // start_date = 2026-07
@@ -392,13 +451,13 @@ export const get_company_invoices = async (req, res) => {
             }
         }
 
-        if (end_date) {
+        if (end_date && !aging) {
             if (filter_type === "month") {
                 // Contoh:
                 // end_date = 2026-07
                 //
                 // Kita gunakan tanggal bulan berikutnya
-                // dengan operator <
+                // dengan operator 
                 values.push(`${end_date}-01`);
 
                 conditions.push(
@@ -462,6 +521,60 @@ export const get_company_invoices = async (req, res) => {
 
         /*
          * ==========================================
+         * FILTER OUTSTANDING BALANCE
+         * ==========================================
+         */
+
+        if (outstanding_balance === "true" || outstanding_balance === true) {
+            conditions.push(`amount_residual > 0`);
+        }
+
+        /*
+         * ==========================================
+         * FILTER AMOUNT PAID POSITIVE
+         * ==========================================
+         */
+
+        if (amount_paid_positive === "true" || amount_paid_positive === true) {
+            conditions.push(`(amount_total - amount_residual) > 0`);
+        }
+
+        /*
+         * ==========================================
+         * FILTER AGING (jatuh tempo terhadap invoice_date_due)
+         * ==========================================
+         */
+
+        if (aging === "0-30") {
+            conditions.push(`(CURRENT_DATE - invoice_date_due) <= 30`);
+            conditions.push(`payment_state = 'not_paid'`);
+        } else if (aging === "31-60") {
+            conditions.push(`(CURRENT_DATE - invoice_date_due) BETWEEN 31 AND 60`);
+            conditions.push(`payment_state = 'not_paid'`);
+        } else if (aging === "61-90") {
+            conditions.push(`(CURRENT_DATE - invoice_date_due) BETWEEN 61 AND 90`);
+            conditions.push(`payment_state = 'not_paid'`);
+        } else if (aging === ">90") {
+            conditions.push(`(CURRENT_DATE - invoice_date_due) > 90`);
+            conditions.push(`payment_state = 'not_paid'`);
+        }
+
+        /*
+         * ==========================================
+         * FILTER invoice_origin & amount_total — dipindah masuk ke
+         * conditions (bukan di-hardcode terpisah setelah whereClause),
+         * supaya query tetap valid kalau conditions lain kosong semua
+         * ==========================================
+         */
+
+        conditions.push(`state = 'posted'`);
+        conditions.push(`invoice_origin IS NOT NULL`);
+        conditions.push(`jsonb_typeof(invoice_origin) = 'array'`);
+        conditions.push(`jsonb_array_length(invoice_origin) > 0`);
+        conditions.push(`amount_total > 0`);
+
+        /*
+         * ==========================================
          * WHERE CLAUSE
          * ==========================================
          */
@@ -478,12 +591,10 @@ export const get_company_invoices = async (req, res) => {
          */
 
         const query = `
-            select invoice_date,partner_id->>1 customer_name,amount_total,amount_tax,(amount_total-amount_residual) amount_paid,amount_residual,payment_state,invoice_date_due,invoice_origin
-            from invoices ${whereClause} AND invoice_origin IS NOT NULL AND jsonb_typeof(invoice_origin) = 'array'
-            AND jsonb_array_length(invoice_origin) > 0 AND amount_total>0
+            select invoice_date,partner_id->>1 customer_name,company_id->>1 company_name,amount_total,amount_tax,(amount_total-amount_residual) amount_paid,amount_residual,payment_state,invoice_date_due,invoice_origin
+            from invoices ${whereClause}
         `;
         const result = await pool.query(query, values);
-
         res.json(result.rows);
 
     } catch (error) {
@@ -520,7 +631,7 @@ export const get_total_orders_by_company=async(req,res)=>{
         values.push(start_date, end_date);
 
         conditions.push(
-            `TO_CHAR(invoice_date,'${format}') BETWEEN $${values.length - 1} AND $${values.length}`
+            `amount_total>0 and TO_CHAR(invoice_date,'${format}') BETWEEN $${values.length - 1} AND $${values.length}`
         );
     } else {
         conditions.push(`
@@ -549,6 +660,7 @@ export const get_total_orders_by_company=async(req,res)=>{
             AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
+            AND state='posted'
         `;
     }
 
@@ -569,11 +681,13 @@ export const get_invoice_report_mtd = async(req,res) => {
         const values = [];
         const conditions = [
             `(
-                (invoice_date >= date_trunc('month', CURRENT_DATE) AND invoice_date <= CURRENT_DATE) 
-                OR 
-                (invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month')
-                AND invoice_date <= (CURRENT_DATE - INTERVAL '1 month'))
-            )`
+                (invoice_date >= date_trunc('month', CURRENT_DATE) AND invoice_date <= CURRENT_DATE)
+                OR
+                (invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 year')
+                AND invoice_date <= (CURRENT_DATE - INTERVAL '1 year'))
+            ) AND invoice_origin IS NOT NULL
+            AND jsonb_typeof(invoice_origin) = 'array'
+            AND jsonb_array_length(invoice_origin) > 0`
         ];
 
         if (company_id) {
@@ -588,58 +702,45 @@ export const get_invoice_report_mtd = async(req,res) => {
         const whereClause = conditions.join(' AND ');
 
         const query = `
+            WITH totals AS (
+                SELECT
+                    SUM(
+                        CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE) 
+                            AND invoice_date <= CURRENT_DATE 
+                        THEN amount_total ELSE 0 END
+                    ) AS total_bulan_ini,
+                    SUM(
+                        CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 year')
+                            AND invoice_date <= (CURRENT_DATE - INTERVAL '1 year')
+                        THEN amount_total ELSE 0 END
+                    ) AS total_bulan_lalu
+                FROM invoices 
+                WHERE ${whereClause}
+            )
             SELECT
-                SUM(
-                    CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE) 
-                        AND invoice_date <= CURRENT_DATE 
-                    THEN amount_total ELSE 0 END
-                ) AS total_bulan_ini,
-                SUM(
-                    CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month') 
-                        AND invoice_date <= (CURRENT_DATE - INTERVAL '1 month')
-                    THEN amount_total ELSE 0 END
-                ) AS total_bulan_lalu,
-                ROUND(
-                    (
-                        SUM(
-                            CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE) 
-                                AND invoice_date <= CURRENT_DATE 
-                            THEN amount_total ELSE 0 END
-                        )
-                        -
-                        SUM(
-                            CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month') 
-                                AND invoice_date <= (CURRENT_DATE - INTERVAL '1 month')
-                            THEN amount_total ELSE 0 END
-                        )
-                    ) 
-                    / NULLIF(
-                        SUM(
-                            CASE WHEN invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month') 
-                                AND invoice_date <= (CURRENT_DATE - INTERVAL '1 month')
-                            THEN amount_total ELSE 0 END
-                        ), 0
-                    ) * 100, 2
-                ) AS persen_perubahan,
-
-                -- Label bulan ini, contoh: "1-13 Agustus 2026"
-                to_char(date_trunc('month', CURRENT_DATE), 'FMDD') || '-' ||
-                to_char(CURRENT_DATE, 'FMDD') || ' ' ||
+                total_bulan_ini,
+                total_bulan_lalu,
+                CASE
+                    WHEN total_bulan_lalu = 0 AND total_bulan_ini = 0 THEN 0
+                    WHEN total_bulan_lalu = 0 AND total_bulan_ini > 0 THEN 100
+                    ELSE ROUND(
+                        (total_bulan_ini - total_bulan_lalu) / NULLIF(total_bulan_lalu, 0) * 100,
+                        2
+                    )
+                END AS persen_perubahan,
+                -- Label bulan ini, contoh: "1 September 2026 - Today"
+                to_char(date_trunc('month', CURRENT_DATE), 'FMDD') || ' ' ||
                 (ARRAY['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])[EXTRACT(MONTH FROM CURRENT_DATE)::int] || ' ' ||
-                EXTRACT(YEAR FROM CURRENT_DATE)::int AS label_bulan_ini,
-
-                -- Label bulan lalu, contoh: "1-13 Juli 2026"
-                to_char(date_trunc('month', CURRENT_DATE - INTERVAL '1 month'), 'FMDD') || '-' ||
-                to_char((CURRENT_DATE - INTERVAL '1 month')::date, 'FMDD') || ' ' ||
-                (ARRAY['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])[EXTRACT(MONTH FROM (CURRENT_DATE - INTERVAL '1 month'))::int] || ' ' ||
-                EXTRACT(YEAR FROM (CURRENT_DATE - INTERVAL '1 month'))::int AS label_bulan_lalu
-
-            FROM invoices 
-            WHERE ${whereClause};
+                EXTRACT(YEAR FROM CURRENT_DATE)::int || ' - Today' AS label_bulan_ini,
+                -- Label bulan lalu (periode sama, tahun sebelumnya), contoh: "1-13 Agu 2025"
+                to_char(date_trunc('month', CURRENT_DATE - INTERVAL '1 year'), 'FMDD') || '-' ||
+                to_char((CURRENT_DATE - INTERVAL '1 year')::date, 'FMDD') || ' ' ||
+                (ARRAY['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'])[EXTRACT(MONTH FROM (CURRENT_DATE - INTERVAL '1 year'))::int] || ' ' ||
+                EXTRACT(YEAR FROM (CURRENT_DATE - INTERVAL '1 year'))::int AS label_bulan_lalu
+            FROM totals;
         `;
 
         const result = await pool.query(query, values);
-
         res.json(result.rows);
 
     } catch (error) {
@@ -698,8 +799,11 @@ export const get_invoice_report_ytd = async (req, res) => {
                     ((COALESCE(periode_ini.total, 0) - COALESCE(periode_lalu.total, 0))
                     / COALESCE(periode_lalu.total, 1)) * 100, 2
                 ) AS persen_perubahan,
-                to_char(DATE_TRUNC('year', CURRENT_DATE), 'FMDD Mon YYYY') || ' - ' || 'Today' AS label_tahun_ini,
-                to_char(DATE_TRUNC('year', CURRENT_DATE) - INTERVAL '1 year', 'FMDD Mon YYYY') || ' - ' || to_char(CURRENT_DATE - INTERVAL '1 year', 'FMDD Mon YYYY') AS label_tahun_lalu
+                to_char(DATE_TRUNC('year', CURRENT_DATE), 'FMDD') || ' Januari ' || EXTRACT(YEAR FROM CURRENT_DATE)::int || ' - Today' AS label_tahun_ini,
+                to_char(DATE_TRUNC('year', CURRENT_DATE) - INTERVAL '1 year', 'FMDD') || ' Jan-' ||
+                to_char(CURRENT_DATE - INTERVAL '1 year', 'FMDD') || ' ' ||
+                (ARRAY['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'])[EXTRACT(MONTH FROM (CURRENT_DATE - INTERVAL '1 year'))::int] || ' ' ||
+                EXTRACT(YEAR FROM (CURRENT_DATE - INTERVAL '1 year'))::int AS label_tahun_lalu
             FROM periode_ini, periode_lalu;
         `;
         const result = await pool.query(query, values);
@@ -785,6 +889,62 @@ export const get_invoice_stats_ytd = async (req, res) => {
                 running_total AS total
             FROM running
             ORDER BY bulan_num, tahun;
+        `;
+        const result = await pool.query(query, values);
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error("get_sales_report_ytd error:", error);
+
+        res.status(500).json({
+            error: "Failed to get report ytd",
+            message: error.message
+        });
+    }
+
+};
+export const get_invoice_stats_mtd = async (req, res) => {
+    try {
+        const { company_id } = req.query;
+        const values = [];
+        const conditions = [];
+
+        if (company_id) {
+            const parsedId = Number(company_id);
+            if (isNaN(parsedId)) {
+                return res.status(400).json({ error: "company_id harus berupa angka" });
+            }
+            values.push(parsedId);
+            conditions.push(`(company_id->>0)::integer = $${values.length}`);
+        }
+
+        const extraWhere = conditions.length > 0
+            ? `AND ${conditions.join(' AND ')}`
+            : '';
+
+        const query = `
+            SELECT
+                invoice_date::date AS date,
+                SUM(SUM(amount_total)) OVER (
+                    PARTITION BY date_trunc('month', invoice_date)
+                    ORDER BY invoice_date::date
+                ) AS amount_total
+            FROM invoices
+            WHERE (
+                (
+                    invoice_date >= date_trunc('month', CURRENT_DATE)
+                    AND invoice_date <= CURRENT_DATE
+                ) OR (
+                    invoice_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 year')
+                    AND invoice_date <= (CURRENT_DATE - INTERVAL '1 year')
+                )
+            )
+            AND invoice_origin IS NOT NULL
+            AND jsonb_typeof(invoice_origin) = 'array'
+            AND jsonb_array_length(invoice_origin) > 0
+            ${extraWhere}
+            GROUP BY invoice_date::date
+            ORDER BY invoice_date::date;
         `;
         const result = await pool.query(query, values);
         res.json(result.rows);
@@ -891,7 +1051,7 @@ export const get_payment_collection_trend = async (req, res) => {
             conditions.push(`
                 DATE(invoice_date) IN (
                     SELECT DISTINCT DATE(invoice_date)
-                    FROM sales_orders
+                    FROM invoices
                     ORDER BY DATE(invoice_date) DESC
                     LIMIT 7
                 )
@@ -904,6 +1064,9 @@ export const get_payment_collection_trend = async (req, res) => {
                 `company_id[0] = $${values.length}`
             );
         }
+
+        conditions.push(`state = 'posted'`);
+
         if (conditions.length > 0) {
             query += `
                 WHERE ${conditions.join(" AND ")} AND invoice_origin IS NOT NULL
@@ -930,75 +1093,6 @@ export const get_payment_collection_trend = async (req, res) => {
 };
 export const get_invoice_stats = async (req, res) => {
     const { start_date, end_date, filter_type, company_id, filter_by } = req.query;
-    let selectField = `
-        partner_id[1] AS label,
-        SUM(amount_total) AS total_amount
-    `;
-
-    let groupField = `
-        ,partner_id[1]
-    `;
-
-    let fromTable = `
-        invoices
-    `;
-
-    let extraJoin = "";
-    if (filter_by === "company") {
-        selectField = `
-            TO_CHAR(invoice_date,'YYYY-MM-DD') AS label,
-            SUM(amount_total) AS total_amount
-        `;
-        groupField = `,invoice_date `;
-    }
-    if (filter_by === "product") {
-
-        selectField = `
-            line->'product_template'->>'name' AS label,
-            SUM(
-                (line->>'price_subtotal')::numeric
-                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
-            ) AS total_amount
-        `;
-
-        groupField = `
-            ,line->'product_template'->>'name'
-        `;
-
-        extraJoin = `
-            CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
-            CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
-            CROSS JOIN LATERAL (
-                SELECT COUNT(*) AS total_lines
-                FROM jsonb_array_elements(invoices.invoice_origin) AS o2
-                CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
-            ) AS line_count
-        `;
-    }
-    if (filter_by === "brand") {
-
-        selectField = `
-            COALESCE(line->'product_template'->'x_studio_brand'->>1, 'No Brand') AS label,
-            SUM(
-                (line->>'price_subtotal')::numeric
-                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
-            ) AS total_amount
-        `;
-
-        groupField = `
-            ,COALESCE(line->'product_template'->'x_studio_brand'->>1, 'No Brand')
-        `;
-
-        extraJoin = `
-            CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
-            CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
-            CROSS JOIN LATERAL (
-                SELECT COUNT(*) AS total_lines
-                FROM jsonb_array_elements(invoices.invoice_origin) AS o2
-                CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
-            ) AS line_count
-        `;
-    }
     let format = "YYYY-MM-DD";
 
     if (filter_type === "month") {
@@ -1006,12 +1100,159 @@ export const get_invoice_stats = async (req, res) => {
     } else if (filter_type === "year") {
         format = "YYYY";
     }
+    let selectField = `
+        company_id[1] AS label,
+        SUM(amount_total) AS total_amount
+    `;
 
-    let query = `
-        SELECT
-            TO_CHAR(invoice_date,'${format}') AS write_date,
+    let groupField = `
+        ,company_id[1],company_id[0]
+    `;
+
+    let fromTable = `
+        invoices
+    `;
+
+    let extraJoin = "";
+    let extraWhere = "";
+    let totalAmountExpr = `SUM(amount_total)`;
+    if (filter_by === "company") {
+        selectField = `
+            TO_CHAR(invoice_date,'${format}') AS label,
+            SUM(amount_total) AS total_amount
+        `;
+        groupField = `,TO_CHAR(invoice_date,'${format}')`;
+        totalAmountExpr = `SUM(amount_total)`;
+    }
+    if(filter_by === 'customer'){
+        selectField = `
             company_id[1] company,
             company_id[0] company_id,
+            partner_id[1] AS label,
+            SUM(amount_total) AS total_amount
+        `;
+
+        groupField = `
+            ,partner_id[1]
+        `;
+    }
+    if (filter_by === "product") {
+
+        selectField = `
+            company_id[1] company,
+            company_id[0] company_id,
+            COALESCE(line->'product_template'->>'name', line->>'name') AS label,
+            SUM(
+                (line->>'price_subtotal')::numeric
+                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
+            ) AS total_amount
+        `;
+
+        groupField = `
+            ,COALESCE(line->'product_template'->>'name', line->>'name')
+        `;
+
+        extraJoin = `
+            CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
+            CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
+            CROSS JOIN LATERAL (
+                SELECT COUNT(*) AS total_lines
+                FROM jsonb_array_elements(invoices.invoice_origin) AS o2
+                CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
+            ) AS line_count
+        `;
+        // baris tanpa quantity (mis. baris catatan/spesifikasi produk yang
+        // menempel di sales order line tapi bukan baris bernilai sendiri)
+        // ikut ke-exclude di sini — sama seperti get_top_products, supaya
+        // produk yang sama tidak pecah jadi 2 "label" berbeda gara-gara
+        // baris catatan itu ikut ke-GROUP BY sendiri
+        extraWhere = `AND COALESCE((line->>'quantity')::numeric, 0) <> 0`;
+        totalAmountExpr = `
+            SUM(
+                (line->>'price_subtotal')::numeric
+                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
+            )
+        `;
+    }
+    if (filter_by === "brand") {
+
+        selectField = `
+            company_id[1] company,
+            company_id[0] company_id,
+            COALESCE(
+                NULLIF(
+                    TRIM(
+                        (regexp_split_to_array(
+                            line->'product_template'->'x_studio_brand'->>1,
+                            '/'
+                        ))[
+                            array_upper(
+                                regexp_split_to_array(
+                                    line->'product_template'->'x_studio_brand'->>1,
+                                    '/'
+                                ),
+                                1
+                            )
+                        ]
+                    ),
+                    ''
+                ),
+                'No Brand'
+            ) AS label,
+            SUM(
+                (line->>'price_subtotal')::numeric
+                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
+            ) AS total_amount
+        `;
+
+        groupField = `
+            ,COALESCE(
+                NULLIF(
+                    TRIM(
+                        (regexp_split_to_array(
+                            line->'product_template'->'x_studio_brand'->>1,
+                            '/'
+                        ))[
+                            array_upper(
+                                regexp_split_to_array(
+                                    line->'product_template'->'x_studio_brand'->>1,
+                                    '/'
+                                ),
+                                1
+                            )
+                        ]
+                    ),
+                    ''
+                ),
+                'No Brand'
+            )
+        `;
+
+        extraJoin = `
+            CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
+            CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
+            CROSS JOIN LATERAL (
+                SELECT COUNT(*) AS total_lines
+                FROM jsonb_array_elements(invoices.invoice_origin) AS o2
+                CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
+            ) AS line_count
+        `;
+        // sama seperti mode "product" — baris catatan/spesifikasi tanpa
+        // quantity ikut di-exclude, supaya tidak nyasar ke bucket "No
+        // Brand" atau ikut mempengaruhi pembagi alokasi pajak
+        extraWhere = `AND COALESCE((line->>'quantity')::numeric, 0) <> 0`;
+        totalAmountExpr = `
+            SUM(
+                (line->>'price_subtotal')::numeric
+                + amount_tax::numeric / NULLIF(line_count.total_lines, 0)
+            )
+        `;
+    }
+    let baseQuery = `
+        SELECT
+            TO_CHAR(invoice_date,'${format}') AS write_date,
             ${selectField}
         FROM ${fromTable}
         ${extraJoin}
@@ -1044,25 +1285,85 @@ export const get_invoice_stats = async (req, res) => {
             `company_id[0] = $${values.length}`
         );
     }
+
+    conditions.push(`state = 'posted'`);
+
     if (conditions.length > 0) {
-        query += `
+        baseQuery += `
             WHERE ${conditions.join(" AND ")} AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
+            ${extraWhere}
         `;
     }
 
-    query += `
+    baseQuery += `
         GROUP BY
             TO_CHAR(invoice_date,'${format}'),
             company_id[1],
             company_id[0]
             ${groupField}
-        ORDER BY
-            TO_CHAR(invoice_date,'${format}');
+        HAVING ${totalAmountExpr} <> 0
     `;
-    const result = await pool.query(query, values);
-    res.json(result.rows);
+    let query;
+    if (filter_by === "product") {
+        // Batasi hanya 10 produk teratas per company,
+        // berdasarkan total keseluruhan periode, tapi tetap
+        // pertahankan breakdown per write_date untuk chart tren.
+        query = `
+            WITH grouped AS (
+                ${baseQuery}
+            ),
+            totals AS (
+                SELECT
+                    company_id,
+                    label,
+                    SUM(total_amount) AS total_amount
+                FROM grouped
+                GROUP BY company_id, label
+            ),
+            ranked AS (
+                SELECT
+                    *,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY company_id
+                        ORDER BY total_amount DESC
+                    ) AS rn
+                FROM totals
+            )
+            SELECT
+                g.write_date,
+                g.company,
+                g.company_id,
+                g.label,
+                g.total_amount
+            FROM grouped g
+            JOIN ranked r
+                ON r.company_id = g.company_id
+                AND r.label = g.label
+                AND r.rn <= 10
+            ORDER BY
+                g.company_id,
+                g.total_amount DESC,
+                g.write_date;
+        `;
+    } else {
+        query = `
+            ${baseQuery}
+            ORDER BY
+                TO_CHAR(invoice_date,'${format}');
+        `;
+    }
+    try {
+        const result = await pool.query(query, values);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("get_sales_stats error:", error);
+        res.status(500).json({
+            error: "Failed to get sales stats",
+            message: error.message
+        });
+    }
 };
 export const get_top_category = async (req, res) => {
     try {
@@ -1196,13 +1497,7 @@ export const get_top_category = async (req, res) => {
         const query = `
             SELECT 
                 categ_id,
-                TRIM(
-                    split_part(
-                        categ_name,
-                        '/',
-                        array_length(string_to_array(categ_name, '/'), 1)
-                    )
-                ) AS categ_name,
+                categ_name,
                 total_amount,
                 total_qty,
                 ROUND(
@@ -1211,13 +1506,27 @@ export const get_top_category = async (req, res) => {
                 ) AS percentage
             FROM (
                 SELECT 
-                    (line->'product_template'->'categ_id'->>0)::int AS categ_id,
-                    line->'product_template'->'categ_id'->>1 AS categ_name,
+                    CASE
+                        WHEN jsonb_typeof(line->'product_template'->'categ_id') = 'array'
+                            THEN (line->'product_template'->'categ_id'->>0)::int
+                        ELSE 0
+                    END AS categ_id,
+                    CASE
+                        WHEN jsonb_typeof(line->'product_template'->'categ_id') = 'array'
+                            THEN TRIM(
+                                split_part(
+                                    line->'product_template'->'categ_id'->>1,
+                                    '/',
+                                    array_length(string_to_array(line->'product_template'->'categ_id'->>1, '/'), 1)
+                                )
+                            )
+                        ELSE 'No Category'
+                    END AS categ_name,
                     SUM(
                         (line->>'price_subtotal')::numeric
                         + (amount_tax / NULLIF(line_count.total_lines, 0))
                     ) AS total_amount,
-                    SUM((line->>'po_qty')::numeric) AS total_qty
+                    SUM((line->>'quantity')::numeric) AS total_qty
                 FROM invoices
                 CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
                 CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
@@ -1225,17 +1534,32 @@ export const get_top_category = async (req, res) => {
                     SELECT COUNT(*) AS total_lines
                     FROM jsonb_array_elements(invoices.invoice_origin) AS o2
                     CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                    WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
                 ) AS line_count
                 ${whereClause}
-                AND line->'product_template'->'categ_id' IS NOT NULL
+                AND state = 'posted'
+                AND line->'product_template' IS NOT NULL
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
                 AND jsonb_array_length(invoice_origin) > 0
-                GROUP BY categ_id, categ_name
-                HAVING SUM(
-                    (line->>'price_subtotal')::numeric
-                    + (amount_tax / NULLIF(line_count.total_lines, 0))
-                ) >= 0
+                AND COALESCE((line->>'quantity')::numeric, 0) <> 0
+                GROUP BY
+                    CASE
+                        WHEN jsonb_typeof(line->'product_template'->'categ_id') = 'array'
+                            THEN (line->'product_template'->'categ_id'->>0)::int
+                        ELSE 0
+                    END,
+                    CASE
+                        WHEN jsonb_typeof(line->'product_template'->'categ_id') = 'array'
+                            THEN TRIM(
+                                split_part(
+                                    line->'product_template'->'categ_id'->>1,
+                                    '/',
+                                    array_length(string_to_array(line->'product_template'->'categ_id'->>1, '/'), 1)
+                                )
+                            )
+                        ELSE 'No Category'
+                    END
             ) sub
             ORDER BY total_amount DESC;
         `;
@@ -1361,12 +1685,12 @@ export const get_top_products = async (req, res) => {
                 SELECT 
                     (company_id->>0)::integer AS company_id, 
                     company_id->>1 AS company_name,
-                    line->'product_template'->>'name' AS product_name,
+                    COALESCE(line->'product_template'->>'name', line->>'name') AS product_name,
                     SUM(
-                        (line->>'price_subtotal')::numeric 
+                        (line->>'price_subtotal')::numeric
                         + (amount_tax / NULLIF(line_count.total_lines, 0))
                     ) AS total_amount,
-                    SUM((line->>'po_qty')::numeric) AS total_qty
+                    SUM((line->>'quantity')::numeric) AS total_qty
                 FROM invoices
                 CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
                 CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
@@ -1374,13 +1698,19 @@ export const get_top_products = async (req, res) => {
                     SELECT COUNT(*) AS total_lines
                     FROM jsonb_array_elements(invoices.invoice_origin) AS o2
                     CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                    WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
                 ) AS line_count
                 ${whereClause}
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
                 AND jsonb_array_length(invoice_origin) > 0
-                GROUP BY (company_id->>0)::integer, company_id->>1, product_name
-                HAVING SUM((line->>'po_qty')::numeric) > 0
+                AND COALESCE((line->>'quantity')::numeric, 0) <> 0
+                AND state='posted'
+                GROUP BY
+                    (company_id->>0)::integer,
+                    company_id->>1,
+                    COALESCE(line->'product_template'->>'name', line->>'name')
+                HAVING SUM((line->>'quantity')::numeric) > 0
             ) sub
             ORDER BY total_amount DESC ${limitClause};
         `;
@@ -1531,12 +1861,16 @@ export const get_top_customers = async (req, res) => {
             SELECT
                 (company_id->>0)::integer AS company_id,
                 company_id->>1 AS company_name,
-
-                (partner_id->>0)::integer AS partner_id,
-                partner_id->>1 AS customer_name,
+                CASE
+                    WHEN jsonb_typeof(partner_id) = 'array' THEN (partner_id->>0)::integer
+                    ELSE 0
+                END AS partner_id,
+                CASE
+                    WHEN jsonb_typeof(partner_id) = 'array' THEN partner_id->>1
+                    ELSE 'No Customer'
+                END AS customer_name,
                 count(id) AS total_order,
                 SUM(amount_total) AS total_amount,
-
                 ROUND(
                     SUM(amount_total) * 100.0
                     / NULLIF(
@@ -1545,21 +1879,30 @@ export const get_top_customers = async (req, res) => {
                     ),
                     2
                 ) AS percentage
-
             FROM invoices
-
-            ${whereClause} AND invoice_origin IS NOT NULL
-			      AND jsonb_typeof(invoice_origin) = 'array'
-			      AND jsonb_array_length(invoice_origin) > 0
-
+            ${whereClause}
+                AND invoice_origin IS NOT NULL
+                AND jsonb_typeof(invoice_origin) = 'array'
+                AND jsonb_array_length(invoice_origin) > 0
+                AND EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements(invoices.invoice_origin) AS o2
+                    CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                    WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
+                )
+                AND state='posted'
             GROUP BY
                 (company_id->>0)::integer,
                 company_id->>1,
-                (partner_id->>0)::integer,
-                partner_id->>1
-
+                CASE
+                    WHEN jsonb_typeof(partner_id) = 'array' THEN (partner_id->>0)::integer
+                    ELSE 0
+                END,
+                CASE
+                    WHEN jsonb_typeof(partner_id) = 'array' THEN partner_id->>1
+                    ELSE 'No Customer'
+                END
             ORDER BY total_amount DESC
-
             ${limitClause}
         `;
         const result = await pool.query(query, values);
@@ -1607,6 +1950,7 @@ export const get_aging_analys = async (req, res) => {
             WHERE payment_state = 'not_paid' AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0 ${extraWhere}
+            AND state='posted'
             GROUP BY aging_bucket
             ORDER BY aging_bucket;
         `;
@@ -1724,6 +2068,26 @@ export const get_top_brands = async (req, res) => {
                 ? `WHERE ${conditions.join(" AND ")}`
                 : "";
         const limitClause = show_all === "true" ? "" : "LIMIT 10";
+
+        /*
+         * ==========================================
+         * KOLOM COMPANY — hanya disertakan di SELECT/GROUP BY
+         * kalau company_id dikirim (bukan '' / kosong). Saat
+         * company_id kosong (tampilan ALL COMPANY), brand di-
+         * agregasi GABUNG lintas company, bukan dipecah per company.
+         * ==========================================
+         */
+
+        const selectCompanyFields = company_id
+            ? `(company_id->>0)::integer AS company_id,
+                company_id->>1 AS company_name,`
+            : "";
+
+        const groupByCompanyFields = company_id
+            ? `(company_id->>0)::integer,
+                company_id->>1,`
+            : "";
+
         /*
          * ==========================================
          * QUERY TOP BRANDS
@@ -1732,15 +2096,12 @@ export const get_top_brands = async (req, res) => {
 
         const query = `
             SELECT
-                (company_id->>0)::integer AS company_id,
-                company_id->>1 AS company_name,
-
+                ${selectCompanyFields}
                 CASE
                     WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
                         THEN (line->'product_template'->'x_studio_brand'->>0)::integer
                     ELSE 0
                 END AS brand_id,
-
                 CASE
                     WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
                         THEN TRIM(
@@ -1752,13 +2113,11 @@ export const get_top_brands = async (req, res) => {
                         )
                     ELSE 'No Brand'
                 END AS brand_name,
-
                 SUM(
                     (line->>'price_subtotal')::numeric
                     + amount_tax / NULLIF(line_count.total_lines, 0)
                 ) AS total_amount,
-                SUM((line->>'po_qty')::numeric) AS total_qty,
-
+                SUM((line->>'quantity')::numeric) AS total_qty,
                 ROUND(
                     SUM(
                         (line->>'price_subtotal')::numeric
@@ -1775,7 +2134,6 @@ export const get_top_brands = async (req, res) => {
                     ),
                     2
                 ) AS percentage
-
             FROM invoices
             CROSS JOIN LATERAL jsonb_array_elements(invoice_origin) AS origin
             CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
@@ -1783,16 +2141,16 @@ export const get_top_brands = async (req, res) => {
                 SELECT COUNT(*) AS total_lines
                 FROM jsonb_array_elements(invoices.invoice_origin) AS o2
                 CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+                WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
             ) AS line_count
-
-            ${whereClause} AND (line->>'po_qty')::numeric > 0
+            ${whereClause} AND COALESCE((line->>'quantity')::numeric, 0) <> 0
+            AND line->'product_template' IS NOT NULL
             AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
-
+            AND state='posted'
             GROUP BY
-                (company_id->>0)::integer,
-                company_id->>1,
+                ${groupByCompanyFields}
                 CASE
                     WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
                         THEN (line->'product_template'->'x_studio_brand'->>0)::integer
@@ -1809,12 +2167,9 @@ export const get_top_brands = async (req, res) => {
                         )
                     ELSE 'No Brand'
                 END
-
             ORDER BY total_amount DESC
-
             ${limitClause}
         `;
-
         const result = await pool.query(query, values);
         res.json(result.rows);
 
@@ -1827,67 +2182,221 @@ export const get_top_brands = async (req, res) => {
         });
     }
 };
+export const get_products = async (req, res) => {
+    const {
+        start_date,
+        end_date,
+        filter_type,
+        company_id,
+        brand_name,
+        category,
+        product_name
+    } = req.query;
+    const values = [];
+    const conditions = [];
+
+    /*
+     * ==========================================
+     * FILTER TANGGAL
+     * ==========================================
+     */
+    if (start_date) {
+        if (filter_type === "month") {
+            values.push(`${start_date}-01`);
+            conditions.push(`invoice_date >= $${values.length}::date`);
+        } else if (filter_type === "year") {
+            values.push(`${start_date}-01-01`);
+            conditions.push(`invoice_date >= $${values.length}::date`);
+        } else {
+            values.push(start_date);
+            conditions.push(`invoice_date >= $${values.length}::date`);
+        }
+    }
+
+    if (end_date) {
+        if (filter_type === "month") {
+            values.push(`${end_date}-01`);
+            conditions.push(`invoice_date < ($${values.length}::date + INTERVAL '1 month')`);
+        } else if (filter_type === "year") {
+            values.push(`${end_date}-01-01`);
+            conditions.push(`invoice_date < ($${values.length}::date + INTERVAL '1 year')`);
+        } else {
+            values.push(end_date);
+            conditions.push(`invoice_date < ($${values.length}::date + INTERVAL '1 day')`);
+        }
+    }
+
+    /*
+     * ==========================================
+     * FILTER COMPANY
+     * ==========================================
+     */
+    if (company_id) {
+        values.push(Number(company_id));
+        conditions.push(`(company_id->>0)::integer = $${values.length}`);
+    }
+
+    /*
+     * ==========================================
+     * FILTER invoice_origin
+     * ==========================================
+     */
+    conditions.push(`state = 'posted'`);
+    conditions.push(`invoice_origin IS NOT NULL`);
+    conditions.push(`jsonb_typeof(invoice_origin) = 'array'`);
+    conditions.push(`jsonb_array_length(invoice_origin) > 0`);
+
+    const whereClause = conditions.length > 0
+        ? `WHERE ${conditions.join(" AND ")}`
+        : "";
+
+    /*
+     * ==========================================
+     * FILTER BRAND, CATEGORY & PRODUCT_NAME — diterapkan di
+     * lineConditions (level line, bukan level invoice), karena
+     * x_studio_brand/categ_id/name ada di dalam tiap baris produk,
+     * bukan di tabel invoices
+     * ==========================================
+     */
+    const lineConditions = [
+        `COALESCE((line->>'quantity')::numeric, 0) <> 0`,
+        // sebagian baris tidak punya product_template (mis. baris bebas/
+        // manual) — nama produknya jatuh ke line->>'name'. Syaratnya
+        // dilonggarkan supaya baris begini tidak ikut ke-exclude, selama
+        // masih ada nama yang bisa dipakai (dari salah satu sumber)
+        `COALESCE(line->'product_template'->>'name', line->>'name') IS NOT NULL`,
+    ];
+
+    if (brand_name) {
+        if (brand_name === 'No Brand') {
+            // produk tanpa brand -> x_studio_brand bernilai false (bukan array)
+            lineConditions.push(
+                `(line->'product_template'->'x_studio_brand') = 'false'::jsonb`
+            );
+        } else {
+            values.push(`%${brand_name}%`);
+            lineConditions.push(
+                `(line->'product_template'->'x_studio_brand'->>1) ILIKE $${values.length}`
+            );
+        }
+    }
+
+    if (category) {
+        if (category === 'No Category') {
+            // sama seperti "No Brand" — produk tanpa kategori itu
+            // categ_id-nya bukan array (null, atau nilai lain seperti
+            // false), persis logika ELSE di get_top_category
+            lineConditions.push(
+                `jsonb_typeof(line->'product_template'->'categ_id') IS DISTINCT FROM 'array'`
+            );
+        } else {
+            values.push(category);
+            lineConditions.push(
+                `TRIM(
+                    regexp_replace(
+                        line->'product_template'->'categ_id'->>1,
+                        '^.*/',
+                        ''
+                    )
+                ) = $${values.length}`
+            );
+        }
+    }
+
+    if (product_name) {
+        values.push(product_name);
+        lineConditions.push(
+            // product_name yang dikirim dari frontend bisa berasal dari
+            // line->'product_template'->>'name' (kasus normal) ATAU dari
+            // fallback line->>'name' (kalau product_template kosong) —
+            // cocokkan ke keduanya lewat COALESCE, sama seperti logika di
+            // get_top_products
+            `COALESCE(line->'product_template'->>'name', line->>'name') = $${values.length}`
+        );
+    }
+
+    /*
+     * ==========================================
+     * QUERY PRODUCTS (flatten invoice_origin[].lines[])
+     * ==========================================
+     */
+    const query = `
+        SELECT
+            i.company_id->>0 AS company_id,
+            i.company_id->>1 AS company_name,
+            i.partner_id->>0 AS customer_id,
+            i.partner_id->>1 AS customer_name,
+            (EXTRACT(DAY FROM i.invoice_date)::int)::text || ' ' ||
+            (ARRAY['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])[EXTRACT(MONTH FROM i.invoice_date)::int] || ' ' ||
+            (EXTRACT(YEAR FROM i.invoice_date)::int)::text AS date,
+            COALESCE(line->'product_template'->>'name', line->>'name') AS product_name,
+            CASE
+                WHEN jsonb_typeof(line->'product_template'->'categ_id') = 'array'
+                    THEN TRIM(
+                        regexp_replace(
+                            line->'product_template'->'categ_id'->>1,
+                            '^.*/',
+                            ''
+                        )
+                    )
+                ELSE 'No Category'
+            END AS category,
+            line->'product_template'->'x_studio_brand' AS brand,
+            (line->>'price_unit')::numeric AS price_unit,
+            (line->>'quantity')::numeric AS quantity,
+            (line->>'price_subtotal')::numeric AS price_subtotal,
+            ROUND(i.amount_tax::numeric / NULLIF(line_count.total_lines, 0), 2) AS tax,
+            ROUND(
+                (line->>'price_subtotal')::numeric
+                + (i.amount_tax::numeric / NULLIF(line_count.total_lines, 0)),
+                2
+            ) AS total_amount
+        FROM invoices i
+        CROSS JOIN LATERAL jsonb_array_elements(i.invoice_origin) AS origin
+        CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
+        CROSS JOIN LATERAL (
+            SELECT COUNT(*) AS total_lines
+            FROM jsonb_array_elements(i.invoice_origin) AS o2
+            CROSS JOIN LATERAL jsonb_array_elements(o2->'lines') AS l2
+            WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
+        ) AS line_count
+        ${whereClause}
+        AND ${lineConditions.join(" AND ")}
+        ORDER BY i.invoice_date, total_amount DESC
+    `;
+    try {
+        const result = await pool.query(query, values);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("get_products error:", error);
+        res.status(500).json({
+            error: "Failed to get products",
+            message: error.message
+        });
+    }
+};
 export const get_companies = async (req, res) => {
     try {
-        const {
-            start_date,
-            end_date,
-            filter_type
-        } = req.query;
-
-        const values = [];
-        const conditions = [];
-
-        /*
-         * ==========================================
-         * FILTER TANGGAL
-         * ==========================================
-         */
-
-
-        /*
-         * ==========================================
-         * DEFAULT: 7 HARI TERAKHIR (kalau tanggal tidak diisi)
-         * ==========================================
-         */
-
-        /*
-         * ==========================================
-         * WHERE CLAUSE
-         * ==========================================
-         */
-
-        const whereClause =
-            conditions.length > 0
-                ? `WHERE ${conditions.join(" AND ")}`
-                : "";
-
-        /*
-         * ==========================================
-         * QUERY COMPANIES
-         * ==========================================
-         */
-
         const query = `
             SELECT
                 company_id
-
-            FROM invoices
-
-            WHERE invoice_origin IS NOT NULL
+            FROM invoices WHERE invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
-
             GROUP BY
                 company_id
-
             ORDER BY
                 company_id
         `;
 
-        const result = await pool.query(query, values);
+        const result = await pool.query(query);
 
-        return res.json(result.rows);
+        const companies = [
+            { company_id: ["", "ALL COMPANY"] },
+            ...result.rows
+        ];
+
+        return res.json(companies);
 
     } catch (error) {
         console.error("get_companies error:", error);
@@ -2042,8 +2551,8 @@ export const truncateInsertInvoice=async()=>{
                         r.invoice_date_due ? new Date(r.invoice_date_due) : null,
                         r.next_payment_date ? new Date(r.next_payment_date) : null,
                         toJsonArray(r.journal_id),
-                        toJsonArray(r.invoice_origin),
-                        [r.invoice_line_ids],
+                        toJsonArray(r.invoice_line_ids),
+                        [r.line_ids],
                         [r.line_ids],
                         [r.payment_ids],
                         [r.matched_payment_ids],

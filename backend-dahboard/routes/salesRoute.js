@@ -1,5 +1,5 @@
 import express from 'express';
-import { get_sales, get_total_sales, get_total_orders, get_total_orders_by_company, get_average_order, get_total_margin, get_margin_percent, get_delivery_full, get_sales_trend, get_top_customers, get_number_of_customers, get_discount_given, get_top_products, get_top_brands, get_sales_person, get_sales_stats, first_last_date, get_companies, get_company_stats, get_sales_report_yoy, get_sales_report_mom, get_sales_report_mtd, get_sales_report_ytd, get_company_sales_stats, get_top_category, get_active_customers, get_invoice_progress, get_order_fullfilment, get_sales_stats_ytd, get_company_orders } from '../controllers/salesController.js';
+import { get_sales, get_total_sales, get_total_orders, get_total_orders_by_company, get_average_order, get_total_margin, get_margin_percent, get_delivery_full, get_sales_trend, get_top_customers, get_number_of_customers, get_discount_given, get_top_products, get_top_brands, get_sales_person, get_sales_stats, first_last_date, get_companies, get_company_stats, get_sales_report_yoy, get_sales_report_mom, get_sales_report_mtd, get_sales_report_ytd, get_company_sales_stats, get_top_category, get_active_customers, get_invoice_progress, get_order_fullfilment, get_sales_stats_ytd, get_company_orders, get_company_list, get_company_revenue, get_sales_stats_mtd, get_products } from '../controllers/salesController.js';
 
 const router = express.Router();
 router.get('/master', get_sales);
@@ -19,6 +19,8 @@ router.get('/report_yoy', get_sales_report_yoy);
 router.get('/report_mom', get_sales_report_mom);
 router.get('/report_mtd', get_sales_report_mtd);
 router.get('/stats_ytd', get_sales_stats_ytd);
+router.get('/stats_mtd', get_sales_stats_mtd);
+router.get('/company_list', get_company_list);
 router.get('/report_ytd', get_sales_report_ytd);
 router.get('/top_category', get_top_category);
 router.get('/get_top_customers', get_top_customers);
@@ -26,8 +28,10 @@ router.get('/number_of_customers', get_number_of_customers);
 router.get('/discount_given', get_discount_given);
 router.get('/top_products', get_top_products);
 router.get('/top_brands', get_top_brands);
+router.get('/products',get_products);
 router.get('/get_sales_person', get_sales_person);
 router.get('/get_sales_stats', get_sales_stats);
+router.get('/company_revenue', get_company_revenue);
 router.get('/get_company_sales_stats', get_company_sales_stats);
 router.get('/order_fullfilment', get_order_fullfilment);
 router.get('/first_last_date', first_last_date);

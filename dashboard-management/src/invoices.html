@@ -2,7 +2,7 @@
 
 <head>
 
-    {{> partials/title-meta title="Blog" }}
+    {{> partials/title-meta title="Project " }}
 
     {{> partials/head-css }}
     <script>
@@ -26,32 +26,441 @@
         });
     </script>
     <style>
-        
+        .hide-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        summary {
+            list-style: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        #salesTable_length select {
+            width: 6vh;
+        }
+        #sales_invoices .apexcharts-series {
+            transition: opacity 300ms ease-in-out;
+        }
+        #sales_invoices .apexcharts-marker {
+            opacity: 0;
+        }
+        .my-tooltip {
+            padding: 8px;
+        }
+
+        .my-tooltip .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0;
+        }
+
+        .my-tooltip .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .my-tooltip .name {
+            flex: 1;
+        }
+
+        .my-tooltip .value {
+            font-weight: 600;
+        }
+
+        #sales_invoices.chart-ready .apexcharts-marker {
+            opacity: 1;
+        }
+        .apexcharts-legend-series {
+            margin-bottom: 10px !important;
+        }
+        #salesTable {
+            width: 100% !important;
+        }
         .dark .date-input {
             background-color: #0f172a !important;
             color: white !important;
         }
 
+        /* nonactive */
+        .dark .ant-picker.range-picker-month1 {
+            background-color:#0f172a;
+            border-color: #777777;
+        }
+        .dark .ant-picker.range-picker-month1:hover {
+            border-color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-month1 .ant-picker-input > input::placeholder {
+            color: #777777;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.range-picker-month1 .ant-picker-input > input:hover::placeholder {
+            color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-year1 {
+            background-color:#0f172a;
+            border-color: #777777;
+        }
+        .dark .ant-picker.range-picker-year1:hover {
+            border-color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-year1 .ant-picker-input > input::placeholder {
+            color: #777777;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.range-picker-year1 .ant-picker-input:hover > input::placeholder {
+            color: #ffffff;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .range-picker-date .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-date .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-default {
+            border-color: #777777;
+        }
+        .dark .range-picker-default .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-default:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-default .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .range-picker-month .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-month .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-year {
+            border-color: #777777;
+        }
+        .dark .range-picker-year .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-year:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-year .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* active */
+        .dark .ant-picker.ant-picker-range.range-picker-date.active {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-year .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .range-picker-month1.active .ant-picker-input > input {
+            color: #fff !important;
+        }
+        .dark .range-picker-year1.active .ant-picker-input > input {
+            color: #fff !important;
+        }
+        
+        /* isinya */
+
         .dark .date-input::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
         }
-    </style>
 
+        .dark .range-picker-date-popup .ant-picker-presets {
+            position: relative;
+            padding-top: 45px !important;
+        }
+
+        .dark .range-picker-date-popup .ant-picker-presets::before {
+            content: "Month Filter";
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+
+            padding-left: 12px;
+
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .company-label {
+            font-weight: 700;
+            font-size: 14px;
+            fill: #194198;
+        }
+
+        .customer-label {
+            font-weight: 400;
+            fill: #111827;
+        }
+
+        /* Dark mode */
+        .dark .company-label {
+            fill: #7dafff;
+        }
+
+        .dark .customer-label {
+            fill: #ffffff;
+        }
+        .img-light {
+            display: inline-block;
+        }
+        .img-dark {
+            display: none;
+        }
+
+        /* Saat dark mode aktif: kebalikannya */
+        .dark .img-light {
+            display: none;
+        }
+        .dark .img-dark {
+            display: inline-block;
+        }
+        /* .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets {
+            position: relative;
+            padding-top: 45px !important;
+        }
+
+        .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets::before {
+            content: "Month Filter";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+
+            font-weight: 600;
+            font-size: 14px;
+        } */
+
+        .ant-picker-panels {
+            order: 1 !important;
+        }
+        
+        .dark .ant-picker-range {
+            color: white;
+            background-color: #0f172a !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets li {
+            transition: all 0.2s ease;
+        }
+
+        /* Saat hover */
+        .dark .ant-picker-range-selected-day .ant-picker-date{
+            color:white
+        }
+        .dark .ant-picker-range-separator >span{
+            color: #94a3b8 !important;
+        }
+        .dark .ant-picker-suffix{
+            color: #94a3b8 !important;
+        }
+        .dark .ant-picker-header {
+            background-color: #0f172a !important;
+            color:white
+        }
+        .dark .ant-picker-body {
+            background-color: #0f172a !important;
+        }
+        .dark .ant-picker-cell{
+            color:white
+        }
+        .dark .ant-picker-content th {
+            color: white !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets{
+            color:white;
+            background-color:#0f172a
+        }
+        .dark .ant-picker-panel-layout{
+            border-color: white;
+        }
+        .dark .ant-picker-presets {
+            background-color: #0f172a !important;
+            color:white
+        }
+        .dark .ant-picker-presets ul li:hover {
+            background-color: #1e0696 !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-header-prev-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-super-prev-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-next-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-super-next-btn{
+            color:white !important;
+        }
+        /* Tanggal yang berada di dalam range */
+        .dark .ant-picker-cell-in-range::before {
+            background: rgba(18, 200, 255, 0.407) !important;
+        }
+
+        /* Tanggal awal dan akhir range */
+        .dark .ant-picker-cell-range-start .ant-picker-cell-inner,
+        .ant-picker-cell-range-end .ant-picker-cell-inner {
+            background: #06b6d4 !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-month-panel
+        .ant-picker-cell:hover
+        .ant-picker-cell-inner {
+            background-color: #5a99ff !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-year-panel
+        .ant-picker-cell:hover
+        .ant-picker-cell-inner {
+            background-color: #5a99ff !important;
+            color: #fff !important;
+        }
+
+        /* Hover saat memilih range */
+        .dark .ant-picker-cell-in-range:hover::before {
+            background: rgba(6, 182, 212, 0.4) !important;
+        }
+        .wrapper {
+  --font-color-dark: #bebfc5;
+  --font-color-light: #bebfc5;
+  --bg-color: #212121;
+  --main-color: #0c0c0c;
+  --secondary-color: #141414;
+  position: relative;
+  width: 250px;
+  height: 36px;
+  background-color: var(--bg-color);
+  border: 2px solid var(--main-color);
+  border-radius: 34px;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.option {
+  margin-right: 5px;
+  width: 80.5px;
+  height: 28px;
+  position: relative;
+  top: 2px;
+  left: 2px;
+  border-radius: 34px;
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+.option:last-child {
+  margin-right: 4px;
+}
+
+.option:hover {
+  background-color: var(--secondary-color);
+}
+
+.option:hover .span {
+  color: var(--font-color-light);
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  appearance: none;
+  cursor: pointer;
+}
+
+.btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.span {
+  color: var(--font-color-dark);
+}
+
+.input:checked + .btn {
+  background-color: var(--main-color);
+  transition: 0.2s cubic-bezier(0, 0, 0, 1);
+}
+
+.input:checked + .btn .span {
+  color: var(--font-color-light);
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+    </style>
 </head>
 
 {{> partials/body }}
+<script src="assets/js/pages/authMiddleware.js"></script>
 
 <!-- Start Layout -->
 <div class="bg-slate-50 dark:bg-dark">
 
     <!-- Start detached bg -->
-    <div class="bg-[url('../images/bg-main.png')] bg-black group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-950 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
+    <div class="bg-[url('../images/bg-main.png')] bg-slate-800 group-data-[sidebar=dark]/item:bg-darklight group-data-[sidebar=brand]/item:bg-sky-500 min-h-[220px] sm:min-h-[250px] bg-bottom fixed hidden w-full -z-50 detached-img"></div>
     <!-- End detached bg -->
 
-    <!-- Start Menu Sidebar Overlay -->
+    <!-- Start Menu Sidebar Olverlay -->
     <div x-cloak class="fixed inset-0 z-10 bg-black/60 dark:bg-dark/90 lg:hidden" :class="{'hidden' : !$store.app.sidebar}" @click="$store.app.toggleSidebar()"></div>
-    <!-- End Menu Sidebar Overlay -->
+    <!-- End Menu Sidebar Olverlay -->
 
     <!-- Start Main Content -->
     <div class="flex mx-auto main-container">
@@ -62,45 +471,56 @@
             {{> partials/topbar }}
             <!-- Start Content -->
             <div class="h-[calc(100vh-60px)] relative overflow-y-auto overflow-x-hidden p-4 space-y-4 detached-content">
-                <div id="invoice_summary"></div>
-                <div id="invoice_statistics"></div>
-                <div id="invoice_2"></div>
-                <!-- <div class="flex flex-col gap-4 min-h-[calc(100vh-212px)]">
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-12 2xl:col-span-12 order-[17] card">
-                            <div class="flex items-center gap-3 mb-4">
-                                <h2 class="text-base font-semibold capitalize text-slate-800 dark:text-slate-100 grow">Invoices</h2>
-                                <a href="#" class="px-3 py-1.5 rounded-md text-xs border border-black/20 dark:border-darkborder text-muted"><i class="align-bottom ltr:mr-1 rtl:ml-1 ri-filter-line"></i> Filters</a>
-                            </div>
-                            <div id="InvoiceTableRoot"></div>
-                        </div>
-                    </div>
-                </div> -->
+                <div id="invoices"></div>
+                <!-- <div id="sales_invoices"></div> -->
+                <!-- <div id="sales_report"></div> -->
             </div>
         </div>
     </div>
 </div>
 
 {{> partials/vendor-scripts }}
+
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
-
-<script  src="assets/js/pages/apex.init.js"></script>
-<script src="assets/libs/jquery/jquery.js"></script>
-
-<script src="assets/libs/highcharts/highcharts.js"></script>
-
-<script src="assets/libs/highcharts/modules/accessibility.js"></script>
-
-<script src="assets/js/pages/blog.js"></script>
-
+<script src="https://unpkg.com/moment@2.29.4/min/moment.min.js"></script>
+<script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/isoWeek.js"></script>
+<script>
+    dayjs.extend(window.dayjs_plugin_isoWeek);
+</script>
+<script src="https://unpkg.com/antd@5/dist/antd.min.js"></script>
 <script type="module" src="assets/js/main.js"></script>
-<script type="text/babel" src="assets/js/pages/invoice_2.jsx"></script> 
-<!-- <script type="text/babel" src="assets/js/pages/invoice.react.jsx"></script> -->
-<script type="text/babel" src="assets/js/pages/invoice_summary.jsx"></script>
-<script type="text/babel" src="assets/js/pages/invoice_statistics.jsx"></script>
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="assets/js/pages/chartOptions.js"></script>
+<script type="text/babel" src="assets/js/components/SourceDataLink.jsx"></script>
+<!-- <script type="text/babel" src="assets/js/pages/sales_invoices.jsx"></script> -->
+<script type="text/babel" src="assets/js/pages/sales_order/format_currency.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/date_range_label.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/loading_overlay.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/mtd_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/report_mtd_panel.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/date_filter_widget.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/company_tabs.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/use_dataset_highlight.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/customer_legend.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/sales_trend_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/company_revenue_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_category_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/brand_products_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_brands_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/ytd_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/sales_stats_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoices/invoice_data_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoices/payment_collection_trend_modal.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoices/aging_analysis_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/kpi_cards.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_products_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/top_customers_chart.jsx"></script>
+<script type="text/babel" src="assets/js/pages/sales_order/use_dashboard_core.jsx"></script>
+<script type="text/babel" src="assets/js/pages/invoices/invoice_card.jsx"></script>
+<!-- <script type="text/babel" src="assets/js/pages/sales_report_summary.jsx"></script> -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
