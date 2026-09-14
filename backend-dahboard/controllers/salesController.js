@@ -147,13 +147,13 @@ export const get_sales_stats_mtd = async (req, res) => {
                     ORDER BY date_order::date
                 ) AS amount_total
             FROM sales_orders
-            WHERE (
+            WHERE ((
                 date_order >= date_trunc('month', CURRENT_DATE)
                 AND date_order <= CURRENT_DATE
             ) OR (
                 date_order >= date_trunc('month', CURRENT_DATE - INTERVAL '1 year')
                 AND date_order <= (CURRENT_DATE - INTERVAL '1 year')
-            )
+            ))
             ${extraWhere}
             GROUP BY date_order::date
             ORDER BY date_order::date;

@@ -474,7 +474,16 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
         const groups = {};
 
         salesStats.forEach(item => {
-            const company = item.company;
+            // PENTING: normalisasi company yang undefined/null/false jadi
+            // "" (string kosong) DI SINI, sebelum dipakai sebagai object
+            // key. Kalau dibiarkan undefined, `groups[company]` akan
+            // meng-coerce key-nya jadi STRING "undefined" (bukan tetap
+            // undefined) — string "undefined" itu truthy, jadi nanti di
+            // sales_trend_chart.jsx gagal match balik ke row.company yang
+            // aslinya undefined asli (bukan string). Lihat window.
+            // buildCustomerKey/parseCustomerKey — keduanya HARUS menerima
+            // company yang sudah dinormalisasi konsisten seperti ini.
+            const company = item.company || "";
             const customer = item.label;
             const amount = Number(item.total_amount);
 
