@@ -2,7 +2,7 @@ window.SalesTrendChart = function SalesTrendChart({
     companyId, salesStats, filterType, selectedFilterBy,
     showAllLabels, visibleCustomers, customers, customerColors,
     selectedDatasets, companyListEndpoint = "/sales/company_list",
-    height = 280,
+    height = 280, gradientFill = true,
 }) {
     const chartElRef = React.useRef(null);
     const chartInstanceRef = React.useRef(null);
@@ -99,13 +99,28 @@ window.SalesTrendChart = function SalesTrendChart({
                 })
             }];
         } else {
-            series = visibleCustomers.map((customer) => {
-                const originalIndex = customers.indexOf(customer);
+            series = visibleCustomers.map((key) => {
+                const originalIndex = customers.indexOf(key);
+                // "key" adalah composite (company+label) — lihat
+                // window.buildCustomerKey. Label yang sama (mis. "No
+                // Brand") bisa muncul di lebih dari satu company, jadi
+                // pencarian data-nya HARUS ikut cocokkan company, bukan
+                // cuma label — kalau tidak, dua company yang labelnya
+                // sama akan berebut baris salesStats yang sama (data salah
+                // satunya hilang/ketimpa).
+                const { company: keyCompany, label } = window.parseCustomerKey(key);
                 return {
-                    name: customer,
+                    name: label,
                     color: customerColors[originalIndex % customerColors.length],
                     data: dates.map(date => {
-                        const item = salesStats.find(row => row.label === customer && row.write_date === date);
+                        const item = salesStats.find(row =>
+                            row.label === label
+                            && row.write_date === date
+                            // kalau key tidak punya prefix company (dipakai
+                            // di tempat yang belum migrasi ke composite
+                            // key), fallback ke pencarian by label saja
+                            && (!keyCompany || row.company === keyCompany)
+                        );
                         return item ? Number(item.total_amount) / 1000000 : 0;
                     })
                 };
@@ -198,7 +213,11 @@ window.SalesTrendChart = function SalesTrendChart({
                 : { size: 4, colors: ["#3b82f6"], strokeColors: "#fff", strokeWidth: 2, hover: { size: 7 } },
             fill: isSinglePoint
                 ? { opacity: 1 }
-                : { type: "gradient", gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.2, stops: [0, 90, 100] } },
+                : !gradientFill
+                    // area di bawah garis benar-benar dihilangkan (bukan
+                    // cuma gradasinya diganti solid) — opacity 0
+                    ? { type: "gradient", gradient: { shadeIntensity: 1, opacityFrom: 0.2, opacityTo: 0.2, stops: [0, 90, 100] } }
+                    : { type: "gradient", gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.2, stops: [0, 90, 100] } },
             plotOptions: isSinglePoint
                 ? { bar: { columnWidth: barColumnWidth, borderRadius: 4, dataLabels: { position: "top" } } }
                 : {},
@@ -300,7 +319,7 @@ window.SalesTrendChart = function SalesTrendChart({
             const styleTag = chartElRef.current && document.getElementById(`datalabel-bg-style-${chartElRef.current.id}`);
             if (styleTag) styleTag.remove();
         };
-    }, [salesStats, filterType, selectedFilterBy, companyId, height]); // showAllLabels & companyListTotals sengaja dipisah, lihat effect di bawah
+    }, [salesStats, filterType, selectedFilterBy, companyId, height, gradientFill]); // showAllLabels & companyListTotals sengaja dipisah, lihat effect di bawah
 
     // update dataLabels tanpa rebuild chart — dipicu showAllLabels, saat
     // companyListTotals selesai di-fetch, ATAU saat seleksi highlight dari
@@ -313,9 +332,13 @@ window.SalesTrendChart = function SalesTrendChart({
             && Array.isArray(selectedDatasets)
             && selectedDatasets.length > 0;
 
+        // selectedDatasets berisi composite key (company+label) yang sama
+        // seperti visibleCustomers — indexOf di sini sekarang cocok persis
+        // 1 entri company tertentu, bukan label polos yang bisa nyasar ke
+        // entri company lain dengan label sama
         const seriesIndexes = hasHighlight
             ? selectedDatasets
-                .map((label) => visibleCustomers.indexOf(label))
+                .map((key) => visibleCustomers.indexOf(key))
                 .filter((i) => i !== -1)
             : undefined;
 

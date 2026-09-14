@@ -43,28 +43,10 @@ window.SalesStatsModal = function SalesStatsModal({
         return () => controller.abort();
     }, [show, filterBy, startDate, endDate, filterType, selectedCompany, endpoint]);
 
-    const labels = React.useMemo(() => {
-        const totals = {};
-        stats.forEach(item => {
-            totals[item.label] = (totals[item.label] || 0) + Number(item.total_amount);
-        });
-        return Object.entries(totals)
-            .sort((a, b) => b[1] - a[1])
-            .map(([label]) => label);
-    }, [stats]);
-
-    useEffect(() => {
-        setHiddenLabels([]);
-    }, [labels]);
-
-    const visibleLabels = React.useMemo(() => {
-        return labels.filter(l => !hiddenLabels.includes(l));
-    }, [labels, hiddenLabels]);
-
     // =========================================================
     // Untuk CustomerLegend di sebelah kanan chart — butuh data
     // dikelompokkan per company (pola sama seperti companyGroups
-    // di sales_order_card.jsx, sumbernya "stats" milik modal ini)
+    // di use_dashboard_core.jsx, sumbernya "stats" milik modal ini)
     // =========================================================
     const [expandedCompanies, setExpandedCompanies] = useState({});
 
@@ -85,7 +67,15 @@ window.SalesStatsModal = function SalesStatsModal({
                 company,
                 customers: Object.entries(labelTotals)
                     .sort((a, b) => b[1] - a[1])
-                    .map(([customer, total]) => ({ customer, total }))
+                    // "key" = identitas unik per (company, label) — label
+                    // yang sama (mis. "No Brand") bisa muncul di lebih
+                    // dari satu company, jadi tidak cukup diandalkan
+                    // sendirian sebagai identitas (lihat window.buildCustomerKey)
+                    .map(([customer, total]) => ({
+                        customer,
+                        total,
+                        key: window.buildCustomerKey(company, customer),
+                    }))
             }))
             .sort((a, b) => {
                 const totalA = a.customers.reduce((s, x) => s + x.total, 0);
@@ -101,6 +91,21 @@ window.SalesStatsModal = function SalesStatsModal({
         });
         setExpandedCompanies(expanded);
     }, [companyGroups]);
+
+    // "labels" di sini berisi KEY (company+label), bukan label polos —
+    // diturunkan dari companyGroups (yang sudah company-aware) supaya
+    // konsisten dengan pola di use_dashboard_core.jsx
+    const labels = React.useMemo(() => {
+        return companyGroups.flatMap(group => group.customers.map(c => c.key));
+    }, [companyGroups]);
+
+    useEffect(() => {
+        setHiddenLabels([]);
+    }, [labels]);
+
+    const visibleLabels = React.useMemo(() => {
+        return labels.filter(l => !hiddenLabels.includes(l));
+    }, [labels, hiddenLabels]);
 
     const isSingleDate = [...new Set(stats.map(item => item.write_date))].length === 1;
 
@@ -154,6 +159,7 @@ window.SalesStatsModal = function SalesStatsModal({
                                 customerColors={chartColors}
                                 selectedDatasets={selectedDatasets}
                                 height={420}
+                                gradientFill={false}
                             />
                         </div>
                         <div className="col-span-4">

@@ -151,7 +151,10 @@ window.MtdStatsModal = function MtdStatsModal({ show, onClose, selectedCompany, 
                 strokeDashArray: 3,
                 xaxis: { lines: { show: false } },
                 yaxis: { lines: { show: true } },
-                padding: { top: 30, right: 20, bottom: 0, left: 10 },
+                // right diperbesar — dataLabel di titik paling kanan (mis.
+                // "Rp. 936.8M") melebar ke kanan dari titiknya, kalau
+                // padding-nya kurang bisa kepotong tepi chart
+                padding: { top: 30, right: 55, bottom: 0, left: 10 },
             },
             plotOptions: isSinglePoint
                 ? { bar: { columnWidth: "20%", borderRadius: 4, dataLabels: { position: "top" } } }

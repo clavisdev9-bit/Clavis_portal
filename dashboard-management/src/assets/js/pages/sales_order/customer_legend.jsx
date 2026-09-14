@@ -32,26 +32,26 @@ window.CustomerLegend = function CustomerLegend({
                                 </div>
                                 {expandedCompanies[group.company] && (
                                     <div className="mt-2">
-                                        {filteredCustomers.map(({ customer }, index) => {
-                                            const isSelected = Array.isArray(selectedDatasets) && selectedDatasets.includes(customer);
+                                        {filteredCustomers.map(({ customer, key }, index) => {
+                                            const isSelected = Array.isArray(selectedDatasets) && selectedDatasets.includes(key);
                                             const isDimmed = Array.isArray(selectedDatasets) && selectedDatasets.length > 0 && !isSelected;
 
                                             return (
                                                 <div
-                                                    key={customer}
-                                                    onClick={(e) => onCustomerClick && onCustomerClick(e, customer)}
+                                                    key={key}
+                                                    onClick={(e) => onCustomerClick && onCustomerClick(e, key)}
                                                     className={`flex items-center gap-2 cursor-pointer hover:opacity-70 py-1 w-full px-1 ${
                                                         isSelected ? "bg-blue-500 text-white" : ""
                                                     }`}
                                                 >
                                                     <span className={`w-5 text-right text-xs ${isSelected ? "!text-white" : ""}`}>{index + 1}.</span>
                                                     <span className="w-3 h-3" style={{
-                                                        background: customerColors[customers.indexOf(customer) % customerColors.length],
-                                                        opacity: hiddenCustomers.includes(customer) || isDimmed ? 0.3 : 1
+                                                        background: customerColors[customers.indexOf(key) % customerColors.length],
+                                                        opacity: hiddenCustomers.includes(key) || isDimmed ? 0.3 : 1
                                                     }} />
                                                     <span title={customer}
                                                         className={`flex-1 break-words whitespace-normal text-xs ${
-                                                            hiddenCustomers.includes(customer) ? "line-through opacity-50" : ""
+                                                            hiddenCustomers.includes(key) ? "line-through opacity-50" : ""
                                                         } ${isSelected ? "font-semibold !text-white" : ""}`}
                                                     >
                                                         {customer}

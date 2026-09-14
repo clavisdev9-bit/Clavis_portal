@@ -489,7 +489,15 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
                 company,
                 customers: Object.entries(customers)
                     .sort((a, b) => b[1] - a[1])
-                    .map(([customer, total]) => ({ customer, total }))
+                    // "key" = identitas unik per (company, customer) — label
+                    // yang sama (mis. "No Brand") bisa muncul di lebih dari
+                    // satu company, jadi tidak bisa diandalkan sebagai
+                    // identitas sendirian (lihat window.buildCustomerKey)
+                    .map(([customer, total]) => ({
+                        customer,
+                        total,
+                        key: window.buildCustomerKey(company, customer),
+                    }))
             }))
             .sort((a, b) => {
                 const totalA = a.customers.reduce((s, x) => s + x.total, 0);
@@ -506,8 +514,12 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
         setExpandedCompanies(expanded);
     }, [companyGroups]);
 
+    // "customers" di sini berisi KEY (company+label) bukan label polos —
+    // lihat window.buildCustomerKey. CustomerLegend tetap menampilkan
+    // label bersih (dari group.customers[].customer), key ini cuma
+    // dipakai untuk identitas (warna, seleksi highlight, visibility).
     const customers = React.useMemo(() => {
-        return companyGroups.flatMap(group => group.customers.map(c => c.customer));
+        return companyGroups.flatMap(group => group.customers.map(c => c.key));
     }, [companyGroups]);
 
     useEffect(() => {
