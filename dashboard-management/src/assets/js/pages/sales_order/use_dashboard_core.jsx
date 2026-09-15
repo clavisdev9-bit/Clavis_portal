@@ -155,10 +155,10 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
             setFilterType("date");
             setFilterLabel(`${dayjs(dateStrings[0]).format("DD MMM YYYY")} - ${dayjs(dateStrings[1]).format("DD MMM YYYY")}`);
         } else {
-            setDefaultDates([dayjs(), dayjs()]);
-            setStartDate(dayjs().format("YYYY-MM-DD"));
+            setDefaultDates([dayjs().startOf('month'), dayjs()]);
+            setStartDate(dayjs().startOf('month').format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
-            setFilterLabel("Today");
+            setFilterLabel("This Month");
             setFilterType("date");
         }
     };
@@ -173,10 +173,10 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
             setFilterType("month");
             setFilterLabel(`${dayjs(dateString[0] + "-01").format("MMM YYYY")} - ${dayjs(dateString[1] + "-01").format("MMM YYYY")}`);
         } else {
-            setDefaultDates([dayjs(), dayjs()]);
-            setStartDate(dayjs().format("YYYY-MM-DD"));
+            setDefaultDates([dayjs().startOf('month'), dayjs()]);
+            setStartDate(dayjs().startOf('month').format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
-            setFilterLabel("Today");
+            setFilterLabel("This Month");
             setFilterType("date");
         }
     };
@@ -191,10 +191,10 @@ window.useDashboardCore = function useDashboardCore(endpoints) {
             setFilterType("year");
             setFilterLabel(`${dateString[0]} - ${dateString[1]}`);
         } else {
-            setDefaultDates([dayjs(), dayjs()]);
-            setStartDate(dayjs().format("YYYY-MM-DD"));
+            setDefaultDates([dayjs().startOf('month'), dayjs()]);
+            setStartDate(dayjs().startOf('month').format("YYYY-MM-DD"));
             setEndDate(dayjs().format("YYYY-MM-DD"));
-            setFilterLabel("Today");
+            setFilterLabel("This Month");
             setFilterType("date");
         }
     };

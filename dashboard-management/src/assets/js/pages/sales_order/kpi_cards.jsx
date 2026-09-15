@@ -44,7 +44,7 @@ window.KpiCards = function KpiCards({
                 const isNaik = persenPerubahan >= 0;
 
                 return (
-                    <div className="card col-span-1">
+                    <div className="card col-span-1 pr-2">
                         <div className="flex flex-col">
                             <div className="text-base text-dark dark:text-white">
                                 <span><i className="fa-solid fa-money-bill-1-wave"></i> &nbsp;Current Year Sales</span>
@@ -248,35 +248,38 @@ window.KpiCards = function KpiCards({
 
             {/* Total Orders */}
             <div className="card col-span-1 p-2 pt-6">
-                <div class="flex">
-                    <div className="px-2 pt-2">
-                        <img
-                            src="/assets/images/order white.png"
-                            alt="Sales Chart Icon"
-                            className="w-16 h-16 img-light"
-                        />
-                        <img
-                            src="/assets/images/order dark.png"
-                            alt="Sales Chart Icon"
-                            className="w-16 h-16 img-dark"
-                        />
+                <div className="flex flex-col">
+                    <div class="flex">
+                        <div className="px-2 pt-2">
+                            <img
+                                src="/assets/images/order white.png"
+                                alt="Sales Chart Icon"
+                                className="w-16 h-16 img-light"
+                            />
+                            <img
+                                src="/assets/images/order dark.png"
+                                alt="Sales Chart Icon"
+                                className="w-16 h-16 img-dark"
+                            />
+                        </div>
+                        <div>
+                            <div className="flex flex-col text-base dark:text-gray-300 mb-1">
+                                <span>&nbsp;{totalOrdersLabel}</span>
+                            </div>
+                            <h4 className="flex mb-2 items-center gap-4 text-2xl font-semibold text-slate-800 dark:text-slate-100">
+                                {totalOrder}
+                            </h4>
+                            <p className="text-muted text-sm mb-1">Orders</p>
+                        </div>
                     </div>
-                    <div>
-                        <div className="flex flex-col text-base dark:text-gray-300 mb-1">
-                            <span>&nbsp;{totalOrdersLabel}</span>
-                        </div>
-                        <h4 className="flex mb-2 items-center gap-4 text-2xl font-semibold text-slate-800 dark:text-slate-100">
-                            {totalOrder}
-                        </h4>
-                        <p className="text-muted text-sm mb-1">Orders</p>
-                        <div class="text-right">
-                            <button
-                                className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
-                                onClick={() => openOrderDataModal("")}
-                            >
-                                see data
-                            </button>
-                        </div>
+                
+                    <div class="text-right">
+                        <button
+                            className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
+                            onClick={() => openOrderDataModal("")}
+                        >
+                            see data
+                        </button>
                     </div>
                 </div>
             </div>

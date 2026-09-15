@@ -30,7 +30,7 @@ window.InvoiceCard = function InvoiceCard() {
 
     //Aging Analysis Variable — khusus halaman ini
     const [agingAnalysis, setAgingAnalysis] = useState([]);
-    const [showAllLabelsAging, setShowAllLabelsAging] = useState(false);
+    const [showAllLabelsAging, setShowAllLabelsAging] = useState(true);
     const [isLoadingAgingAnalysis, setIsLoadingAgingAnalysis] = useState(false);
 
     //KPI Cards Variable — khusus halaman ini

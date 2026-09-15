@@ -29,7 +29,7 @@ window.SalesOrderCard = function SalesOrderCard() {
     } = dash;
 
     //Order Fulfillment Variable — khusus halaman ini
-    const [showAllLabels2, setShowAllLabels2] = useState(false);
+    const [showAllLabels2, setShowAllLabels2] = useState(true);
     const [deliveryStatus, setDeliveryStatus] = useState([]);
     const [isLoadingDeliveryStatus, setIsLoadingDeliveryStatus] = useState(false);
 
