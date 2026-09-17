@@ -365,12 +365,10 @@ function SalesReportCard() {
     return (
         <div class="col-span-12 2xl:col-span-12 order-[17] card" style={{ minWidth: 0 }}>
             <div className="grid-cols-1">
-                <div className="flex underline">
-                    <i className="fa-solid fa-filter dark:text-white text-sm py-2">&nbsp;</i>
-                    <span className="pl-2 dark:text-white text-dark py-1">
-                        Filter
-                    </span>
-                </div>
+                <i className="fa-solid fa-filter dark:text-white text-sm"></i>
+                <span className="ml-2 dark:text-white text-dark">
+                    Filter
+                </span>
             </div>
             <div className="grid-cols-12 border  border-t-0 border-l-0 border-r-0 py-2 filter-border">
                 <label className="text-md col-span-2 text-dark dark:text-white font-medium pr-3 items-center">
