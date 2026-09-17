@@ -1,4 +1,6 @@
 const { useEffect, useState, useRef } = React;
+const { DatePicker } = antd;
+const { RangePicker } = DatePicker;
 
 const MONTHS_ID = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -71,23 +73,56 @@ function SalesReportCard() {
     const filterRef = useRef(null);
     const defaultColumns = [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
     const lockedColumns = [2, 4];
-
+    
+    const rangePresets = [
+        { label: 'Today', value: [dayjs(), dayjs()] },
+        { label: 'Last 7 Days', value: [dayjs().subtract(7, 'day'), dayjs()] },
+        { label: 'Last 14 Days', value: [dayjs().subtract(14, 'day'), dayjs()] },
+        { label: 'Last 30 Days', value: [dayjs().subtract(30, 'day'), dayjs()] },
+        { label: 'last 60 Days', value: [dayjs().subtract(90, 'day'), dayjs()] },
+    ];
+    const [defaultDates, setDefaultDates] = useState(null);
+    const [startDate, setStartDate] = useState(dayjs().startOf('month').format("YYYY-MM-DD"));
+    const [endDate, setEndDate] = useState(dayjs().format("YYYY-MM-DD"));
+    useEffect(() => {
+        setDefaultDates([dayjs().startOf('month'), dayjs()]);
+    }, []);
+    const onRangeChange = (dates, dateStrings) => {
+        if (dates) {
+            setDefaultDates(dates);
+            setStartDate(dateStrings[0]);
+            setEndDate(dateStrings[1]);
+        } else {
+            setDefaultDates([dayjs(), dayjs()]);
+            setStartDate(dayjs().startOf('month'));
+            setEndDate(dayjs());
+        }
+    };
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`${__API_URL__}/sales/fti_sales`)
-            .then(res => {
-                setFtiSales(res.data);
-            })
-            .catch(console.error)
-            .finally(() => {
-                setIsLoading(false);
-            });
-    }, []);
+        const params = {};
+        if (startDate && endDate) {
+            params.start_date = startDate;
+            params.end_date = endDate;
+        }
+        axios.get(`${__API_URL__}/sales/fti_sales`, {params})
+        .then(res => {
+            console.log(res.data);
+            setFtiSales(res.data);
+        })
+        .catch(console.error)
+        .finally(() => {
+            setIsLoading(false);
+        });
+    }, [startDate, endDate]);
 
     useEffect(() => {
         if (dtInstance.current) {
             dtInstance.current.destroy();
             dtInstance.current = null;
+            if (tableRef.current) {
+                $(tableRef.current).find('tbody').empty();
+            }
         }
 
         if (tableRef.current && ftiSales.length > 0) {
@@ -267,6 +302,9 @@ function SalesReportCard() {
             if (dtInstance.current) {
                 dtInstance.current.destroy();
                 dtInstance.current = null;
+                if (tableRef.current) {
+                    $(tableRef.current).find('tbody').empty();
+                }
             }
         };
     }, [ftiSales]);
@@ -326,7 +364,31 @@ function SalesReportCard() {
 
     return (
         <div class="col-span-12 2xl:col-span-12 order-[17] card" style={{ minWidth: 0 }}>
-            <div class="grid grid-cols-2 content-between mb-2">
+            <div className="grid-cols-1">
+                <div className="flex underline">
+                    <i className="fa-solid fa-filter dark:text-white text-sm py-2">&nbsp;</i>
+                    <span className="pl-2 dark:text-white text-dark py-1">
+                        Filter
+                    </span>
+                </div>
+            </div>
+            <div className="grid-cols-12 border  border-t-0 border-l-0 border-r-0 py-2 filter-border">
+                <label className="text-md col-span-2 text-dark dark:text-white font-medium pr-3 items-center">
+                    Request Delivery Date &nbsp;&nbsp;&nbsp;&nbsp;
+                </label>
+
+                <RangePicker
+                    presets={rangePresets}
+                    value={defaultDates}
+                    onChange={onRangeChange}
+                    className={
+                        defaultDates
+                            ? "range-picker-date active col-span-10"
+                            : "range-picker-date col-span-10"
+                    }
+                />
+            </div>
+            <div class="grid grid-cols-2 content-between mb-2 pt-3">
                 <h4 class="font-semibold pt-1 dark:text-white">Finetoday Sales Report</h4>
                 <div class="flex justify-end gap-1" ref={filterRef}>
                     <div className="relative">
@@ -407,9 +469,18 @@ function SalesReportCard() {
                         </div>
                     </div>
                 )}
+                {!isLoading && ftiSales.length === 0 && (
+                    <div className="flex justify-center py-6">
+                        <span className="text-sm font-medium dark:text-white">Tidak ada data</span>
+                    </div>
+                )}
                 <div className="card-body" style={isLoading ? { minWidth: 0, filter: 'blur(2px)', pointerEvents: 'none', userSelect: 'none' } : { minWidth: 0 }}>
                     <div style={{ width: 0, minWidth: '100%' }}>
-                        <table ref={tableRef} className="w-full display" style={{ width: '100%' }}>
+                        <table
+                            ref={tableRef}
+                            className="w-full display"
+                            style={{ width: '100%', display: (!isLoading && ftiSales.length === 0) ? 'none' : undefined }}
+                        >
                             <thead className="text-left">
                                 <tr>
                                     <th>No</th>

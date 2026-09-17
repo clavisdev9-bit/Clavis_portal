@@ -1696,7 +1696,6 @@ export const get_products = async (req, res) => {
     `;
 
     try {
-        console.log(query,values);
         const result = await pool.query(query, values);
         res.json(result.rows);
     } catch (error) {
@@ -1740,7 +1739,12 @@ export const get_companies = async (req, res) => {
 };
 export const get_fti_sales = async (req, res) => {
     try {
-        const query = `
+        const {
+            start_date,
+            end_date
+        } = req.query;
+
+        let query = `
             select so.type_name, so.partner_id->>1 customer_name, so.client_order_ref, name, so.partner_shipping_id, so.delivery_date,  line->'po_qty' so_qty, line->'dl_qty' delivered_qty, 
             COALESCE(
                 NULLIF(
@@ -1774,7 +1778,14 @@ export const get_fti_sales = async (req, res) => {
             and so.type_name='Sales Order'
         `;
 
-        const result = await pool.query(query);
+        const params = [];
+
+        if (start_date && end_date) {
+            params.push(start_date, end_date);
+            query += ` AND so.delivery_date >= $${params.length - 1} AND so.delivery_date <= $${params.length}`;
+        }
+
+        const result = await pool.query(query, params);
 
         res.json(result.rows);
 
