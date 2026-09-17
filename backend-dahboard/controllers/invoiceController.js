@@ -208,6 +208,7 @@ export const get_company_revenue = async (req, res) => {
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
             AND state = 'posted'
+            AND move_type='out_invoice'
         `;
         values.push(start_date, end_date);
     } else {
@@ -224,7 +225,6 @@ export const get_company_revenue = async (req, res) => {
     }
 
     query += `GROUP BY company_id[1];`;
-    console.log(query,values);
     const result = await pool.query(query, values);
 
     res.json(result.rows);
@@ -284,6 +284,7 @@ export const get_company_residual=async(req,res)=>{
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
             AND state='posted'
+            AND move_type='out_invoice'
         `;
     }
 
@@ -345,6 +346,7 @@ export const get_company_paid=async(req,res)=>{
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
             AND state='posted'
+            AND move_type='out_invoice'
         `;
     }
 
@@ -568,6 +570,7 @@ export const get_company_invoices = async (req, res) => {
          */
 
         conditions.push(`state = 'posted'`);
+        conditions.push(`move_type = 'out_invoice'`);
         conditions.push(`invoice_origin IS NOT NULL`);
         conditions.push(`jsonb_typeof(invoice_origin) = 'array'`);
         conditions.push(`jsonb_array_length(invoice_origin) > 0`);
@@ -661,6 +664,7 @@ export const get_total_orders_by_company=async(req,res)=>{
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
             AND state='posted'
+            AND move_type='out_invoice'
         `;
     }
 
@@ -687,7 +691,9 @@ export const get_invoice_report_mtd = async(req,res) => {
                 AND invoice_date <= (CURRENT_DATE - INTERVAL '1 year'))
             ) AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
-            AND jsonb_array_length(invoice_origin) > 0`
+            AND jsonb_array_length(invoice_origin) > 0
+            AND state='posted'
+            AND move_type='out_invoice'`
         ];
 
         if (company_id) {
@@ -780,6 +786,8 @@ export const get_invoice_report_ytd = async (req, res) => {
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
                 AND jsonb_array_length(invoice_origin) > 0
+                AND state='posted'
+                AND move_type='out_invoice'
                 ${extraWhere}
             ),
             periode_lalu AS (
@@ -790,6 +798,8 @@ export const get_invoice_report_ytd = async (req, res) => {
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
                 AND jsonb_array_length(invoice_origin) > 0
+                AND state='posted'
+                AND move_type='out_invoice'
                 ${extraWhere}
             )
             SELECT
@@ -854,6 +864,8 @@ export const get_invoice_stats_ytd = async (req, res) => {
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
                 AND jsonb_array_length(invoice_origin) > 0
+                AND state='posted'
+                AND move_type='out_invoice'
                 ${extraWhere}
                 GROUP BY DATE_TRUNC('month', invoice_date)
             ),
@@ -942,6 +954,8 @@ export const get_invoice_stats_mtd = async (req, res) => {
             AND invoice_origin IS NOT NULL
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
+            AND state='posted'
+            AND move_type='out_invoice'
             ${extraWhere}
             GROUP BY invoice_date::date
             ORDER BY invoice_date::date;
@@ -1287,6 +1301,7 @@ export const get_invoice_stats = async (req, res) => {
     }
 
     conditions.push(`state = 'posted'`);
+    conditions.push(`move_type = 'out_invoice'`);
 
     if (conditions.length > 0) {
         baseQuery += `
@@ -1538,6 +1553,7 @@ export const get_top_category = async (req, res) => {
                 ) AS line_count
                 ${whereClause}
                 AND state = 'posted'
+                AND move_type='out_invoice'
                 AND line->'product_template' IS NOT NULL
                 AND invoice_origin IS NOT NULL
                 AND jsonb_typeof(invoice_origin) = 'array'
@@ -1706,6 +1722,7 @@ export const get_top_products = async (req, res) => {
                 AND jsonb_array_length(invoice_origin) > 0
                 AND COALESCE((line->>'quantity')::numeric, 0) <> 0
                 AND state='posted'
+                AND move_type='out_invoice'
                 GROUP BY
                     (company_id->>0)::integer,
                     company_id->>1,
@@ -1891,6 +1908,7 @@ export const get_top_customers = async (req, res) => {
                     WHERE COALESCE((l2->>'quantity')::numeric, 0) <> 0
                 )
                 AND state='posted'
+                AND move_type='out_invoice'
             GROUP BY
                 (company_id->>0)::integer,
                 company_id->>1,
@@ -1951,6 +1969,7 @@ export const get_aging_analys = async (req, res) => {
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0 ${extraWhere}
             AND state='posted'
+            AND move_type='out_invoice'
             GROUP BY aging_bucket
             ORDER BY aging_bucket;
         `;
@@ -2149,6 +2168,7 @@ export const get_top_brands = async (req, res) => {
             AND jsonb_typeof(invoice_origin) = 'array'
             AND jsonb_array_length(invoice_origin) > 0
             AND state='posted'
+            AND move_type='out_invoice'
             GROUP BY
                 ${groupByCompanyFields}
                 CASE
@@ -2505,7 +2525,7 @@ export const truncateInsertInvoice=async()=>{
                     next_payment_date,
                     journal_id,
                     invoice_origin,
-                    invoice_line_ids,
+                    sales_order_number,
                     line_ids,
                     payment_ids,
                     matched_payment_ids,
@@ -2552,7 +2572,7 @@ export const truncateInsertInvoice=async()=>{
                         r.next_payment_date ? new Date(r.next_payment_date) : null,
                         toJsonArray(r.journal_id),
                         toJsonArray(r.invoice_line_ids),
-                        [r.line_ids],
+                        [r.invoice_origin],
                         [r.line_ids],
                         [r.payment_ids],
                         [r.matched_payment_ids],

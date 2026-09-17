@@ -1696,6 +1696,7 @@ export const get_products = async (req, res) => {
     `;
 
     try {
+        console.log(query,values);
         const result = await pool.query(query, values);
         res.json(result.rows);
     } catch (error) {
@@ -1733,6 +1734,56 @@ export const get_companies = async (req, res) => {
         return res.status(500).json({
             status: false,
             message: "Gagal mengambil data company",
+            error: error.message
+        });
+    }
+};
+export const get_fti_sales = async (req, res) => {
+    try {
+        const query = `
+            select so.type_name, so.partner_id->>1 customer_name, so.client_order_ref, name, so.partner_shipping_id, so.delivery_date,  line->'po_qty' so_qty, line->'dl_qty' delivered_qty, 
+            COALESCE(
+                NULLIF(
+                    TRIM(
+                        (regexp_split_to_array(
+                            line->'product_template'->'x_studio_brand'->>1,
+                            '/'
+                        ))[
+                            array_upper(
+                                regexp_split_to_array(
+                                    line->'product_template'->'x_studio_brand'->>1,
+                                    '/'
+                                ),
+                                1
+                            )
+                        ]
+                    ),
+                    ''
+                ),
+                'No Brand'
+            ) brand, line->'product_template'->>'name' product_name, line->'unit'->>1 uom, line->'price_unit' price_unit, line->'price_subtotal' price_subtotal, line->'tax'->>0 so_vat 
+            from sales_orders so CROSS JOIN LATERAL jsonb_array_elements(so.order_line) AS line
+            where company_id->>0='3'
+            AND TRIM(
+                regexp_replace(
+                    line->'product_template'->'categ_id'->>1,
+                    '^.*/',
+                    ''
+                )
+            ) = 'FINETODAY'
+            and so.type_name='Sales Order'
+        `;
+
+        const result = await pool.query(query);
+
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error("get_fti_sales error:", error);
+
+        return res.status(500).json({
+            status: false,
+            message: "Gagal mengambil data fti sales",
             error: error.message
         });
     }
@@ -3497,6 +3548,7 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         invoice_status,
                         write_date,
                         delivery_date,
+                        client_order_ref,
                         write_uid
                     )
                     VALUES (
@@ -3504,7 +3556,7 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         $11::jsonb,$12,$13,$14,$15::jsonb,$16::jsonb,$17,$18,$19,$20,
                         $21,$22,$23,$24,$25,$26,$27::jsonb,
                         $28::jsonb,$29::jsonb,$30::jsonb,$31,$32,$33::jsonb,$34,$35::jsonb,$36::jsonb,
-                        $37,$38::jsonb,$39,$40::jsonb,$41,$42,$43,$44::jsonb
+                        $37,$38::jsonb,$39,$40::jsonb,$41,$42,$43,$44,$45::jsonb
                     )
                     `,
                     [
@@ -3562,6 +3614,7 @@ export const truncateInsertSalesOrder=async(req,res)=>{
                         r.write_date
                             ? new Date(r.write_date)
                             : null,
+                        r.client_order_ref,
                         toJson(r.write_uid)
                     ]
                 );
