@@ -26,6 +26,242 @@
         });
     </script>
     <style>
+        .dark .filter-border{
+            border-color: #696969;
+        }
+        .filter-border{
+            border-color: #a3a3a3;
+        }
+        /* nonactive */
+        .dark .ant-picker.range-picker-month1 {
+            background-color:#0f172a;
+            border-color: #777777;
+        }
+        .dark .ant-picker.range-picker-month1:hover {
+            border-color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-month1 .ant-picker-input > input::placeholder {
+            color: #777777;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.range-picker-month1 .ant-picker-input > input:hover::placeholder {
+            color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-year1 {
+            background-color:#0f172a;
+            border-color: #777777;
+        }
+        .dark .ant-picker.range-picker-year1:hover {
+            border-color: #ffffff;
+        }
+        .dark .ant-picker.range-picker-year1 .ant-picker-input > input::placeholder {
+            color: #777777;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.range-picker-year1 .ant-picker-input:hover > input::placeholder {
+            color: #ffffff;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date {
+            border-color: #777777;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .range-picker-date .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-date .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-default {
+            border-color: #777777;
+        }
+        .dark .range-picker-default .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-default:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-default .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month {
+            border-color: #777777;
+        }
+        .dark .range-picker-month .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-month:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-month .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-year {
+            border-color: #777777;
+        }
+        .dark .range-picker-year .ant-picker-input > input::placeholder {
+            color: #777777 !important;
+            opacity: 1 !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-year:hover {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-year .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* active */
+        .dark .ant-picker.ant-picker-range.range-picker-date.active {
+            border-color: #ffffff;
+        }
+        .dark .range-picker-year .ant-picker-input > input:hover::placeholder {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .dark .range-picker-month1.active .ant-picker-input > input {
+            color: #fff !important;
+        }
+        .dark .range-picker-year1.active .ant-picker-input > input {
+            color: #fff !important;
+        }
+        
+        /* isinya */
+
+        .dark .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .dark .range-picker-date-popup .ant-picker-presets {
+            position: relative;
+            padding-top: 45px !important;
+        }
+
+        .dark .range-picker-date-popup .ant-picker-presets::before {
+            content: "Month Filter";
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+
+            padding-left: 12px;
+
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .ant-picker-panels {
+            order: 1 !important;
+        }
+        
+        .dark .ant-picker-range {
+            color: white;
+            background-color: #0f172a !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets li {
+            transition: all 0.2s ease;
+        }
+
+        /* Saat hover */
+        .dark .ant-picker-range-selected-day .ant-picker-date{
+            color:white
+        }
+        .dark .ant-picker-range-separator >span{
+            color: #94a3b8 !important;
+        }
+        .dark .ant-picker-suffix{
+            color: #94a3b8 !important;
+        }
+        .dark .ant-picker-header {
+            background-color: #0f172a !important;
+            color:white
+        }
+        .dark .ant-picker-body {
+            background-color: #0f172a !important;
+        }
+        .dark .ant-picker-cell{
+            color:white
+        }
+        .dark .ant-picker-content th {
+            color: white !important;
+        }
+        .dark .ant-picker.ant-picker-range.range-picker-date.ant-picker-presets{
+            color:white;
+            background-color:#0f172a
+        }
+        .dark .ant-picker-panel-layout{
+            border-color: white;
+        }
+        .dark .ant-picker-presets {
+            background-color: #0f172a !important;
+            color:white
+        }
+        .dark .ant-picker-presets ul li:hover {
+            background-color: #1e0696 !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-header-prev-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-super-prev-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-next-btn{
+            color:white !important;
+        }
+        .dark .ant-picker-header-super-next-btn{
+            color:white !important;
+        }
+        /* Tanggal yang berada di dalam range */
+        .dark .ant-picker-cell-in-range::before {
+            background: rgba(18, 200, 255, 0.407) !important;
+        }
+
+        /* Tanggal awal dan akhir range */
+        .dark .ant-picker-cell-range-start .ant-picker-cell-inner,
+        .ant-picker-cell-range-end .ant-picker-cell-inner {
+            background: #06b6d4 !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-month-panel
+        .ant-picker-cell:hover
+        .ant-picker-cell-inner {
+            background-color: #5a99ff !important;
+            color: #fff !important;
+        }
+        .dark .ant-picker-year-panel
+        .ant-picker-cell:hover
+        .ant-picker-cell-inner {
+            background-color: #5a99ff !important;
+            color: #fff !important;
+        }
+
+        /* Hover saat memilih range */
+        .dark .ant-picker-cell-in-range:hover::before {
+            background: rgba(6, 182, 212, 0.4) !important;
+        }
 
     </style>
 </head>
@@ -63,6 +299,7 @@
 <script>
     dayjs.extend(window.dayjs_plugin_isoWeek);
 </script>
+<script src="https://unpkg.com/antd@5/dist/antd.min.js"></script>
 <script type="module" src="assets/js/main.js"></script>
 <script type="text/babel" src="assets/js/pages/finetoday/fti_sales_report.jsx"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
