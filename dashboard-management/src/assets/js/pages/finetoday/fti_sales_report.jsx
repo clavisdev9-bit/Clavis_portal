@@ -289,7 +289,7 @@ function SalesReportCard() {
                 drawCallback: function () {
                     const api = this.api();
                     const startIndex = api.page.info().start;
-                    api.column(0, { order: 'current', search: 'applied' })
+                    api.column(0, { order: 'current', search: 'applied', page: 'current' })
                         .nodes()
                         .each(function (cell, i) {
                             cell.innerHTML = startIndex + i + 1;
@@ -362,6 +362,166 @@ function SalesReportCard() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // ===== Export Excel =====
+    const getExportValue = (index, row) => {
+        const doQty = row.delivered_qty;
+        const unitPrice = row.price_unit;
+        const hasDo = doQty !== null && doQty !== undefined && unitPrice !== null && unitPrice !== undefined;
+        const doSubTotal = hasDo ? doQty * unitPrice : null;
+
+        switch (index) {
+            case 2: return row.customer_name || '-';
+            case 3: return row.client_order_ref || '-';
+            case 4: return row.name || '-';
+            case 5:
+                return (Array.isArray(row.partner_shipping_id) && row.partner_shipping_id.length > 1)
+                    ? row.partner_shipping_id[1]
+                    : '-';
+            case 6: return row.delivery_date ? new Date(row.delivery_date) : '-';
+            case 7: return (row.so_qty === null || row.so_qty === undefined) ? '-' : Number(row.so_qty);
+            case 8: return (row.delivered_qty === null || row.delivered_qty === undefined) ? '-' : Number(row.delivered_qty);
+            case 9: return row.brand || '-';
+            case 10: return row.product_name || '-';
+            case 11: return row.uom || '-';
+            case 12: return (row.price_unit === null || row.price_unit === undefined) ? '-' : Number(row.price_unit);
+            case 13: return (row.price_subtotal === null || row.price_subtotal === undefined) ? '-' : Number(row.price_subtotal);
+            case 14: return '11%';
+            case 15: return (row.price_subtotal === null || row.price_subtotal === undefined) ? '-' : Number((row.price_subtotal * 11) / 100);
+            case 16: return (row.price_subtotal === null || row.price_subtotal === undefined) ? '-' : Number(row.price_subtotal + ((row.price_subtotal * 11) / 100));
+            case 17: return hasDo ? Number(doSubTotal) : '-';
+            case 18: return '11%';
+            case 19: return hasDo ? Number((doSubTotal * 11) / 100) : '-';
+            case 20: return hasDo ? Number(doSubTotal + ((doSubTotal * 11) / 100)) : '-';
+            default: return '-';
+        }
+    };
+
+    const thinBorder = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+
+    const exportToExcel = async () => {
+        if (!ftiSales || ftiSales.length === 0) return;
+
+        const activeColumns = columns.filter(col => visibleColumns.includes(col.index));
+        const totalCols = 1 + activeColumns.length; // +1 for "No"
+
+        const sortedSales = [...ftiSales].sort((a, b) => {
+            const dateA = a.delivery_date ? dayjs(a.delivery_date).valueOf() : 0;
+            const dateB = b.delivery_date ? dayjs(b.delivery_date).valueOf() : 0;
+            return dateB - dateA;
+        });
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('FTI Sales Report');
+
+        // Row 1: Title
+        worksheet.mergeCells(1, 1, 1, totalCols);
+        const titleCell = worksheet.getCell(1, 1);
+        titleCell.value = 'FTI Sales Report';
+        titleCell.font = { bold: true, size: 14 };
+        titleCell.alignment = { horizontal: 'center' };
+
+        // Row 2: date range, e.g. "2 Maret 2026 - 30 April 2026"
+        const rangeText = (startDate && endDate)
+            ? `${dayjs(startDate).format('D MMMM YYYY')} - ${dayjs(endDate).format('D MMMM YYYY')}`
+            : '-';
+        worksheet.mergeCells(2, 1, 2, totalCols);
+        const rangeCell = worksheet.getCell(2, 1);
+        rangeCell.value = rangeText;
+        rangeCell.alignment = { horizontal: 'center' };
+
+        // Row 3 intentionally left blank as spacer
+
+        // Row 4: header
+        const headerRowIndex = 4;
+        const headerLabels = ['No', ...activeColumns.map(col => col.label)];
+        headerLabels.forEach((label, i) => {
+            const cell = worksheet.getCell(headerRowIndex, i + 1);
+            cell.value = label;
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'left', vertical: 'middle' };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF00FFFF' } // cyan
+            };
+            cell.border = thinBorder;
+        });
+
+        const currencyColIndexes = [12, 13, 15, 16, 17, 19, 20];
+        const currencyFormat = '[$-421]"Rp" #,##0.00';
+        const qtyColIndexes = [7, 8];
+        const qtyFormat = '[$-421]#,##0';
+
+        sortedSales.forEach((row, rowIdx) => {
+            const excelRowIndex = headerRowIndex + 1 + rowIdx;
+
+            const noCell = worksheet.getCell(excelRowIndex, 1);
+            noCell.value = rowIdx + 1;
+            noCell.border = thinBorder;
+
+            activeColumns.forEach((col, colPos) => {
+                const cell = worksheet.getCell(excelRowIndex, colPos + 2);
+                const value = getExportValue(col.index, row);
+                cell.value = value;
+                cell.border = thinBorder;
+
+                if (col.index === 6 && value instanceof Date) {
+                    cell.numFmt = 'd mmm yyyy';
+                } else if (currencyColIndexes.includes(col.index) && typeof value === 'number') {
+                    cell.numFmt = currencyFormat;
+                } else if (qtyColIndexes.includes(col.index) && typeof value === 'number') {
+                    cell.numFmt = qtyFormat;
+                }
+
+                if (col.index === 10) {
+                    cell.alignment = { wrapText: true, vertical: 'top' };
+                }
+            });
+        });
+
+        // Column widths: auto-fit to content, except "Product Name" fixed at 60
+        worksheet.getColumn(1).width = Math.max(4, String(sortedSales.length).length + 2);
+        activeColumns.forEach((col, i) => {
+            const colNumber = i + 2;
+            if (col.index === 10) {
+                worksheet.getColumn(colNumber).width = 60;
+                return;
+            }
+            let maxLen = col.label.length;
+            sortedSales.forEach(row => {
+                const val = getExportValue(col.index, row);
+                let len;
+                if (val instanceof Date) {
+                    len = 12;
+                } else if (typeof val === 'number') {
+                    len = val.toLocaleString('id-ID').length + 4;
+                } else {
+                    len = String(val === null || val === undefined ? '' : val).length;
+                }
+                if (len > maxLen) maxLen = len;
+            });
+            worksheet.getColumn(colNumber).width = maxLen + 2;
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `fti_sales_report_${dayjs().format('YYYYMMDD_HHmmss')}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+
     return (
         <div class="col-span-12 2xl:col-span-12 order-[17] card" style={{ minWidth: 0 }}>
             <div className="grid-cols-1">
@@ -388,7 +548,14 @@ function SalesReportCard() {
             </div>
             <div class="grid grid-cols-2 content-between mb-2 pt-3">
                 <h4 class="font-semibold pt-1 dark:text-white">Finetoday Sales Report</h4>
-                <div class="flex justify-end gap-1" ref={filterRef}>
+                <div class="flex justify-end gap-2" ref={filterRef}>
+                    <button
+                        onClick={exportToExcel}
+                        disabled={ftiSales.length === 0}
+                        class="text-right py-1 px-3 font-medium rounded-md border border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <i class="ri-file-excel-2-line text-md"></i> Export Excel
+                    </button>
                     <div className="relative">
                         <button onClick={() => setShowColumn(!showColumn)} class="text-right py-1 px-3 font-medium rounded-md border border-gray-400"><i class="ri-layout-vertical-line text-md"></i> Columns</button>
                         {showColumn && (
