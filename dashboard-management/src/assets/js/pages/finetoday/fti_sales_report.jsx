@@ -423,7 +423,7 @@ function SalesReportCard() {
         const titleCell = worksheet.getCell(1, 1);
         titleCell.value = 'FTI Sales Report';
         titleCell.font = { bold: true, size: 14 };
-        titleCell.alignment = { horizontal: 'center' };
+        titleCell.alignment = { horizontal: 'left', vertical: 'top' };
 
         // Row 2: date range, e.g. "2 Maret 2026 - 30 April 2026"
         const rangeText = (startDate && endDate)
@@ -432,7 +432,7 @@ function SalesReportCard() {
         worksheet.mergeCells(2, 1, 2, totalCols);
         const rangeCell = worksheet.getCell(2, 1);
         rangeCell.value = rangeText;
-        rangeCell.alignment = { horizontal: 'center' };
+        rangeCell.alignment = { horizontal: 'left', vertical: 'top' };
 
         // Row 3 intentionally left blank as spacer
 
@@ -443,7 +443,7 @@ function SalesReportCard() {
             const cell = worksheet.getCell(headerRowIndex, i + 1);
             cell.value = label;
             cell.font = { bold: true };
-            cell.alignment = { horizontal: 'left', vertical: 'middle' };
+            cell.alignment = { horizontal: 'left', vertical: 'top' };
             cell.fill = {
                 type: 'pattern',
                 pattern: 'solid',
@@ -463,12 +463,14 @@ function SalesReportCard() {
             const noCell = worksheet.getCell(excelRowIndex, 1);
             noCell.value = rowIdx + 1;
             noCell.border = thinBorder;
+            noCell.alignment = { vertical: 'top' };
 
             activeColumns.forEach((col, colPos) => {
                 const cell = worksheet.getCell(excelRowIndex, colPos + 2);
                 const value = getExportValue(col.index, row);
                 cell.value = value;
                 cell.border = thinBorder;
+                cell.alignment = { vertical: 'top' };
 
                 if (col.index === 6 && value instanceof Date) {
                     cell.numFmt = 'd mmm yyyy';
