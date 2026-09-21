@@ -7,6 +7,18 @@ window.SalesTrendChart = function SalesTrendChart({
     const chartElRef = React.useRef(null);
     const chartInstanceRef = React.useRef(null);
     const companyListCache = React.useRef({});
+    const applyDataLabelColors = () => {
+        if (!chartElRef.current || !chartInstanceRef.current) return;
+        const colors = chartInstanceRef.current.w.globals.colors || [];
+        const dataLabelGroups = chartElRef.current.querySelectorAll(".apexcharts-datalabels");
+        dataLabelGroups.forEach((group, i) => {
+            const color = colors[i];
+            if (!color) return;
+            group.querySelectorAll("rect").forEach((rect) => {
+                rect.style.fill = color;
+            });
+        });
+    };
     const datesRef = React.useRef([]);
     const [companyListTotals, setCompanyListTotals] = useState({});
 
@@ -281,21 +293,11 @@ window.SalesTrendChart = function SalesTrendChart({
             // background dataLabels (dataLabels.background.foreColor itu
             // sebenarnya warna TEKS, bukan warna kotak) — jadi kotaknya
             // diwarnai lewat CSS injection langsung ke elemen <rect>-nya.
-            if (!chartElRef.current.id) {
-                chartElRef.current.id = `sales-trend-chart-${Math.random().toString(36).slice(2)}`;
+            if (chartElRef.current) {
+                chartElRef.current.style.minHeight = `${CHART_HEIGHT}px`;
             }
-            const styleId = `datalabel-bg-style-${chartElRef.current.id}`;
-            let styleTag = document.getElementById(styleId);
-            if (!styleTag) {
-                styleTag = document.createElement("style");
-                styleTag.id = styleId;
-                document.head.appendChild(styleTag);
-            }
-            styleTag.innerHTML = `
-                #${chartElRef.current.id} .apexcharts-datalabels rect {
-                    fill: #3b82f6 !important;
-                }
-            `;
+
+            applyDataLabelColors();
 
             const markers = chartElRef.current.querySelectorAll(".apexcharts-marker");
             if (showAllLabels) {
@@ -316,8 +318,6 @@ window.SalesTrendChart = function SalesTrendChart({
                 chartInstanceRef.current.destroy();
                 chartInstanceRef.current = null;
             }
-            const styleTag = chartElRef.current && document.getElementById(`datalabel-bg-style-${chartElRef.current.id}`);
-            if (styleTag) styleTag.remove();
         };
     }, [salesStats, filterType, selectedFilterBy, companyId, height, gradientFill]); // showAllLabels & companyListTotals sengaja dipisah, lihat effect di bawah
 
@@ -350,6 +350,7 @@ window.SalesTrendChart = function SalesTrendChart({
             // paksa lagi min-height, karena updateOptions bisa memicu
             // ApexCharts menghitung ulang & menimpanya
             chartElRef.current.style.minHeight = `${CHART_HEIGHT}px`;
+            applyDataLabelColors();
 
             const seriesElements = chartElRef.current.querySelectorAll(".apexcharts-series");
             seriesElements.forEach((el, i) => {

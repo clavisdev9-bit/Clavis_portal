@@ -1,3 +1,30 @@
+const brandKeywordMap = {
+    'PANASONIC': ['PANASONIC'],
+    'HOT WHEELS': ['HOT WHEELS', 'HOTWHEELS'],
+    'BARBIE': ['BARBIE'],
+    'PAWS NOVA': ['SAMSAM', 'SAMSAMX'],
+    'AMERICAN APPAREL': ['AMERICAN APPAREL'],
+    'GILDAN': ['GILDAN'],
+};
+
+function getBrandName(template, lineName) {
+    // 1. kalau x_studio_brand sudah array (brand resmi dari Odoo), pakai itu
+    if (template.x_studio_brand && Array.isArray(template.x_studio_brand)) {
+        return template.x_studio_brand[1] || "-";
+    }
+
+    // 2. fallback: cocokkan dari nama produk/line, sesuai urutan brandKeywordMap
+    const name = (template.name || lineName || "").toUpperCase();
+    for (const brandName in brandKeywordMap) {
+        const keywords = brandKeywordMap[brandName];
+        if (keywords.some((keyword) => name.includes(keyword.toUpperCase()))) {
+            return brandName;
+        }
+    }
+
+    // 3. tidak match apapun
+    return "No Brand";
+}
 window.InvoiceDataModal = function InvoiceDataModal({
     show, onClose, startDate, endDate, filterType, selectedCompany,
     initialToInvoice, initialSelectedCustomer, initialOutstandingBalance, initialAmountPaidPositive,
@@ -151,9 +178,7 @@ window.InvoiceDataModal = function InvoiceDataModal({
                 // jatuh ke line.name (nama mentah baris, mis. baris
                 // manual/bebas tanpa produk terdaftar)
                 const productName = template.name || line.name || "-";
-                const brandRaw = template.x_studio_brand && Array.isArray(template.x_studio_brand)
-                    ? template.x_studio_brand[1]
-                    : "-";
+                const brandRaw = getBrandName(template, line.name);
                 const categRaw = template.categ_id && Array.isArray(template.categ_id)
                     ? template.categ_id[1]
                     : "-";

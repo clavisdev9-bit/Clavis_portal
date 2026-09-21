@@ -1,6 +1,54 @@
 import pool from '../db.js';
 import dayjs from 'dayjs';
 const BASE_URL=process.env.CLAVIS_BASE_URL;
+const brandKeywordMap = {
+    'PANASONIC': ['PANASONIC'],
+    'HOT WHEELS': ['HOT WHEELS', 'HOTWHEELS'],
+    'BARBIE': ['BARBIE'],
+    'AMERICAN APPAREL': ['AMERICAN APPAREL'],
+    'PAWS NOVA': ['SAMSAM', 'SAMSAMX'],
+    'GILDAN': ['GILDAN'],
+};
+const fallbackBrandNames = Object.keys(brandKeywordMap);function buildBrandLabelCaseSql() {
+    const nameExpr = `COALESCE(line->'product_template'->>'name', line->>'name')`;
+
+    const fallbackWhens = Object.entries(brandKeywordMap)
+        .map(([brandName, keywords]) => {
+            const conditions = keywords
+                .map((keyword) => `${nameExpr} ILIKE '%${keyword.replace(/'/g, "''")}%'`)
+                .join(' OR ');
+            return `WHEN ${conditions} THEN '${brandName.replace(/'/g, "''")}'`;
+        })
+        .join('\n            ');
+
+    return `
+        CASE
+            WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
+                THEN COALESCE(
+                    NULLIF(
+                        TRIM(
+                            (regexp_split_to_array(
+                                line->'product_template'->'x_studio_brand'->>1,
+                                '/'
+                            ))[
+                                array_upper(
+                                    regexp_split_to_array(
+                                        line->'product_template'->'x_studio_brand'->>1,
+                                        '/'
+                                    ),
+                                    1
+                                )
+                            ]
+                        ),
+                        ''
+                    ),
+                    'No Brand'
+                )
+            ${fallbackWhens}
+            ELSE 'No Brand'
+        END
+    `;
+}
 export const get_sales = async (req, res) => {
     try {
         const { date_from, date_to } = req.query;
@@ -1336,55 +1384,19 @@ export const get_sales_stats = async (req, res) => {
         `;
     }
     if (filter_by === "brand") {
+        const brandCaseSql = buildBrandLabelCaseSql();
+
         selectField = `
             company_id[1] company,
             company_id[0] company_id,
-            COALESCE(
-                NULLIF(
-                    TRIM(
-                        (regexp_split_to_array(
-                            line->'product_template'->'x_studio_brand'->>1,
-                            '/'
-                        ))[
-                            array_upper(
-                                regexp_split_to_array(
-                                    line->'product_template'->'x_studio_brand'->>1,
-                                    '/'
-                                ),
-                                1
-                            )
-                        ]
-                    ),
-                    ''
-                ),
-                'No Brand'
-            ) AS label,
+            ${brandCaseSql} AS label,
             SUM(
                 (line->>'price_subtotal')::numeric
                 + amount_tax::numeric / NULLIF(jsonb_array_length(order_line), 0)
             ) AS total_amount
         `;
         groupField = `
-            ,COALESCE(
-                NULLIF(
-                    TRIM(
-                        (regexp_split_to_array(
-                            line->'product_template'->'x_studio_brand'->>1,
-                            '/'
-                        ))[
-                            array_upper(
-                                regexp_split_to_array(
-                                    line->'product_template'->'x_studio_brand'->>1,
-                                    '/'
-                                ),
-                                1
-                            )
-                        ]
-                    ),
-                    ''
-                ),
-                'No Brand'
-            )
+            ,${brandCaseSql}
         `;
         extraJoin = `
             CROSS JOIN LATERAL jsonb_array_elements(order_line) AS line
@@ -1619,9 +1631,38 @@ export const get_products = async (req, res) => {
 
     if (brand_name) {
         if (brand_name === 'No Brand') {
-            // produk tanpa brand -> x_studio_brand bernilai false (bukan array)
+            const notLikeConditions = Object.values(brandKeywordMap)
+                .flat()
+                .map(keyword => `(line->>'name') NOT ILIKE '%${keyword}%'`)
+                .join(' AND ');
+
             lineConditions.push(
-                `(line->'product_template'->'x_studio_brand') = 'false'::jsonb`
+                `(
+                    (line->'product_template'->'x_studio_brand') = 'false'::jsonb
+                    OR jsonb_typeof(line->'product_template'->'x_studio_brand') != 'array'
+                )
+                AND ${notLikeConditions}`
+            );
+        } else if (fallbackBrandNames.includes(brand_name)) {
+            const keywords = brandKeywordMap[brand_name];
+            const nameConditions = keywords
+                .map(keyword => {
+                    values.push(`%${keyword}%`);
+                    return `(line->>'name') ILIKE $${values.length}`;
+                })
+                .join(' OR ');
+
+            lineConditions.push(
+                `(
+                    (jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
+                        AND (line->'product_template'->'x_studio_brand'->>1) ILIKE $${(() => {
+                            values.push(`%${brand_name}%`);
+                            return values.length;
+                        })()})
+                    OR
+                    (jsonb_typeof(line->'product_template'->'x_studio_brand') != 'array'
+                        AND (${nameConditions}))
+                )`
             );
         } else {
             values.push(`%${brand_name}%`);
@@ -1694,6 +1735,7 @@ export const get_products = async (req, res) => {
         AND ${lineConditions.join(" AND ")}
         ORDER BY so.date_order, total_amount DESC
     `;
+    console.log(query,values);
 
     try {
         const result = await pool.query(query, values);
@@ -3377,6 +3419,14 @@ export const get_top_brands = async (req, res) => {
                                 ''
                             )
                         )
+                    WHEN line->>'name' ILIKE '%PANASONIC%' THEN 'PANASONIC'
+                    WHEN line->>'name' ILIKE '%HOT WHEELS%' THEN 'HOT WHEELS'
+                    WHEN line->>'name' ILIKE '%HOTWHEELS%' THEN 'HOT WHEELS'
+                    WHEN line->>'name' ILIKE '%BARBIE%' THEN 'BARBIE'
+                    WHEN line->>'name' ILIKE '%SAMSAM%' THEN 'PAWS NOVA'
+                    WHEN line->>'name' ILIKE '%SAMSAMX%' THEN 'PAWS NOVA'
+                    WHEN line->>'name' ILIKE '%AMERICAN APPAREL%' THEN 'AMERICAN APPAREL'
+                    WHEN line->>'name' ILIKE '%GILDAN%' THEN 'GILDAN'
                     ELSE 'No Brand'
                 END AS brand_name,
                 SUM(
@@ -3425,6 +3475,14 @@ export const get_top_brands = async (req, res) => {
                                 ''
                             )
                         )
+                    WHEN line->>'name' ILIKE '%PANASONIC%' THEN 'PANASONIC'
+                    WHEN line->>'name' ILIKE '%HOT WHEELS%' THEN 'HOT WHEELS'
+                    WHEN line->>'name' ILIKE '%HOTWHEELS%' THEN 'HOT WHEELS'
+                    WHEN line->>'name' ILIKE '%BARBIE%' THEN 'BARBIE'
+                    WHEN line->>'name' ILIKE '%SAMSAM%' THEN 'PAWS NOVA'
+                    WHEN line->>'name' ILIKE '%SAMSAMX%' THEN 'PAWS NOVA'
+                    WHEN line->>'name' ILIKE '%AMERICAN APPAREL%' THEN 'AMERICAN APPAREL'
+                    WHEN line->>'name' ILIKE '%GILDAN%' THEN 'GILDAN'
                     ELSE 'No Brand'
                 END
             ORDER BY total_amount DESC
