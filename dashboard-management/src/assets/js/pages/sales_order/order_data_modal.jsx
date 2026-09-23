@@ -27,13 +27,22 @@ function getBrandName(template, lineName) {
 }
 window.OrderDataModal = function OrderDataModal({
     show, onClose, startDate, endDate, filterType, selectedCompany,
-    initialToInvoice, initialSelectedCustomer, initialDeliveryStatus,
+    initialToInvoice, initialSelectedCustomer, initialDeliveryStatus, dateTabs = null,
 }) {
     const [isLoadingOrder, setIsLoadingOrder] = useState(false);
     const [orderData, setOrderData] = useState([]);
     const [toInvoice, setToInvoice] = useState("");
     const [selectedCustomer, setSelectedCustomer] = useState("");
     const [deliveryStatusFilter, setDeliveryStatusFilter] = useState("");
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+    const hasTabs = Array.isArray(dateTabs) && dateTabs.length > 0;
+    const activeTab = hasTabs ? (dateTabs[activeTabIndex] || dateTabs[0]) : null;
+    // kalau dateTabs diberikan, tanggal yang dipakai untuk fetch mengikuti tab aktif;
+    // kalau tidak, tetap pakai startDate/endDate/filterType dari props seperti semula
+    const effectiveStartDate = hasTabs ? activeTab.startDate : startDate;
+    const effectiveEndDate = hasTabs ? activeTab.endDate : endDate;
+    const effectiveFilterType = hasTabs ? (activeTab.filterType || "day") : filterType;
 
     const orderTableElRef = React.useRef(null);
     const dataTableInstanceRef = React.useRef(null);
@@ -45,16 +54,17 @@ window.OrderDataModal = function OrderDataModal({
             setSelectedCustomer(initialSelectedCustomer || "");
             setToInvoice(initialToInvoice || "");
             setDeliveryStatusFilter(initialDeliveryStatus || "");
+            setActiveTabIndex(0);
         }
     }, [show, initialToInvoice, initialSelectedCustomer, initialDeliveryStatus]);
 
     // fetch orders
     useEffect(() => {
         const params = {};
-        if (startDate && endDate && filterType) {
-            params.start_date = startDate;
-            params.end_date = endDate;
-            params.filter_type = filterType;
+        if (effectiveStartDate && effectiveEndDate && effectiveFilterType) {
+            params.start_date = effectiveStartDate;
+            params.end_date = effectiveEndDate;
+            params.filter_type = effectiveFilterType;
         }
         if (selectedCompany) {
             params.company_id = selectedCompany;
@@ -77,7 +87,7 @@ window.OrderDataModal = function OrderDataModal({
             .finally(() => {
                 setIsLoadingOrder(false);
             });
-    }, [startDate, endDate, filterType, selectedCompany, selectedCustomer, toInvoice, deliveryStatusFilter]);
+    }, [effectiveStartDate, effectiveEndDate, effectiveFilterType, selectedCompany, selectedCustomer, toInvoice, deliveryStatusFilter]);
 
     // render datatable — hanya jalan kalau elemen <table> sudah ter-mount
     // (yaitu saat modal sedang terbuka)
@@ -411,7 +421,23 @@ window.OrderDataModal = function OrderDataModal({
                         &times;
                     </button>
                 </div>
-
+                {hasTabs && (
+                    <div className="flex gap-1 mb-3 border-b border-slate-200 dark:border-slate-700">
+                        {dateTabs.map((tab, idx) => (
+                            <button
+                                key={tab.label}
+                                onClick={() => setActiveTabIndex(idx)}
+                                className={`px-4 py-1.5 text-sm rounded-t-md border-b-2 -mb-px transition-colors ${
+                                    idx === activeTabIndex
+                                        ? "border-blue-500 text-blue-600 dark:text-blue-400 font-semibold"
+                                        : "border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
                 <div className="relative overflow-x-auto min-h-[200px] min-w-[600px]">
                     <div
                         className={`absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-slate-900/60 transition-opacity duration-200 ${

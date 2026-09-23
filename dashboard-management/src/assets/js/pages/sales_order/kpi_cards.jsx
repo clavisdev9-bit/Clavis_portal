@@ -11,27 +11,37 @@ window.KpiCards = function KpiCards({
     const [showStatsMtdModal, setShowStatsMtdModal] = useState(false);
     const [showOrderDataModal, setShowOrderDataModal] = useState(false);
     const [orderDataPreset, setOrderDataPreset] = useState({ toInvoice: "", selectedCustomer: "" });
+    const [orderModalDateOverride, setOrderModalDateOverride] = useState(null);
 
     const [showStatsOutstandingModal, setShowStatsOutstandingModal] = useState(false);
     const [activeTrendSeries, setActiveTrendSeries] = useState("Outstanding Amount");
     const [showInvoiceDataModal, setShowInvoiceDataModal] = useState(false);
     const [invoiceDataPreset, setInvoiceDataPreset] = useState({ outstandingBalance: false, amountPaidPositive: false });
+    const [invoiceModalDateOverride, setInvoiceModalDateOverride] = useState(null);
 
     const openStatsOutstandingModal = (series) => {
         setActiveTrendSeries(series);
         setShowStatsOutstandingModal(true);
     };
 
-    const openOrderDataModal = (toInvoiceValue) => {
+    const openOrderDataModal = (toInvoiceValue, dateOverride = null) => {
         setOrderDataPreset({ toInvoice: toInvoiceValue, selectedCustomer: "" });
+        setOrderModalDateOverride(dateOverride);
         setShowOrderDataModal(true);
     };
 
-    const openInvoiceDataModal = (preset) => {
+    const openInvoiceDataModal = (preset, dateOverride = null) => {
         setInvoiceDataPreset({ outstandingBalance: false, amountPaidPositive: false, ...preset });
+        setInvoiceModalDateOverride(dateOverride);
         setShowInvoiceDataModal(true);
     };
-
+    const openYtdMtdDataModal = (dateOverride) => {
+        if (window.InvoiceDataModal) {
+            openInvoiceDataModal({}, dateOverride);
+        } else {
+            openOrderDataModal("", dateOverride);
+        }
+    };
     return (
         <>
             {/* Current Year Sales */}
@@ -76,7 +86,33 @@ window.KpiCards = function KpiCards({
                                 </span>{" "}
                                 than ({data.label_tahun_lalu})
                             </p>
-                            <div class="text-right">
+                            <div class="flex justify-end gap-1">
+                                <button
+                                    className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
+                                    onClick={() => {
+                                        const currentYear = dayjs().year();
+                                        const previousYear = currentYear - 1;
+
+                                        openYtdMtdDataModal({
+                                            tabs: [
+                                                {
+                                                    label: String(currentYear),
+                                                    startDate: dayjs().startOf("year").format("YYYY-MM-DD"),
+                                                    endDate: dayjs().format("YYYY-MM-DD"),
+                                                    filterType: "day",
+                                                },
+                                                {
+                                                    label: String(previousYear),
+                                                    startDate: dayjs().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
+                                                    endDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+                                                    filterType: "day",
+                                                },
+                                            ],
+                                        });
+                                    }}
+                                >
+                                    see data
+                                </button>
                                 <button className="text-white bg-blue-600 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-blue-700"
                                     onClick={() => setShowStatsModal(true)}
                                 >
@@ -169,7 +205,33 @@ window.KpiCards = function KpiCards({
                                 </span>{" "}
                                 than ({data.label_bulan_lalu})
                             </p>
-                            <div class="text-right">
+                            <div className="flex justify-end gap-1">
+                                <button
+                                    className="text-white bg-yellow-500 text-sm text-right px-2 rounded-md cursor-pointer hover:bg-yellow-600"
+                                    onClick={() => {
+                                        const currentMonthLabel = dayjs().format("MMMM YYYY");
+                                        const lastYearSameMonthLabel = dayjs().subtract(1, "year").format("MMMM YYYY");
+
+                                        openYtdMtdDataModal({
+                                            tabs: [
+                                                {
+                                                    label: currentMonthLabel,
+                                                    startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+                                                    endDate: dayjs().format("YYYY-MM-DD"),
+                                                    filterType: "day",
+                                                },
+                                                {
+                                                    label: lastYearSameMonthLabel,
+                                                    startDate: dayjs().subtract(1, "year").startOf("month").format("YYYY-MM-DD"),
+                                                    endDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+                                                    filterType: "day",
+                                                },
+                                            ],
+                                        });
+                                    }}
+                                >
+                                    see data
+                                </button>
                                 <button className="text-white bg-blue-600 text-sm px-2 rounded-md cursor-pointer hover:bg-blue-700"
                                     onClick={() => setShowStatsMtdModal(true)}
                                 >
@@ -456,9 +518,10 @@ window.KpiCards = function KpiCards({
             <OrderDataModalComponent
                 show={showOrderDataModal}
                 onClose={() => setShowOrderDataModal(false)}
-                startDate={startDate}
-                endDate={endDate}
-                filterType={filterType}
+                startDate={orderModalDateOverride && orderModalDateOverride.startDate ? orderModalDateOverride.startDate : startDate}
+                endDate={orderModalDateOverride && orderModalDateOverride.endDate ? orderModalDateOverride.endDate : endDate}
+                filterType={orderModalDateOverride && orderModalDateOverride.filterType ? orderModalDateOverride.filterType : filterType}
+                dateTabs={orderModalDateOverride && orderModalDateOverride.tabs ? orderModalDateOverride.tabs : null}
                 selectedCompany={selectedCompany}
                 initialToInvoice={orderDataPreset.toInvoice}
                 initialSelectedCustomer={orderDataPreset.selectedCustomer}
@@ -488,9 +551,10 @@ window.KpiCards = function KpiCards({
                 <window.InvoiceDataModal
                     show={showInvoiceDataModal}
                     onClose={() => setShowInvoiceDataModal(false)}
-                    startDate={startDate}
-                    endDate={endDate}
-                    filterType={filterType}
+                    startDate={invoiceModalDateOverride && invoiceModalDateOverride.startDate ? invoiceModalDateOverride.startDate : startDate}
+                    endDate={invoiceModalDateOverride && invoiceModalDateOverride.endDate ? invoiceModalDateOverride.endDate : endDate}
+                    filterType={invoiceModalDateOverride && invoiceModalDateOverride.filterType ? invoiceModalDateOverride.filterType : filterType}
+                    dateTabs={invoiceModalDateOverride && invoiceModalDateOverride.tabs ? invoiceModalDateOverride.tabs : null}
                     selectedCompany={selectedCompany}
                     initialOutstandingBalance={invoiceDataPreset.outstandingBalance}
                     initialAmountPaidPositive={invoiceDataPreset.amountPaidPositive}
