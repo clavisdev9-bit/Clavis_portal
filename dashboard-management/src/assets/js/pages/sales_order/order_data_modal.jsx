@@ -6,7 +6,12 @@ const brandKeywordMap = {
     'AMERICAN APPAREL': ['AMERICAN APPAREL'],
     'GILDAN': ['GILDAN'],
 };
-
+const COMPANY_TITLES = {
+    "2": "PT. DUTA INDO MANDIRI",
+    "3": "PT. My Everything Indonesia",
+    "4": "PT. CLAVIS APPAREL INDONESIA",
+    "11": "PT. DUTA INDO RAYA",
+};
 function getBrandName(template, lineName) {
     // 1. kalau x_studio_brand sudah array (brand resmi dari Odoo), pakai itu
     if (template.x_studio_brand && Array.isArray(template.x_studio_brand)) {
@@ -31,6 +36,8 @@ window.OrderDataModal = function OrderDataModal({
 }) {
     const [isLoadingOrder, setIsLoadingOrder] = useState(false);
     const [orderData, setOrderData] = useState([]);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+    const [productsData, setProductsData] = useState([]);
     const [toInvoice, setToInvoice] = useState("");
     const [selectedCustomer, setSelectedCustomer] = useState("");
     const [deliveryStatusFilter, setDeliveryStatusFilter] = useState("");
@@ -89,6 +96,30 @@ window.OrderDataModal = function OrderDataModal({
             });
     }, [effectiveStartDate, effectiveEndDate, effectiveFilterType, selectedCompany, selectedCustomer, toInvoice, deliveryStatusFilter]);
 
+    useEffect(() => {
+        const params = {};
+        if (effectiveStartDate && effectiveEndDate && effectiveFilterType) {
+            params.start_date = effectiveStartDate;
+            params.end_date = effectiveEndDate;
+            params.filter_type = effectiveFilterType;
+        }
+        if (selectedCompany) {
+            params.company_id = selectedCompany;
+        }
+        if (selectedCustomer) {
+            params.partner_id = selectedCustomer;
+        }
+        if (toInvoice) {
+            params.invoice_status = toInvoice;
+        }
+        setIsLoadingProducts(true);
+        axios.get(`${__API_URL__}/sales/products`, { params })
+            .then(res => {
+                setProductsData(res.data);
+            })
+            .catch(console.error)
+            .finally(() => setIsLoadingProducts(false));
+    }, [effectiveStartDate, effectiveEndDate, effectiveFilterType, selectedCompany, selectedCustomer, toInvoice, show]);
     // render datatable — hanya jalan kalau elemen <table> sudah ter-mount
     // (yaitu saat modal sedang terbuka)
     useEffect(() => {
@@ -398,6 +429,155 @@ window.OrderDataModal = function OrderDataModal({
 
     if (!show) return null;
 
+    const exportToExcel = async () => {
+        if (!productsData || productsData.length === 0) return;
+        const TAX_RATE = 0.11;
+        const RP_FORMAT = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* "-"??_-;_-@_-';
+        const DATE_FORMAT = '[$-421]dd mmmm yyyy;@';
+        const HEADER_FILL = "FFC6D9F1";
+        const HEADER_ROW = 5;
+        const thinBorder = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+        };
+
+        const getCompanyTitle = (companyId, fallback) =>
+            COMPANY_TITLES[String(companyId)] || fallback;
+
+        const toExcelDate = (value) => {
+            if (!value) return null;
+            const d = new Date(value);
+            return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        };
+
+        const toNumber = (value) => parseFloat(value) || 0;
+
+        const isAllCompany = selectedCompany === "" || selectedCompany === null || selectedCompany === undefined;
+        const companyTitle = getCompanyTitle(selectedCompany, "ALL Company");
+        const periodLabel = window.formatDateRangeLabel(startDate, endDate);
+
+        // ===== Definisi kolom =====
+        // show: false  -> kolom tidak ditampilkan
+        // fixedWidth   -> lebar tetap (tidak auto)
+        const columns = [
+            { header: "No", value: (item, i) => i + 1 },
+            {
+                header: "Company",
+                show: isAllCompany,
+                value: (item) => getCompanyTitle(item.company_id, item.company_name || ""),
+            },
+            { header: "Order Number", value: (item) => item.name },
+            { header: "Order Date", value: (item) => toExcelDate(item.write_date), numFmt: DATE_FORMAT },
+            { header: "Customer Name", value: (item) => item.customer_name },
+            { header: "Product Name", value: (item) => item.product_name, fixedWidth: 43.43 },
+            { header: "Brand", value: (item) => (item.brand ? item.brand : "No Brand") },
+            { header: "Category", value: (item) => item.category },
+            { header: "Price Unit", value: (item) => toNumber(item.price_unit), numFmt: RP_FORMAT },
+            { header: "Qty SO", value: (item) => toNumber(item.quantity) },
+            { header: "Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
+            { header: "Tax", value: () => TAX_RATE, numFmt: "0%" },
+            { header: "Tax Amount", value: (item) => toNumber(item.tax), numFmt: RP_FORMAT },
+            { header: "Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+        ].filter((col) => col.show !== false);
+
+        const workbook = new ExcelJS.Workbook();
+        const ws = workbook.addWorksheet("Sheet1");
+
+        // ===== Judul =====
+        ws.getCell("A1").value = "Order Report";
+        ws.getCell("A1").font = { name: "Calibri", size: 14, bold: true };
+        ws.getCell("A2").value = companyTitle;
+        ws.getCell("A2").font = { name: "Calibri", size: 12, bold: true };
+        ws.getCell("A3").value = periodLabel;
+        ws.getCell("A3").font = { name: "Calibri", size: 11 };
+
+        // ===== Header =====
+        const headerRow = ws.getRow(HEADER_ROW);
+        headerRow.values = columns.map((col) => col.header);
+        headerRow.eachCell((cell) => {
+            cell.font = { name: "Calibri", size: 11, bold: true };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: HEADER_FILL } };
+            cell.border = thinBorder;
+        });
+
+        // ===== Urutkan: invoice_date, lalu invoice number =====
+        const sortedData = productsData.slice().sort((a, b) => {
+            const dateA = new Date(a.write_date).getTime() || 0;
+            const dateB = new Date(b.write_date).getTime() || 0;
+            if (dateA !== dateB) return dateB - dateA; // desc
+            return String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true });
+        });
+
+        // ===== Data =====
+        sortedData.forEach((item, index) => {
+            const row = ws.addRow(columns.map((col) => col.value(item, index)));
+
+            columns.forEach((col, i) => {
+                const cell = row.getCell(i + 1);
+                cell.font = { name: "Calibri", size: 11 };
+                cell.border = thinBorder;
+                if (col.numFmt) cell.numFmt = col.numFmt;
+            });
+        });
+
+        // ===== Lebar kolom otomatis =====
+        const BULAN = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+        ];
+
+        const getDisplayText = (cell) => {
+            const v = cell.value;
+            if (v === null || v === undefined) return "";
+            if (v instanceof Date) {
+                const dd = String(v.getUTCDate()).padStart(2, "0");
+                return dd + " " + BULAN[v.getUTCMonth()] + " " + v.getUTCFullYear();
+            }
+            if (typeof v === "number") {
+                if (cell.numFmt === RP_FORMAT) {
+                    return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                if (cell.numFmt === "0%") return Math.round(v * 100) + "%";
+            }
+            return String(v);
+        };
+
+        columns.forEach((col, i) => {
+            const column = ws.getColumn(i + 1);
+
+            if (col.fixedWidth) {
+                column.width = col.fixedWidth;
+                return;
+            }
+
+            let maxLen = 0;
+            column.eachCell({ includeEmpty: false }, (cell, rowNumber) => {
+                if (rowNumber < HEADER_ROW) return;
+                const len = getDisplayText(cell).length;
+                if (len > maxLen) maxLen = len;
+            });
+            column.width = Math.max(maxLen + 2, 6);
+        });
+
+        // ===== Download =====
+        const slug = companyTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+        const fileName = "orders_report_" + slug + "_" + dayjs().format("YYYYMMDD_HHmmss") + ".xlsx";
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+    };
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
@@ -407,18 +587,23 @@ window.OrderDataModal = function OrderDataModal({
                 className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-max mx-4 p-6 max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-end mb-2">
+                    <button
+                        onClick={onClose}
+                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div className="flex justify-between items-center mb-2">
                     <div className="flex items-baseline gap-2">
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                             Order Data
                         </h3>
                         <span className="text-dark dark:text-white">(In Thousand Rupiah)</span>
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl leading-none"
-                    >
-                        &times;
+                    <button onClick={exportToExcel} class="text-right py-1 px-3 mr-3 font-medium rounded-md border border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="ri-file-excel-2-line text-md"></i> Export Excel
                     </button>
                 </div>
                 {hasTabs && (

@@ -1566,7 +1566,9 @@ export const get_products = async (req, res) => {
         company_id,
         brand_name,
         category,
-        product_name
+        product_name,
+        partner_id,
+        invoice_status,
     } = req.query;
     const values = [];
     const conditions = [];
@@ -1691,6 +1693,19 @@ export const get_products = async (req, res) => {
             `line->'product_template'->>'name' = $${values.length}`
         );
     }
+    if (partner_id) {
+        values.push(partner_id);
+        lineConditions.push(
+            `partner_id->>0 = $${values.length}`
+        );
+    }
+    if (invoice_status) {
+        values.push(invoice_status);
+
+        lineConditions.push(
+            `invoice_status = $${values.length}`
+        );
+    }
 
     /*
      * ==========================================
@@ -1703,6 +1718,8 @@ export const get_products = async (req, res) => {
             so.company_id->>1 AS company_name,
             so.partner_id->>0 AS customer_id,
             so.partner_id->>1 AS customer_name,
+	        so.name,
+            so.date_order write_date,
             (EXTRACT(DAY FROM so.date_order)::int)::text || ' ' ||
             (ARRAY['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])[EXTRACT(MONTH FROM so.date_order)::int] || ' ' ||
             (EXTRACT(YEAR FROM so.date_order)::int)::text AS date,
@@ -1714,9 +1731,28 @@ export const get_products = async (req, res) => {
                     ''
                 )
             ) AS category,
-            line->'product_template'->'x_studio_brand' AS brand,
+            CASE
+                WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
+                    THEN TRIM(
+                        regexp_replace(
+                            line->'product_template'->'x_studio_brand'->>1,
+                            '^.*/',
+                            ''
+                        )
+                    )
+                WHEN line->>'name' ILIKE '%PANASONIC%' THEN 'PANASONIC'
+                WHEN line->>'name' ILIKE '%HOT WHEELS%' THEN 'HOT WHEELS'
+                WHEN line->>'name' ILIKE '%HOTWHEELS%' THEN 'HOT WHEELS'
+                WHEN line->>'name' ILIKE '%BARBIE%' THEN 'BARBIE'
+                WHEN line->>'name' ILIKE '%SAMSAM%' THEN 'PAWS NOVA'
+                WHEN line->>'name' ILIKE '%SAMSAMX%' THEN 'PAWS NOVA'
+                WHEN line->>'name' ILIKE '%AMERICAN APPAREL%' THEN 'AMERICAN APPAREL'
+                WHEN line->>'name' ILIKE '%GILDAN%' THEN 'GILDAN'
+                ELSE 'No Brand'
+            END AS brand,
             (line->>'price_unit')::numeric AS price_unit,
             (line->>'po_qty')::numeric AS quantity,
+            (line->>'dl_qty')::numeric AS quantity_do,
             (line->>'price_subtotal')::numeric AS price_subtotal,
             ROUND(so.amount_tax::numeric / NULLIF(line_count.total_lines, 0), 2) AS tax,
             ROUND(

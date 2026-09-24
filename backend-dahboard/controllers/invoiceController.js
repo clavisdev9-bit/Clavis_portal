@@ -2236,7 +2236,11 @@ export const get_products = async (req, res) => {
         company_id,
         brand_name,
         category,
-        product_name
+        product_name,
+        partner_id,
+        outstanding_balance,
+        amount_paid_positive,
+        aging
     } = req.query;
     const values = [];
     const conditions = [];
@@ -2390,6 +2394,51 @@ export const get_products = async (req, res) => {
             `COALESCE(line->'product_template'->>'name', line->>'name') = $${values.length}`
         );
     }
+    if (partner_id) {
+        values.push(partner_id);
+        lineConditions.push(
+            `partner_id->>0 = $${values.length}`
+        );
+    }
+    /*
+    * ==========================================
+    * FILTER OUTSTANDING BALANCE
+    * ==========================================
+    */
+
+    if (outstanding_balance === "true" || outstanding_balance === true) {
+        lineConditions.push(`amount_residual > 0`);
+    }
+
+    /*
+        * ==========================================
+        * FILTER AMOUNT PAID POSITIVE
+        * ==========================================
+        */
+
+    if (amount_paid_positive === "true" || amount_paid_positive === true) {
+        lineConditions.push(`(amount_total - amount_residual) > 0`);
+    }
+
+    /*
+        * ==========================================
+        * FILTER AGING (jatuh tempo terhadap invoice_date_due)
+        * ==========================================
+        */
+
+    if (aging === "0-30") {
+        lineConditions.push(`(CURRENT_DATE - invoice_date_due) <= 30`);
+        lineConditions.push(`payment_state = 'not_paid'`);
+    } else if (aging === "31-60") {
+        lineConditions.push(`(CURRENT_DATE - invoice_date_due) BETWEEN 31 AND 60`);
+        lineConditions.push(`payment_state = 'not_paid'`);
+    } else if (aging === "61-90") {
+        lineConditions.push(`(CURRENT_DATE - invoice_date_due) BETWEEN 61 AND 90`);
+        lineConditions.push(`payment_state = 'not_paid'`);
+    } else if (aging === ">90") {
+        lineConditions.push(`(CURRENT_DATE - invoice_date_due) > 90`);
+        lineConditions.push(`payment_state = 'not_paid'`);
+    }
 
     /*
      * ==========================================
@@ -2402,6 +2451,8 @@ export const get_products = async (req, res) => {
             i.company_id->>1 AS company_name,
             i.partner_id->>0 AS customer_id,
             i.partner_id->>1 AS customer_name,
+	        i.name,
+            i.invoice_date write_date,
             (EXTRACT(DAY FROM i.invoice_date)::int)::text || ' ' ||
             (ARRAY['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])[EXTRACT(MONTH FROM i.invoice_date)::int] || ' ' ||
             (EXTRACT(YEAR FROM i.invoice_date)::int)::text AS date,
@@ -2417,7 +2468,25 @@ export const get_products = async (req, res) => {
                     )
                 ELSE 'No Category'
             END AS category,
-            line->'product_template'->'x_studio_brand' AS brand,
+            CASE
+                WHEN jsonb_typeof(line->'product_template'->'x_studio_brand') = 'array'
+                    THEN TRIM(
+                        regexp_replace(
+                            line->'product_template'->'x_studio_brand'->>1,
+                            '^.*/',
+                            ''
+                        )
+                    )
+                WHEN line->>'name' ILIKE '%PANASONIC%' THEN 'PANASONIC'
+                WHEN line->>'name' ILIKE '%HOT WHEELS%' THEN 'HOT WHEELS'
+                WHEN line->>'name' ILIKE '%HOTWHEELS%' THEN 'HOT WHEELS'
+                WHEN line->>'name' ILIKE '%BARBIE%' THEN 'BARBIE'
+                WHEN line->>'name' ILIKE '%SAMSAM%' THEN 'PAWS NOVA'
+                WHEN line->>'name' ILIKE '%SAMSAMX%' THEN 'PAWS NOVA'
+                WHEN line->>'name' ILIKE '%AMERICAN APPAREL%' THEN 'AMERICAN APPAREL'
+                WHEN line->>'name' ILIKE '%GILDAN%' THEN 'GILDAN'
+                ELSE 'No Brand'
+            END AS brand,
             (line->>'price_unit')::numeric AS price_unit,
             (line->>'quantity')::numeric AS quantity,
             (line->>'price_subtotal')::numeric AS price_subtotal,
