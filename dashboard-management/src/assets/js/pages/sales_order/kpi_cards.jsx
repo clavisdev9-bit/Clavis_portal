@@ -42,6 +42,22 @@ window.KpiCards = function KpiCards({
             openOrderDataModal("", dateOverride);
         }
     };
+    const formatPersen = (persen, totalLalu) => {
+        // Tidak ada basis pembanding → persentase tidak bermakna
+        if (!totalLalu || totalLalu <= 0 || !isFinite(persen)) return "N/A";
+
+        const abs = Math.abs(persen);
+
+        // Batasi agar tidak kepanjangan
+        if (abs >= 1000) {
+            return new Intl.NumberFormat("id-ID", {
+                notation: "compact",
+                maximumFractionDigits: 1,
+            }).format(abs) + "%"; // contoh: 2,5 rb%
+        }
+
+        return abs.toFixed(1) + "%";
+    };
     return (
         <>
             {/* Current Year Sales */}
@@ -52,6 +68,8 @@ window.KpiCards = function KpiCards({
                 const persenPerubahan = parseFloat(data.persen_perubahan);
                 const selisih = totalTahunIni - totalTahunLalu;
                 const isNaik = persenPerubahan >= 0;
+                const persenLabel = formatPersen(persenPerubahan, totalTahunLalu);
+                const tanpaPembanding = persenLabel === "N/A";
 
                 return (
                     <div className="card col-span-1 pr-2">
@@ -64,14 +82,19 @@ window.KpiCards = function KpiCards({
                                 <div className="font-semibold text-dark dark:text-white text-xl">{window.formatCurrency(totalTahunIni)}</div>
                                 <div className="font-semibold text-rak dark:text-white ml-1">
                                     <span
-                                        className={`text-sm leading-none rounded-md ${
-                                            isNaik
+                                        className={`text-sm leading-none rounded-md px-1 ${
+                                            tanpaPembanding
+                                                ? "bg-gray-500/20 text-gray-500"
+                                                : isNaik
                                                 ? "bg-success/20 text-success"
                                                 : "bg-danger/20 text-danger"
                                         }`}
+                                        title={tanpaPembanding ? "Tidak ada data tahun lalu untuk dibandingkan" : undefined}
                                     >
-                                        <i className={isNaik ? "ri-arrow-up-line" : "ri-arrow-down-line"}></i>{" "}
-                                        {Math.abs(persenPerubahan).toFixed(1)}%
+                                        {!tanpaPembanding && (
+                                            <i className={isNaik ? "ri-arrow-up-line" : "ri-arrow-down-line"}></i>
+                                        )}{" "}
+                                        {persenLabel}
                                     </span>
                                 </div>
                             </div>
@@ -171,6 +194,8 @@ window.KpiCards = function KpiCards({
                 const persenPerubahan = parseFloat(data.persen_perubahan);
                 const selisih = totalBulanIni - totalBulanLalu;
                 const isNaik = persenPerubahan >= 0;
+                const persenLabel = formatPersen(persenPerubahan, totalBulanLalu);
+                const tanpaPembanding = persenLabel === "N/A";
 
                 return (
                     <div className="card col-span-1">
@@ -183,14 +208,19 @@ window.KpiCards = function KpiCards({
                                 <div className="font-semibold text-dark dark:text-white text-xl">{window.formatCurrency(totalBulanIni)}</div>
                                 <div className="font-semibold text-rak dark:text-white ml-1">
                                     <span
-                                        className={`text-sm leading-none rounded-md ${
-                                            isNaik
+                                        className={`text-sm leading-none rounded-md px-1 ${
+                                            tanpaPembanding
+                                                ? "bg-gray-500/20 text-gray-500"
+                                                : isNaik
                                                 ? "bg-success/20 text-success"
                                                 : "bg-danger/20 text-danger"
                                         }`}
+                                        title={tanpaPembanding ? "Tidak ada data tahun lalu untuk dibandingkan" : undefined}
                                     >
-                                        <i className={isNaik ? "ri-arrow-up-line" : "ri-arrow-down-line"}></i>{" "}
-                                        {Math.abs(persenPerubahan).toFixed(1)}%
+                                        {!tanpaPembanding && (
+                                            <i className={isNaik ? "ri-arrow-up-line" : "ri-arrow-down-line"}></i>
+                                        )}{" "}
+                                        {persenLabel}
                                     </span>
                                 </div>
                             </div>
