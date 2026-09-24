@@ -353,6 +353,7 @@ window.OrderDataModal = function OrderDataModal({
         const table = $(targetEl).DataTable({
             data: orderData,
             destroy: true,
+            autoWidth: false,
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
             order: [[selectedCompany === '' ? 2 : 1, "desc"]],
@@ -423,6 +424,7 @@ window.OrderDataModal = function OrderDataModal({
             if (dataTableInstanceRef.current) {
                 dataTableInstanceRef.current.destroy();
                 dataTableInstanceRef.current = null;
+                $(targetEl).find("thead").empty();
             }
         };
     }, [orderData, selectedCompany, toInvoice, show]);
@@ -584,7 +586,7 @@ window.OrderDataModal = function OrderDataModal({
             onClick={onClose}
         >
             <div
-                className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-max mx-4 p-6 max-h-[90vh] overflow-y-auto"
+                className="bg-white dark:bg-slate-800 rounded-lg shadow-lg w-[95vw] max-w-7xl mx-4 p-6 max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-end mb-2">
