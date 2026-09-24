@@ -1771,8 +1771,6 @@ export const get_products = async (req, res) => {
         AND ${lineConditions.join(" AND ")}
         ORDER BY so.date_order, total_amount DESC
     `;
-    console.log(query,values);
-
     try {
         const result = await pool.query(query, values);
         res.json(result.rows);
