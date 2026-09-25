@@ -12,6 +12,7 @@ const COMPANY_TITLES = {
     "4": "PT. CLAVIS APPAREL INDONESIA",
     "11": "PT. DUTA INDO RAYA",
 };
+const RP_FORMAT_ZERO = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* 0.00_-;_-@_-';
 function getBrandName(template, lineName) {
     // 1. kalau x_studio_brand sudah array (brand resmi dari Odoo), pakai itu
     if (template.x_studio_brand && Array.isArray(template.x_studio_brand)) {
@@ -454,7 +455,20 @@ window.OrderDataModal = function OrderDataModal({
             return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
         };
 
-        const toNumber = (value) => parseFloat(value) || 0;
+        const toNumber = (value) => {
+            if (typeof value === "number") return value;
+            if (!value) return 0;
+            const s = String(value);
+            // hanya normalisasi jika ada koma (format Indonesia)
+            const normalized = s.includes(",") ? s.replace(/\./g, "").replace(",", ".") : s;
+            return parseFloat(normalized) || 0;
+        };
+        const isZeroTax = (value) => {
+            if (value === null || value === undefined || value === "") return true;
+            // normalisasi format Indonesia: "1.234,56" -> "1234.56", "0,00" -> "0.00"
+            const normalized = String(value).replace(/\./g, "").replace(",", ".");
+            return parseFloat(normalized) === 0;
+        };
 
         const isAllCompany = selectedCompany === "" || selectedCompany === null || selectedCompany === undefined;
         const companyTitle = getCompanyTitle(selectedCompany, "ALL Company");
@@ -479,8 +493,12 @@ window.OrderDataModal = function OrderDataModal({
             { header: "Price Unit", value: (item) => toNumber(item.price_unit), numFmt: RP_FORMAT },
             { header: "Qty SO", value: (item) => toNumber(item.quantity) },
             { header: "Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
-            { header: "Tax", value: () => TAX_RATE, numFmt: "0%" },
-            { header: "Tax Amount", value: (item) => toNumber(item.tax), numFmt: RP_FORMAT },
+            { header: "Tax", value: (item) => (isZeroTax(item.tax) ? 0 : TAX_RATE), numFmt: "0%"},
+            {
+                header: "Tax Amount",
+                value: (item) => (isZeroTax(item.tax) ? 0 : toNumber(item.tax)),
+                numFmt: RP_FORMAT_ZERO,
+            },
             { header: "Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
         ].filter((col) => col.show !== false);
 
@@ -542,6 +560,9 @@ window.OrderDataModal = function OrderDataModal({
                     return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 }
                 if (cell.numFmt === "0%") return Math.round(v * 100) + "%";
+            }
+            if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
+                return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
             return String(v);
         };
