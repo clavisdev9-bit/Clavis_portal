@@ -262,6 +262,8 @@ window.BrandProductsModal = function BrandProductsModal({
         if (!productsData || productsData.length === 0) return;
         const TAX_RATE = 0.11;
         const RP_FORMAT = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* "-"??_-;_-@_-';
+        // Sama dengan RP_FORMAT, tapi angka 0 tampil "Rp 0,00" (bukan "-")
+        const RP_FORMAT_ZERO = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* #,##0.00_-;_-@_-';
         const DATE_FORMAT = '[$-421]dd mmmm yyyy;@';
         const HEADER_FILL = "FFC6D9F1";
         const HEADER_ROW = 5;
@@ -295,6 +297,22 @@ window.BrandProductsModal = function BrandProductsModal({
             return parseFloat(normalized) === 0;
         };
 
+        // ===== Perhitungan DO =====
+        const round2 = (n) => Math.round(n * 100) / 100;
+        const getVat = (item) => (isZeroTax(item.tax) ? 0 : TAX_RATE);
+        const getDoSubtotal = (item) => round2(toNumber(item.quantity_do) * toNumber(item.price_unit));
+        const getDoVatAmount = (item) => round2(getDoSubtotal(item) * getVat(item));
+        const getDoGrandTotal = (item) => round2(getDoSubtotal(item) + getDoVatAmount(item));
+
+        // ===== Mode: invoice atau order =====
+        const isInvoice = endpoint === "/invoices/products";
+        const showDoColumns = endpoint === "/sales/products";
+        const docLabel = isInvoice ? "Invoice" : "Order";
+        const reportTitle = isInvoice ? "Invoices Report" : "Order Report";
+        const filePrefix = isInvoice ? "invoices_report_" : "orders_report_";
+        // invoice pakai tanggal invoice, order tetap pakai write_date
+        const getDocDate = (item) => (isInvoice ? item.invoice_date : item.write_date);
+
         const isAllCompany = selectedCompany === "" || selectedCompany === null || selectedCompany === undefined;
         const companyTitle = getCompanyTitle(selectedCompany, "ALL Company");
         const periodLabel = window.formatDateRangeLabel(startDate, endDate);
@@ -302,6 +320,7 @@ window.BrandProductsModal = function BrandProductsModal({
         // ===== Definisi kolom =====
         // show: false  -> kolom tidak ditampilkan
         // fixedWidth   -> lebar tetap (tidak auto)
+        // value(item, index, isFirstOfDoc)
         const columns = [
             { header: "No", value: (item, i) => i + 1 },
             {
@@ -309,29 +328,50 @@ window.BrandProductsModal = function BrandProductsModal({
                 show: isAllCompany,
                 value: (item) => getCompanyTitle(item.company_id, item.company_name || ""),
             },
-            { header: "Order Number", value: (item) => item.name },
-            { header: "Order Date", value: (item) => toExcelDate(item.write_date), numFmt: DATE_FORMAT },
+            { header: docLabel + " Number", value: (item) => item.name },
+            { header: docLabel + " Date", value: (item) => toExcelDate(getDocDate(item)), numFmt: DATE_FORMAT },
             { header: "Customer Name", value: (item) => item.customer_name },
             { header: "Product Name", value: (item) => item.product_name, fixedWidth: 43.43 },
             { header: "Brand", value: (item) => (item.brand ? item.brand : "No Brand") },
             { header: "Category", value: (item) => item.category },
             { header: "Price Unit", value: (item) => toNumber(item.price_unit), numFmt: RP_FORMAT },
-            { header: "Qty SO", value: (item) => toNumber(item.quantity) },
-            { header: "Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
-            { header: "Tax", value: (item) => (isZeroTax(item.tax) ? 0 : TAX_RATE), numFmt: "0%"},
+            { header: isInvoice ? "Quantity" : "Qty SO", value: (item) => toNumber(item.quantity) },
+            { header: "Qty DO", show: showDoColumns, value: (item) => toNumber(item.quantity_do) },
+            { header: isInvoice ? "Subtotal":"SO Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
+            { header: isInvoice ? "Tax" : "SO Vat", value: (item) => getVat(item), numFmt: "0%" },
             {
-                header: "Tax Amount",
+                header: isInvoice ? "Tax Amount" : "SO Vat Amount",
                 value: (item) => (isZeroTax(item.tax) ? 0 : toNumber(item.tax)),
                 numFmt: RP_FORMAT_ZERO,
             },
-            { header: "Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+            { header: isInvoice ? "Total" : "SO Grand Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+
+            // ===== Payment (hanya untuk /invoices/products, tampil di baris pertama tiap invoice) =====
+            {
+                header: "Amount Paid",
+                show: isInvoice,
+                value: (item, i, isFirstOfDoc) => (isFirstOfDoc ? toNumber(item.amount_paid) : null),
+                numFmt: RP_FORMAT_ZERO,
+            },
+            {
+                header: "Amount Residual",
+                show: isInvoice,
+                value: (item, i, isFirstOfDoc) => (isFirstOfDoc ? toNumber(item.amount_residual) : null),
+                numFmt: RP_FORMAT_ZERO,
+            },
+
+            // ===== DO (hanya untuk /sales/products) =====
+            { header: "DO Subtotal", show: showDoColumns, value: (item) => getDoSubtotal(item), numFmt: RP_FORMAT_ZERO },
+            { header: "DO Vat", show: showDoColumns, value: (item) => getVat(item), numFmt: "0%" },
+            { header: "DO Vat Amount", show: showDoColumns, value: (item) => getDoVatAmount(item), numFmt: RP_FORMAT_ZERO },
+            { header: "DO Grand Total", show: showDoColumns, value: (item) => getDoGrandTotal(item), numFmt: RP_FORMAT_ZERO },
         ].filter((col) => col.show !== false);
 
         const workbook = new ExcelJS.Workbook();
         const ws = workbook.addWorksheet("Sheet1");
 
         // ===== Judul =====
-        ws.getCell("A1").value = "Order Report";
+        ws.getCell("A1").value = reportTitle;
         ws.getCell("A1").font = { name: "Calibri", size: 14, bold: true };
         ws.getCell("A2").value = companyTitle;
         ws.getCell("A2").font = { name: "Calibri", size: 12, bold: true };
@@ -347,17 +387,20 @@ window.BrandProductsModal = function BrandProductsModal({
             cell.border = thinBorder;
         });
 
-        // ===== Urutkan: invoice_date, lalu invoice number =====
+        // ===== Urutkan: tanggal (terbaru dulu), lalu nomor dokumen =====
         const sortedData = productsData.slice().sort((a, b) => {
-            const dateA = new Date(a.write_date).getTime() || 0;
-            const dateB = new Date(b.write_date).getTime() || 0;
+            const dateA = new Date(getDocDate(a)).getTime() || 0;
+            const dateB = new Date(getDocDate(b)).getTime() || 0;
             if (dateA !== dateB) return dateB - dateA; // desc
             return String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true });
         });
 
         // ===== Data =====
         sortedData.forEach((item, index) => {
-            const row = ws.addRow(columns.map((col) => col.value(item, index)));
+            const prevItem = index > 0 ? sortedData[index - 1] : null;
+            const isFirstOfDoc = !prevItem || prevItem.name !== item.name;
+
+            const row = ws.addRow(columns.map((col) => col.value(item, index, isFirstOfDoc)));
 
             columns.forEach((col, i) => {
                 const cell = row.getCell(i + 1);
@@ -381,13 +424,10 @@ window.BrandProductsModal = function BrandProductsModal({
                 return dd + " " + BULAN[v.getUTCMonth()] + " " + v.getUTCFullYear();
             }
             if (typeof v === "number") {
-                if (cell.numFmt === RP_FORMAT) {
+                if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
                     return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 }
                 if (cell.numFmt === "0%") return Math.round(v * 100) + "%";
-            }
-            if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
-                return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
             return String(v);
         };
@@ -411,7 +451,7 @@ window.BrandProductsModal = function BrandProductsModal({
 
         // ===== Download =====
         const slug = companyTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
-        const fileName = "orders_report_" + slug + "_" + dayjs().format("YYYYMMDD_HHmmss") + ".xlsx";
+        const fileName = filePrefix + slug + "_" + dayjs().format("YYYYMMDD_HHmmss") + ".xlsx";
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], {

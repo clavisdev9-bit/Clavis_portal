@@ -469,7 +469,12 @@ window.OrderDataModal = function OrderDataModal({
             const normalized = String(value).replace(/\./g, "").replace(",", ".");
             return parseFloat(normalized) === 0;
         };
+        const round2 = (n) => Math.round(n * 100) / 100;
 
+        const getSoVat = (item) => (isZeroTax(item.tax) ? 0 : TAX_RATE);
+        const getDoSubtotal = (item) => round2(toNumber(item.quantity_do) * toNumber(item.price_unit));
+        const getDoVatAmount = (item) => round2(getDoSubtotal(item) * getSoVat(item));
+        const getDoGrandTotal = (item) => round2(getDoSubtotal(item) + getDoVatAmount(item));
         const isAllCompany = selectedCompany === "" || selectedCompany === null || selectedCompany === undefined;
         const companyTitle = getCompanyTitle(selectedCompany, "ALL Company");
         const periodLabel = window.formatDateRangeLabel(startDate, endDate);
@@ -492,14 +497,21 @@ window.OrderDataModal = function OrderDataModal({
             { header: "Category", value: (item) => item.category },
             { header: "Price Unit", value: (item) => toNumber(item.price_unit), numFmt: RP_FORMAT },
             { header: "Qty SO", value: (item) => toNumber(item.quantity) },
-            { header: "Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
-            { header: "Tax", value: (item) => (isZeroTax(item.tax) ? 0 : TAX_RATE), numFmt: "0%"},
+            { header: "Qty DO", value: (item) => toNumber(item.quantity_do) },
+            { header: "SO Subtotal", value: (item) => toNumber(item.price_subtotal), numFmt: RP_FORMAT },
+            { header: "SO Vat", value: (item) => getSoVat(item), numFmt: "0%" },
             {
-                header: "Tax Amount",
+                header: "SO Vat Amount",
                 value: (item) => (isZeroTax(item.tax) ? 0 : toNumber(item.tax)),
                 numFmt: RP_FORMAT_ZERO,
             },
-            { header: "Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+            { header: "SO Grand Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+
+            // ===== DO =====
+            { header: "DO Subtotal", value: (item) => getDoSubtotal(item), numFmt: RP_FORMAT_ZERO },
+            { header: "DO Vat", value: (item) => getSoVat(item), numFmt: "0%" },
+            { header: "DO Vat Amount", value: (item) => getDoVatAmount(item), numFmt: RP_FORMAT_ZERO },
+            { header: "DO Grand Total", value: (item) => getDoGrandTotal(item), numFmt: RP_FORMAT_ZERO },
         ].filter((col) => col.show !== false);
 
         const workbook = new ExcelJS.Workbook();
@@ -556,13 +568,10 @@ window.OrderDataModal = function OrderDataModal({
                 return dd + " " + BULAN[v.getUTCMonth()] + " " + v.getUTCFullYear();
             }
             if (typeof v === "number") {
-                if (cell.numFmt === RP_FORMAT) {
+                if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
                     return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 }
                 if (cell.numFmt === "0%") return Math.round(v * 100) + "%";
-            }
-            if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
-                return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
             return String(v);
         };

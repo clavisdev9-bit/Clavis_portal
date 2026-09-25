@@ -12,7 +12,7 @@ const COMPANY_TITLES = {
     "4": "PT. CLAVIS APPAREL INDONESIA",
     "11": "PT. DUTA INDO RAYA",
 };
-const RP_FORMAT_ZERO = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* 0.00_-;_-@_-';
+const RP_FORMAT_ZERO = '_-"Rp"* #,##0.00_-;\\-"Rp"* #,##0.00_-;_-"Rp"* 0_-;_-@_-';
 function getBrandName(template, lineName) {
     // 1. kalau x_studio_brand sudah array (brand resmi dari Odoo), pakai itu
     if (template.x_studio_brand && Array.isArray(template.x_studio_brand)) {
@@ -548,6 +548,16 @@ window.InvoiceDataModal = function InvoiceDataModal({
                 numFmt: RP_FORMAT_ZERO,
             },
             { header: "Total", value: (item) => toNumber(item.total_amount), numFmt: RP_FORMAT },
+            {
+                header: "Amount Paid",
+                value: (item, i, isFirstOfInvoice) => (isFirstOfInvoice ? toNumber(item.amount_paid) : null),
+                numFmt: RP_FORMAT_ZERO,
+            },
+            {
+                header: "Amount Residual",
+                value: (item, i, isFirstOfInvoice) => (isFirstOfInvoice ? toNumber(item.amount_residual) : null),
+                numFmt: RP_FORMAT_ZERO,
+            },
         ].filter((col) => col.show !== false);
 
         const workbook = new ExcelJS.Workbook();
@@ -580,7 +590,10 @@ window.InvoiceDataModal = function InvoiceDataModal({
 
         // ===== Data =====
         sortedData.forEach((item, index) => {
-            const row = ws.addRow(columns.map((col) => col.value(item, index)));
+            const prevItem = index > 0 ? sortedData[index - 1] : null;
+            const isFirstOfInvoice = !prevItem || prevItem.name !== item.name;
+
+            const row = ws.addRow(columns.map((col) => col.value(item, index, isFirstOfInvoice)));
 
             columns.forEach((col, i) => {
                 const cell = row.getCell(i + 1);
@@ -604,11 +617,12 @@ window.InvoiceDataModal = function InvoiceDataModal({
                 return dd + " " + BULAN[v.getUTCMonth()] + " " + v.getUTCFullYear();
             }
             if (typeof v === "number") {
-                if (cell.numFmt === RP_FORMAT) {
+                if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
                     return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 }
                 if (cell.numFmt === "0%") return Math.round(v * 100) + "%";
             }
+
             
             if (cell.numFmt === RP_FORMAT || cell.numFmt === RP_FORMAT_ZERO) {
                 return "Rp   " + v.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });

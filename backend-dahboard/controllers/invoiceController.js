@@ -2495,7 +2495,9 @@ export const get_products = async (req, res) => {
                 (line->>'price_subtotal')::numeric
                 + (i.amount_tax::numeric / NULLIF(line_count.total_lines, 0)),
                 2
-            ) AS total_amount
+            ) AS total_amount,
+        amount_paid,
+        amount_residual
         FROM invoices i
         CROSS JOIN LATERAL jsonb_array_elements(i.invoice_origin) AS origin
         CROSS JOIN LATERAL jsonb_array_elements(origin->'lines') AS line
